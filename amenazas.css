@@ -1,0 +1,333 @@
+.amenazas-main {
+  min-height: 100vh;
+  padding: 110px 32px 72px;
+  position: relative;
+  z-index: 1;
+}
+
+.amenazas-header {
+  margin-bottom: 28px;
+}
+
+.amenazas-title {
+  font-family: var(--font-main);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.amenazas-desc {
+  color: var(--text-muted);
+  font-size: 1rem;
+  max-width: 680px;
+  line-height: 1.5;
+}
+
+.amenazas-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1px 380px;
+  min-height: 72vh;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(2, 12, 7, 0.72);
+  backdrop-filter: blur(6px);
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 136, 0.04),
+    0 18px 60px rgba(0, 0, 0, 0.32);
+}
+
+.globo-wrapper {
+  position: relative;
+  min-height: 520px;
+  background:
+    radial-gradient(circle at center, rgba(0, 255, 136, 0.04), transparent 62%),
+    rgba(0, 8, 5, 0.58);
+  overflow: hidden;
+}
+
+#globo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+}
+
+#globo:active {
+  cursor: grabbing;
+}
+
+.globo-legend {
+  position: absolute;
+  left: 24px;
+  bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 2;
+  padding: 12px 14px;
+  background: rgba(3, 12, 8, 0.6);
+  border: 1px solid rgba(0, 255, 136, 0.09);
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.divider {
+  width: 1px;
+  background: var(--border);
+}
+
+.noticias-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: rgba(1, 10, 6, 0.72);
+}
+
+.noticias-panel-header {
+  padding: 22px 22px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.noticias-title {
+  margin: 8px 0 4px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.noticias-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+.noticias-ver-mas {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-ver-mas {
+  font-size: 0.85rem;
+  color: var(--green-mid);
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.btn-ver-mas:hover {
+  opacity: 1;
+  color: var(--green);
+}
+
+.noticias-burbujas {
+  display: flex;
+  flex-direction: column;   /* 🔥 vuelve a vertical */
+  gap: 12px;
+
+  max-height: 420px;        /* 🔥 limita altura */
+  overflow-y: auto;         /* 🔥 activa scroll vertical */
+  overflow-x: hidden;
+  position: relative;
+  padding: 10px;
+}
+
+.noticias-burbujas::-webkit-scrollbar {
+  display: none;
+}
+
+.noticias-burbujas::after {
+  content: "";
+  position: sticky;
+  bottom: 0;
+  height: 40px;
+  background: linear-gradient(to top, #020603, transparent);
+}
+
+.noticias-burbujas::-webkit-scrollbar {
+  width: 6px;
+}
+
+.noticias-burbujas::-webkit-scrollbar-thumb {
+  background: #00ff88;
+  border-radius: 10px;
+}
+
+.burbuja {
+  background: rgba(5, 18, 11, 0.82);
+  border: 1px solid var(--border);
+  border-radius: 14px 14px 14px 4px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 300px;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease;
+  position: relative;
+}
+
+.burbuja.clickable {
+  cursor: pointer;
+}
+
+.burbuja:hover {
+  transform: translateY(-2px);
+  border-color: var(--green-mid);
+  background: rgba(8, 24, 15, 0.9);
+}
+
+.burbuja::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: var(--green-mid);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.burbuja:hover::before {
+  opacity: 1;
+}
+
+.burbuja-tag {
+  display: inline-block;
+  width: fit-content;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 4px;
+}
+
+.burbuja-tag.ransomware {
+  background: rgba(255, 68, 68, 0.12);
+  color: #ff5d5d;
+  border: 1px solid rgba(255, 68, 68, 0.28);
+}
+
+.burbuja-tag.phishing {
+  background: rgba(255, 153, 0, 0.12);
+  color: #ffae33;
+  border: 1px solid rgba(255, 153, 0, 0.28);
+}
+
+.burbuja-tag.malware {
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+  border: 1px solid rgba(0, 255, 136, 0.25);
+}
+
+.burbuja-tag.ddos {
+  background: rgba(0, 170, 255, 0.14);
+  color: #30b7ff;
+  border: 1px solid rgba(0, 170, 255, 0.26);
+}
+
+.burbuja-texto {
+  font-size: 0.92rem;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.burbuja-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.burbuja-pais,
+.burbuja-tiempo {
+  font-family: var(--font-mono);
+}
+
+.burbuja-pais {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.burbuja-tiempo {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.burbuja-link {
+  width: fit-content;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--green-mid);
+  text-decoration: none;
+  margin-top: 6px;
+  opacity: 0.85;
+
+}
+
+.burbuja-link:hover {
+  color: var(--green);
+  opacity: 1;
+}
+
+.burbuja-action {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--green-mid);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.burbuja:hover .burbuja-action {
+  opacity: 1;
+}
+
+@media (max-width: 1100px) {
+  .amenazas-layout {
+    grid-template-columns: minmax(0, 1fr) 1px 340px;
+  }
+}
+
+@media (max-width: 900px) {
+  .amenazas-main {
+    padding: 96px 20px 56px;
+  }
+
+  .amenazas-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(420px, 52vh) 1px auto;
+  }
+
+  .globo-wrapper {
+    min-height: 420px;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+  }
+}

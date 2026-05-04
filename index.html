@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ciber Sin Humo — Ciberseguridad</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
+
+<canvas id="matrix"></canvas>
+
+<header class="navbar">
+  <div class="logo">
+    <img src="mantislabs-icon.png" alt="Mantis Logo" class="logo-img">
+    <span class="logo-text">CIBER <span class="logo-accent">SIN HUMO</span></span>
+  </div>
+  <nav>
+    <a href="#inicio" class="nav-link">Inicio</a>
+    <a href="#videos" class="nav-link">Vídeos</a>
+    <a href="#sugerencias" class="nav-link">Sugerencias</a>
+    <a href="#recursos" class="nav-link">Recursos</a>
+    <a href="#blog" class="nav-link">Blog</a>
+    <a href="amenazas.html" class="nav-link">Amenazas</a>
+  </nav>
+  <div class="nav-status">
+    <span class="status-dot"></span>
+    <span class="status-text">SECURE</span>
+  </div>
+</header>
+
+<section class="hero" id="inicio">
+  <div class="hero-grid-overlay"></div>
+  <div class="mantis-bg">
+    <img src="mantis.png" alt="" class="mantis-bg-img">
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      <span>Ciberseguridad accesible</span>
+    </div>
+    <h1 class="hero-title">
+      <span>Todo lo que</span>
+      <span>pasa en tu pantalla</span>
+      <span class="hero-accent">que nadie te explicó.</span>
+      <span>Hasta ahora.</span>
+    </h1>
+    <p class="hero-subtitle">De forma simple, práctica y real. Sin humo, sin rodeos.</p>
+    <div class="buttons">
+      <a href="#videos" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+        Ver vídeos
+      </a>
+      <a href="#recursos" class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        Recursos
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">+30</span>
+        <span class="stat-label">Vídeos</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Categorías</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Gratuito</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<section class="section" id="videos">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2 class="section-title">Vídeos</h2>
+      <p class="section-desc">Aprende con contenido claro y directo, organizado por temática.</p>
+    </div>
+
+    <div class="learning-paths" id="learning-paths">
+      <button class="path-card" type="button" data-route="principiante">
+        <span class="path-num">01</span>
+        <span class="path-kicker">Empieza desde cero</span>
+        <strong>No sé nada de ciber</strong>
+        <span>Conceptos básicos, riesgos comunes y primeros hábitos seguros.</span>
+      </button>
+
+      <button class="path-card" type="button" data-route="privacidad">
+        <span class="path-num">02</span>
+        <span class="path-kicker">Protege tu vida digital</span>
+        <strong>Quiero mejorar mi privacidad</strong>
+        <span>Navegación, contraseñas, móvil, redes y exposición pública.</span>
+      </button>
+
+      <button class="path-card" type="button" data-route="sistema">
+        <span class="path-num">03</span>
+        <span class="path-kicker">Entiende el mapa completo</span>
+        <strong>Quiero entender cómo funciona todo esto</strong>
+        <span>Redes, web, amenazas, OSINT y herramientas explicadas sin humo.</span>
+      </button>
+    </div>
+
+    <div class="route-view" id="route-view" hidden>
+      <div class="route-topbar">
+        <button class="route-back" id="route-back" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          Volver
+        </button>
+        <div>
+          <span class="section-tag" id="route-tag">ruta</span>
+          <h3 class="route-title" id="route-title"></h3>
+          <p class="route-desc" id="route-desc"></p>
+        </div>
+      </div>
+
+      <div class="route-filters" id="route-filters"></div>
+      <div class="video-grid route-video-grid" id="route-video-grid"></div>
+    </div>
+  </div>
+</section>
+<section class="section section-sugerencias" id="sugerencias">
+  <div class="section-inner sugerencias-inner">
+    <div class="section-header sugerencias-header">
+      <span class="section-tag">sugerencias</span>
+      <h2 class="section-title">Dime qué contenido quieres ver</h2>
+      <p class="section-desc">Manda ideas de vídeos, dudas o temas que te gustaría que explique de forma clara y sin humo.</p>
+    </div>
+
+    <form class="sugerencias-form" id="sugerencias-form" data-email="mantislabs.es@gmail.com">
+      <div class="form-grid">
+        <label class="form-field">
+          <span>Nombre</span>
+          <input type="text" name="nombre" placeholder="Tu nombre o alias" autocomplete="name">
+        </label>
+
+        <label class="form-field">
+          <span>Tu correo</span>
+          <input type="email" name="correo" placeholder="Opcional, por si quieres respuesta" autocomplete="email">
+        </label>
+      </div>
+
+      <label class="form-field">
+        <span>Tipo de contenido</span>
+        <select name="tipo">
+          <option value="Idea de vídeo">Idea de vídeo</option>
+          <option value="Duda de ciberseguridad">Duda de ciberseguridad</option>
+          <option value="Recurso recomendado">Recurso recomendado</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </label>
+
+      <label class="form-field">
+        <span>Sugerencia</span>
+        <textarea name="mensaje" rows="6" placeholder="Cuéntame la idea, el problema o el tema que te gustaría ver..." required></textarea>
+      </label>
+
+      <div class="form-footer">
+        <label class="form-check">
+          <input type="checkbox" name="permiso" required>
+          <span>Acepto enviar esta sugerencia por correo.</span>
+        </label>
+
+        <button type="submit" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+          Enviar sugerencia
+        </button>
+      </div>
+
+      <p class="form-status" id="sugerencias-status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<section class="section section-alt" id="recursos">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-tag">recursos</span>
+      <h2 class="section-title">Recursos</h2>
+      <p class="section-desc">Herramientas, plataformas y materiales para aprender y protegerte mejor.</p>
+    </div>
+    <div class="recursos-grid">
+      <div class="recurso-group">
+        <div class="recurso-group-header">
+          <h3>Navegadores seguros</h3>
+        </div>
+        <div class="recurso-list">
+          <a href="#" class="recurso-item"><span class="recurso-name">Brave</span><span class="recurso-tag">Privacidad</span></a>
+          <a href="#" class="recurso-item"><span class="recurso-name">Firefox</span><span class="recurso-tag">Seguridad</span></a>
+          <a href="#" class="recurso-item"><span class="recurso-name">Tor Browser</span><span class="recurso-tag">Anonimato</span></a>
+        </div>
+      </div>
+      <div class="recurso-group">
+        <div class="recurso-group-header">
+          <h3>Herramientas</h3>
+        </div>
+        <div class="recurso-list">
+          <a href="#" class="recurso-item"><span class="recurso-name">Nmap</span><span class="recurso-tag">Redes</span></a>
+          <a href="#" class="recurso-item"><span class="recurso-name">Wireshark</span><span class="recurso-tag">Tráfico</span></a>
+          <a href="#" class="recurso-item"><span class="recurso-name">Burp Suite</span><span class="recurso-tag">Web</span></a>
+          <a href="#" class="recurso-item"><span class="recurso-name">Metasploit</span><span class="recurso-tag">Pentesting</span></a>
+        </div>
+      </div>
+      <div class="recurso-group">
+        <div class="recurso-group-header">
+          <h3>Plataformas</h3>
+        </div>
+        <div class="recurso-list">
+          <a href="#" class="recurso-item"><span class="recurso-name">Hack The Box</span><span class="recurso-tag">Práctica</span></a>
+          <a href="#" class="recurso-item"><span class="recurso-name">TryHackMe</span><span class="recurso-tag">Aprendizaje</span></a>
+          <a href="#" class="recurso-item"><span class="recurso-name">OverTheWire</span><span class="recurso-tag">Retos</span></a>
+        </div>
+      </div>
+      <div class="recurso-group">
+        <div class="recurso-group-header">
+          <h3>Libros recomendados</h3>
+        </div>
+        <div class="recurso-list">
+          <a href="#" class="recurso-item"><span class="recurso-name">The Web Application Hacker's Handbook</span><span class="recurso-tag">Web</span></a>
+          <a href="#" class="recurso-item"><span class="recurso-name">Linux Basics for Hackers</span><span class="recurso-tag">Linux</span></a>
+          <a href="#" class="recurso-item"><span class="recurso-name">Practical Malware Analysis</span><span class="recurso-tag">Malware</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="blog">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-tag">blog</span>
+      <h2 class="section-title">Últimos artículos</h2>
+      <p class="section-desc">Explicaciones más completas, análisis y contenido para profundizar.</p>
+    </div>
+    <div class="blog-grid">
+      <article class="blog-card featured-blog">
+        <div class="blog-meta">
+          <span class="blog-tag">Guía</span>
+          <span class="blog-date">Abr 2026</span>
+        </div>
+        <h3 class="blog-title">Qué es el phishing y cómo reconocerlo antes de caer</h3>
+        <p class="blog-excerpt">Una explicación clara de uno de los ataques más comunes en Internet, con ejemplos y consejos prácticos.</p>
+        <a href="#" class="blog-link">Leer artículo →</a>
+      </article>
+      <article class="blog-card">
+        <div class="blog-meta">
+          <span class="blog-tag">Privacidad</span>
+          <span class="blog-date">Abr 2026</span>
+        </div>
+        <h3 class="blog-title">VPN: cuándo sí y cuándo no sirven</h3>
+        <a href="#" class="blog-link">Leer artículo →</a>
+      </article>
+      <article class="blog-card">
+        <div class="blog-meta">
+          <span class="blog-tag">Herramientas</span>
+          <span class="blog-date">Abr 2026</span>
+        </div>
+        <h3 class="blog-title">Nmap explicado para principiantes</h3>
+        <a href="#" class="blog-link">Leer artículo →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <img src="mantislabs-icon.png" alt="Mantis Lab" class="logo-img">
+        <span class="logo-text">MANTIS <span class="logo-accent">LAB</span></span>
+      </div>
+      <p class="footer-tagline">Ciberseguridad sin humo.</p>
+      <p class="footer-credit">Contenido creado por Yoel Moreno.</p>
+    </div>
+
+    <div class="footer-column">
+      <h3>Legal</h3>
+      <a href="aviso-legal.html">Aviso legal</a>
+      <a href="privacidad.html">Política de privacidad</a>
+      <a href="cookies.html">Política de cookies</a>
+      <button class="footer-link-button" type="button" data-open-cookie-settings>Cambiar cookies</button>
+    </div>
+
+    <div class="footer-column">
+      <h3>Redes</h3>
+      <a href="https://www.tiktok.com/@cibersinhumo">TikTok</a>
+      <a href="https://www.instagram.com/cibersinhumo/">Instagram</a>
+      <a href="https://www.youtube.com/@cibersinhumo">YouTube</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 Mantis Lab. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<div class="cookie-banner" id="cookie-banner" hidden>
+  <div>
+    <strong>Cookies</strong>
+    <p>Usamos cookies técnicas y, si aceptas, Google Tag Manager/Analytics para medir visitas y mejorar el contenido. Puedes aceptar o rechazar las cookies no necesarias.</p>
+  </div>
+  <div class="cookie-actions">
+    <button type="button" class="btn btn-secondary" data-cookie-action="reject">Rechazar</button>
+    <button type="button" class="btn btn-primary" data-cookie-action="accept">Aceptar</button>
+  </div>
+</div>
+
+<div class="splash" id="splash">
+  <div class="splash-content">
+    <img src="mantislabs-icon.png" class="splash-logo" alt="Logo Ciber Sin Humo">
+    <div class="splash-name">CIBER SIN <span class="splash-accent">HUMO</span></div>
+    <div class="smoke-container">
+      <div class="smoke s1"></div><div class="smoke s2"></div><div class="smoke s3"></div>
+      <div class="smoke s4"></div><div class="smoke s5"></div><div class="smoke s6"></div>
+      <div class="smoke s7"></div><div class="smoke s8"></div><div class="smoke s9"></div>
+      <div class="smoke s10"></div><div class="smoke s11"></div><div class="smoke s12"></div>
+      <div class="smoke s13"></div><div class="smoke s14"></div><div class="smoke s15"></div>
+      <div class="smoke s16"></div><div class="smoke s17"></div><div class="smoke s18"></div>
+      <div class="smoke s19"></div><div class="smoke s20"></div><div class="smoke s21"></div>
+      <div class="smoke s22"></div><div class="smoke s23"></div><div class="smoke s24"></div>
+      <div class="smoke s25"></div><div class="smoke s26"></div><div class="smoke s27"></div>
+      <div class="smoke s28"></div><div class="smoke s29"></div><div class="smoke s30"></div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amenazas en Tiempo Real — Ciber Sin Humo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="amenazas.css">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
+
+<canvas id="matrix"></canvas>
+
+<header class="navbar">
+  <div class="logo">
+    <img src="mantislabs-icon.png" alt="Mantis Logo" class="logo-img">
+    <span class="logo-text">CIBER <span class="logo-accent">SIN HUMO</span></span>
+  </div>
+  <nav>
+    <a href="index.html" class="nav-link">Inicio</a>
+    <a href="index.html#videos" class="nav-link">Vídeos</a>
+    <a href="amenazas.html" class="nav-link active">Amenazas</a>
+    <a href="index.html#recursos" class="nav-link">Recursos</a>
+    <a href="index.html#blog" class="nav-link">Blog</a>
+  </nav>
+  <div class="nav-status">
+    <span class="status-dot"></span>
+    <span class="status-text">SECURE</span>
+  </div>
+</header>
+
+<main class="amenazas-main">
+  <div class="amenazas-header">
+    <span class="section-tag">en tiempo real</span>
+    <h1 class="amenazas-title">Mapa de <span class="hero-accent">Amenazas</span></h1>
+    <p class="amenazas-desc">
+      Visualización de ataques y campañas recientes. Explora el mapa y consulta ejemplos reales.
+    </p>
+  </div>
+
+  <div class="amenazas-layout">
+
+    <div class="globo-wrapper">
+      <canvas id="globo"></canvas>
+
+      <div class="globo-legend">
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#ff4444"></span>
+          <span>Ransomware</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#ff9900"></span>
+          <span>Phishing</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#00ff88"></span>
+          <span>Malware</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#00aaff"></span>
+          <span>DDoS</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="noticias-panel">
+      <div class="noticias-panel-header">
+        <span class="section-tag">últimas amenazas</span>
+        <h3 class="noticias-title">Actividad reciente</h3>
+        <p class="noticias-subtitle">Ejemplos reales de ataques y campañas activas.</p>
+      </div>
+
+      <div class="noticias-burbujas" id="noticias-burbujas">
+      </div>
+
+  <div class="noticias-ver-mas">
+  <a href="https://thehackernews.com" target="_blank" class="btn-ver-mas">
+    Ver más noticias →
+  </a>
+</div>
+        
+</main>
+
+<script src="script.js"></script>
+<script src="amenazas.js"></script>
+</body>
+</html>
