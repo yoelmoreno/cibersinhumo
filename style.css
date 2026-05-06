@@ -1691,6 +1691,78 @@ select {
 }
 
 @media (max-width: 900px) {
+  .splash-logo {
+    width: 76px;
+    height: 76px;
+  }
+
+  .splash-name {
+    font-size: clamp(1.25rem, 7vw, 1.85rem);
+    letter-spacing: 0.1em;
+  }
+
+  .smoke-container {
+    bottom: -100px;
+    width: 100vw;
+    height: 420px;
+    transform: translateX(-50%);
+    overflow: hidden;
+  }
+
+  .smoke {
+    display: none;
+  }
+
+  .smoke-container::before,
+  .smoke-container::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: min(118vw, 520px);
+    height: min(82vw, 360px);
+    border-radius: 50%;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 58%, rgba(0,255,136,0.34) 0%, rgba(0,255,136,0.2) 24%, rgba(0,255,136,0.08) 52%, transparent 74%),
+      radial-gradient(ellipse at 34% 72%, rgba(0,255,136,0.18), transparent 58%),
+      radial-gradient(ellipse at 68% 70%, rgba(0,255,136,0.16), transparent 62%);
+    filter: blur(34px);
+    opacity: 0;
+    transform: translateX(-50%) translateY(44px) scale(0.72);
+    animation: mobileSmoke 3.9s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  .smoke-container::after {
+    width: min(104vw, 460px);
+    height: min(76vw, 320px);
+    animation-delay: 1.2s;
+    opacity: 0;
+    filter: blur(42px);
+  }
+
+  @keyframes mobileSmoke {
+    0% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(52px) scale(0.72);
+    }
+
+    18% {
+      opacity: 0.62;
+    }
+
+    58% {
+      opacity: 0.34;
+      transform: translateX(-53%) translateY(-92px) scale(1.05);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateX(-47%) translateY(-190px) scale(1.28);
+    }
+  }
+
   .navbar {
     padding: 0 16px;
     gap: 14px;
@@ -1763,6 +1835,16 @@ select {
 }
 
 @media (max-width: 640px) {
+  .smoke-container {
+    bottom: -86px;
+    height: 360px;
+  }
+
+  .smoke-container::before,
+  .smoke-container::after {
+    filter: blur(30px);
+  }
+
   .hero {
     padding-top: 132px;
   }

@@ -15,17 +15,60 @@ window.addEventListener("load", () => {
   let dragging = false, lastX, lastY, velY = 0.002;
   let geoData = null;
 
-  canvas.addEventListener("mousedown", e => { dragging = true; lastX = e.clientX; lastY = e.clientY; velY = 0; });
-  canvas.addEventListener("mousemove", e => {
+  canvas.addEventListener("pointerdown", e => {
+    dragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    velY = 0;
+    if (canvas.setPointerCapture) {
+      canvas.setPointerCapture(e.pointerId);
+    }
+  });
+
+  canvas.addEventListener("pointermove", e => {
     if (!dragging) return;
+    e.preventDefault();
     velY = (e.clientX - lastX) * 0.005;
     rotY += velY;
     rotX += (e.clientY - lastY) * 0.005;
     rotX = Math.max(-Math.PI/2.5, Math.min(Math.PI/2.5, rotX));
     lastX = e.clientX; lastY = e.clientY;
   });
-  canvas.addEventListener("mouseup", () => dragging = false);
-  canvas.addEventListener("mouseleave", () => dragging = false);
+
+  function stopDrag(e) {
+    dragging = false;
+    if (e && canvas.hasPointerCapture && canvas.hasPointerCapture(e.pointerId)) {
+      canvas.releasePointerCapture(e.pointerId);
+    }
+  }
+
+  canvas.addEventListener("pointerup", stopDrag);
+  canvas.addEventListener("pointercancel", stopDrag);
+  canvas.addEventListener("pointerleave", stopDrag);
+
+  canvas.addEventListener("touchstart", e => {
+    if (!e.touches.length) return;
+    e.preventDefault();
+    dragging = true;
+    lastX = e.touches[0].clientX;
+    lastY = e.touches[0].clientY;
+    velY = 0;
+  }, { passive: false });
+
+  canvas.addEventListener("touchmove", e => {
+    if (!dragging || !e.touches.length) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    velY = (touch.clientX - lastX) * 0.005;
+    rotY += velY;
+    rotX += (touch.clientY - lastY) * 0.005;
+    rotX = Math.max(-Math.PI/2.5, Math.min(Math.PI/2.5, rotX));
+    lastX = touch.clientX;
+    lastY = touch.clientY;
+  }, { passive: false });
+
+  canvas.addEventListener("touchend", () => dragging = false);
+  canvas.addEventListener("touchcancel", () => dragging = false);
 
   function latLonTo3D(lat, lon, r) {
       const phi = (90 - lat) * Math.PI / 180;
