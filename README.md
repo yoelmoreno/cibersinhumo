@@ -1,6 +1,6 @@
-# 🟢 Ciber Sin Humo
+# 🟢 Mantis Lab
 
-Ciber Sin Humo es una plataforma web centrada en la divulgación de ciberseguridad de forma clara, visual y accesible.
+**Mantis Lab** es una plataforma web centrada en la divulgación de ciberseguridad de forma clara, visual y accesible.
 
 El objetivo principal es ofrecer contenido educativo combinado con recursos prácticos, enfocado especialmente a principiantes y usuarios interesados en mejorar su seguridad digital.
 
@@ -117,8 +117,8 @@ La web sigue una estética:
 
 ## 📌 Autor
 
-Proyecto desarrollado por **Ciber Sin Humo**  
-(@cibersinhumo)
+Proyecto desarrollado por **Mantis Lab**  
+(@mantislabs_)
 
 ---
 
