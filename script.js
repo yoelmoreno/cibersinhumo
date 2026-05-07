@@ -201,7 +201,7 @@ function videoMedia(video) {
     return `<iframe class="video-embed" src="${video.embedUrl}" title="${video.title}" allowfullscreen loading="lazy"></iframe>`;
   }
 
-  return `<div class="video-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg></div>`;
+  return `<div class="video-placeholder"><span>Próximamente</span></div>`;
 }
 
 function renderRouteVideos() {
