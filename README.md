@@ -1,6 +1,5 @@
-# 🟢 Mantis Lab
-
-**Mantis Lab** es una plataforma web centrada en la divulgación de ciberseguridad de forma clara, visual y accesible.
+# 🟢 Ciber Sin Humo
+**Ciber Sin Humo** es una plataforma web centrada en la divulgación de ciberseguridad de forma clara, visual y accesible.
 
 El objetivo principal es ofrecer contenido educativo combinado con recursos prácticos, enfocado especialmente a principiantes y usuarios interesados en mejorar su seguridad digital.
 
