@@ -105,7 +105,8 @@ const learningRoutes = {
         category: "Conceptos",
         type: "youtube",
         url: "https://www.youtube.com/watch?v=oq0exQZD_mU&list=PLje9tFGVK-hBtHHm_V-BXeegZdTTVCCP5&index=2",
-        thumbnailUrl: "https://i.ytimg.com/vi/oq0exQZD_mU/hqdefault.jpg",
+        thumbnailUrl: "https://i.ytimg.com/vi/oq0exQZD_mU/maxresdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/oq0exQZD_mU/hqdefault.jpg",
         badge: "Nuevo"
       },
       {
@@ -186,7 +187,7 @@ function videoMedia(video) {
   if (video.thumbnailUrl && video.url) {
     return `
       <a class="video-thumb-link" href="${video.url}" target="_blank" rel="noopener noreferrer" aria-label="Ver ${video.title}">
-        <img class="video-thumb-img" src="${video.thumbnailUrl}" alt="Portada de ${video.title}" loading="lazy">
+        <img class="video-thumb-img" src="${video.thumbnailUrl}" alt="Portada de ${video.title}" loading="lazy"${video.thumbnailFallback ? ` onerror="this.onerror=null;this.src='${video.thumbnailFallback}'"` : ""}>
         <span class="video-play-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><polygon points="7,4 19,12 7,20"/></svg></span>
       </a>
     `;
