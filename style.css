@@ -568,6 +568,51 @@ select {
   box-shadow: inset 0 0 0 1px rgba(0, 255, 136, 0.1);
 }
 
+.video-thumb-link {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+}
+
+.video-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.78;
+  filter: saturate(0.95) contrast(1.08) brightness(0.82);
+  transition: transform 0.24s ease, opacity 0.24s ease, filter 0.24s ease;
+}
+
+.video-card:hover .video-thumb-img {
+  transform: scale(1.04);
+  opacity: 0.96;
+  filter: saturate(1.08) contrast(1.12) brightness(0.92);
+}
+
+.video-play-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border: 1px solid rgba(0, 255, 136, 0.24);
+  border-radius: 999px;
+  background: rgba(3, 10, 7, 0.68);
+  color: var(--green);
+  box-shadow: 0 0 28px rgba(0, 255, 136, 0.18);
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.video-card:hover .video-play-icon {
+  transform: translate(-50%, -50%) scale(1.08);
+  border-color: rgba(0, 255, 136, 0.42);
+  background: rgba(0, 255, 136, 0.12);
+}
+
 .video-duration,
 .video-badge {
   position: absolute;

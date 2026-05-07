@@ -101,6 +101,14 @@ const learningRoutes = {
     desc: "Empieza por lo esencial: amenazas comunes, hábitos seguros y conceptos base.",
     videos: [
       {
+        title: "Introducción al canal",
+        category: "Conceptos",
+        type: "youtube",
+        url: "https://www.youtube.com/watch?v=oq0exQZD_mU&list=PLje9tFGVK-hBtHHm_V-BXeegZdTTVCCP5&index=2",
+        thumbnailUrl: "https://i.ytimg.com/vi/oq0exQZD_mU/hqdefault.jpg",
+        badge: "Nuevo"
+      },
+      {
         title: "Qué es la ciberseguridad explicado fácil",
         category: "Conceptos",
         type: "placeholder"
@@ -175,6 +183,15 @@ let activeRoute = null;
 let activeFilter = "Todos";
 
 function videoMedia(video) {
+  if (video.thumbnailUrl && video.url) {
+    return `
+      <a class="video-thumb-link" href="${video.url}" target="_blank" rel="noopener noreferrer" aria-label="Ver ${video.title}">
+        <img class="video-thumb-img" src="${video.thumbnailUrl}" alt="Portada de ${video.title}" loading="lazy">
+        <span class="video-play-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><polygon points="7,4 19,12 7,20"/></svg></span>
+      </a>
+    `;
+  }
+
   if (video.type === "youtube" && video.embedUrl) {
     return `<iframe class="video-embed" src="${video.embedUrl}" title="${video.title}" allowfullscreen loading="lazy"></iframe>`;
   }
@@ -200,7 +217,7 @@ function renderRouteVideos() {
       </div>
       <div class="video-hover-info">
         <span class="video-category">${video.category}</span>
-        <h3 class="video-title">${video.title}</h3>
+        <h3 class="video-title">${video.url ? `<a href="${video.url}" target="_blank" rel="noopener noreferrer">${video.title}</a>` : video.title}</h3>
       </div>
     </article>
   `).join("") : `<div class="video-empty">Todavía no hay vídeos en esta categoría.</div>`;
