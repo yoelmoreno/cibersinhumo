@@ -104,9 +104,9 @@ const learningRoutes = {
         title: "Introducción al canal",
         category: "Conceptos",
         type: "youtube",
-        url: "https://www.youtube.com/watch?v=oq0exQZD_mU&list=PLje9tFGVK-hBtHHm_V-BXeegZdTTVCCP5&index=2",
-        thumbnailUrl: "https://i.ytimg.com/vi/oq0exQZD_mU/maxresdefault.jpg",
-        thumbnailFallback: "https://i.ytimg.com/vi/oq0exQZD_mU/hqdefault.jpg",
+        url: "https://www.youtube.com/watch?v=lEinvhz9fLc&list=PLje9tFGVK-hBtHHm_V-BXeegZdTTVCCP5&index=2",
+        thumbnailUrl: "https://i.ytimg.com/vi/lEinvhz9fLc/maxresdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/lEinvhz9fLc/hqdefault.jpg",
         badge: "Nuevo"
       },
       {
