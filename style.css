@@ -369,6 +369,32 @@ select {
   opacity: 0.82;
 }
 
+@media (min-width: 901px) {
+  .hero {
+    padding: calc(var(--nav-height) + 34px) 34px 48px;
+  }
+
+  .hero-content {
+    width: min(100%, 840px);
+  }
+
+  .hero-title {
+    font-size: clamp(3.2rem, 7.4vw, 6.35rem);
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1.08rem, 1.6vw, 1.34rem);
+  }
+
+  .mantis-bg {
+    width: min(67vw, 1240px);
+  }
+
+  .mantis-bg-img {
+    --mantis-scale: 1.16;
+  }
+}
+
 .stat {
   display: flex;
   flex-direction: column;
