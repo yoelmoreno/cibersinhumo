@@ -102,7 +102,7 @@ const learningRoutes = {
     videos: [
       {
         title: "Introducción al canal",
-        category: "Conceptos",
+        category: "Introducción",
         type: "youtube",
         url: "https://www.youtube.com/watch?v=lEinvhz9fLc&list=PLje9tFGVK-hBtHHm_V-BXeegZdTTVCCP5&index=2",
         thumbnailUrl: "https://i.ytimg.com/vi/lEinvhz9fLc/maxresdefault.jpg",
@@ -115,9 +115,13 @@ const learningRoutes = {
         type: "placeholder"
       },
       {
-        title: "Phishing: cómo reconocerlo antes de caer",
-        category: "Amenazas",
-        type: "placeholder"
+        title: "Phishing: qué es y cómo evitarlo",
+        category: "Ataques",
+        type: "youtube",
+        url: "https://youtu.be/6_L84s6Jn4s",
+        thumbnailUrl: "https://i.ytimg.com/vi/6_L84s6Jn4s/maxresdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/6_L84s6Jn4s/hqdefault.jpg",
+        badge: "Nuevo"
       },
       {
         title: "Contraseñas seguras sin complicarte",
@@ -227,7 +231,13 @@ function renderRouteVideos() {
 function renderRouteFilters() {
   if (!activeRoute || !routeFilters) return;
 
-  const categories = ["Todos", ...new Set(activeRoute.videos.map((video) => video.category))];
+  const routeCategories = [...new Set(activeRoute.videos.map((video) => video.category))];
+  const preferredOrder = ["Ataques", "Introducción", "Conceptos", "Privacidad", "Móvil", "Redes", "OSINT"];
+  const orderedCategories = [
+    ...preferredOrder.filter((category) => routeCategories.includes(category)),
+    ...routeCategories.filter((category) => !preferredOrder.includes(category))
+  ];
+  const categories = ["Todos", ...orderedCategories];
   routeFilters.innerHTML = categories.map((category) => `
     <button class="filter-chip ${category === activeFilter ? "active" : ""}" type="button" data-filter="${category}">${category}</button>
   `).join("");
