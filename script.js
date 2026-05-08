@@ -110,16 +110,11 @@ const learningRoutes = {
         badge: "Nuevo"
       },
       {
-        title: "Qué es la ciberseguridad explicado fácil",
-        category: "Conceptos",
-        type: "placeholder"
-      },
-      {
         title: "Phishing: qué es y cómo evitarlo",
         category: "Ataques",
         type: "youtube",
         url: "https://youtu.be/6_L84s6Jn4s",
-        thumbnailUrl: "https://i.ytimg.com/vi/6_L84s6Jn4s/maxresdefault.jpg",
+        thumbnailUrl: "phishing-cover.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/6_L84s6Jn4s/hqdefault.jpg",
         badge: "Nuevo"
       },
