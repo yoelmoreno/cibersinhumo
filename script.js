@@ -114,7 +114,7 @@ const learningRoutes = {
         category: "Ataques",
         type: "youtube",
         url: "https://youtu.be/6_L84s6Jn4s",
-        thumbnailUrl: "phishing-cover.jpg",
+        thumbnailUrl: "phishing-cover.jpg?v=2",
         thumbnailFallback: "https://i.ytimg.com/vi/6_L84s6Jn4s/hqdefault.jpg",
         badge: "Nuevo"
       },
