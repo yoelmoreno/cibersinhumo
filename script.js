@@ -119,6 +119,15 @@ const learningRoutes = {
         badge: "Nuevo"
       },
       {
+        title: "Troyanos: qué son y cómo evitarlos",
+        category: "Ataques",
+        type: "youtube",
+        url: "https://youtu.be/KnIAbzji1EM",
+        thumbnailUrl: "troyano-cover.jpg?v=1",
+        thumbnailFallback: "https://i.ytimg.com/vi/KnIAbzji1EM/hqdefault.jpg",
+        badge: "Nuevo"
+      },
+      {
         title: "Contraseñas seguras sin complicarte",
         category: "Privacidad",
         type: "placeholder"
