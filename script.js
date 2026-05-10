@@ -128,6 +128,26 @@ const learningRoutes = {
         badge: "Nuevo"
       },
       {
+        title: "Spyware: cuando te espían sin que lo sepas",
+        category: "Ataques",
+        type: "placeholder"
+      },
+      {
+        title: "DDoS: ataques que tumban servicios",
+        category: "Ataques",
+        type: "placeholder"
+      },
+      {
+        title: "MITM: el ataque del intermediario",
+        category: "Ataques",
+        type: "placeholder"
+      },
+      {
+        title: "Ransomware: cuando secuestran tus archivos",
+        category: "Ataques",
+        type: "placeholder"
+      },
+      {
         title: "Contraseñas seguras sin complicarte",
         category: "Privacidad",
         type: "placeholder"
