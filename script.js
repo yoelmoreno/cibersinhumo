@@ -137,6 +137,11 @@ const learningRoutes = {
         badge: "Nuevo"
       },
       {
+        title: "Spyware: keyloggers y robo de teclas",
+        category: "Ataques",
+        type: "placeholder"
+      },
+      {
         title: "DDoS: ataques que tumban servicios",
         category: "Ataques",
         type: "placeholder"
