@@ -107,7 +107,14 @@ const learningRoutes = {
         url: "https://www.youtube.com/watch?v=lEinvhz9fLc&list=PLje9tFGVK-hBtHHm_V-BXeegZdTTVCCP5&index=2",
         thumbnailUrl: "https://i.ytimg.com/vi/lEinvhz9fLc/maxresdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/lEinvhz9fLc/hqdefault.jpg",
-        badge: "Nuevo"
+        badge: "Nuevo",
+        description: "Presentación del canal, enfoque de la web y primeros conceptos de ciberseguridad sin humo.",
+        resources: [
+          {
+            label: "Presentación PDF",
+            url: "recursos/presentacion-ciberseguridad-intro.pdf"
+          }
+        ]
       },
       {
         title: "Phishing: qué es y cómo evitarlo",
@@ -121,7 +128,7 @@ const learningRoutes = {
         resources: [
           {
             label: "MADPhisher",
-            url: "https://github.com/Ignitetch/MadPhisher"
+            url: "https://github.com/SajidIbnNayeem/MadPhisher/blob/main/MadPhisher.sh"
           },
           {
             label: "Ejemplos Malwarebytes",
