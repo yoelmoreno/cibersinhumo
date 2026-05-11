@@ -6,7 +6,12 @@ window.addEventListener("load", () => {
   const activityCount = document.getElementById("activity-count");
   const threatSource = document.getElementById("threat-source");
 
-  const NEWS_URL = "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/TheHackersNews";
+  const feedSources = [
+    { name: "The Hacker News", rss: "https://feeds.feedburner.com/TheHackersNews" },
+    { name: "BleepingComputer", rss: "https://www.bleepingcomputer.com/feed/" },
+    { name: "KrebsOnSecurity", rss: "https://krebsonsecurity.com/feed/" },
+    { name: "SecurityWeek", rss: "https://www.securityweek.com/feed/" }
+  ];
 
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -365,10 +370,40 @@ window.addEventListener("load", () => {
     return new Date(fecha).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
   }
 
+  function normalizeFeedItem(item, sourceName) {
+    return {
+      title: item.title || "Amenaza detectada en fuente abierta",
+      link: item.link || "#",
+      pubDate: item.pubDate || item.published || item.created || new Date().toISOString(),
+      source: sourceName
+    };
+  }
+
+  async function fetchFeed(source) {
+    const url = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.rss)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!Array.isArray(data.items)) return [];
+    return data.items.slice(0, 8).map((item) => normalizeFeedItem(item, source.name));
+  }
+
+  function mergeFeedItems(feedGroups) {
+    const seen = new Set();
+    return feedGroups
+      .flat()
+      .filter((item) => {
+        const key = item.title.toLowerCase().replace(/\s+/g, " ").trim();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  }
+
   function renderNews(items) {
     if (!noticiasContenedor) return;
     noticiasContenedor.innerHTML = "";
-    items.slice(0, 7).forEach((item, index) => {
+    items.slice(0, 9).forEach((item, index) => {
       const type = classifyThreat(item.title);
       const location = inferLocation(item.title, index);
       const div = document.createElement("div");
@@ -377,7 +412,7 @@ window.addEventListener("load", () => {
         <div class="burbuja-tag ${type}">${attackLabels[type]}</div>
         <p class="burbuja-texto">${item.title}</p>
         <div class="burbuja-meta">
-          <span class="burbuja-pais">${location.name}</span>
+          <span class="burbuja-pais">${item.source || location.name}</span>
           <span class="burbuja-tiempo">${item.pubDate ? tiempoRelativo(new Date(item.pubDate)) : formatearFechaNoticia(new Date())}</span>
         </div>
         <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="burbuja-link">Fuente original →</a>
@@ -387,32 +422,34 @@ window.addEventListener("load", () => {
   }
 
   async function loadThreatFeed() {
-    if (threatSource) threatSource.textContent = "conectando feed...";
+    if (threatSource) threatSource.textContent = "conectando fuentes...";
     try {
-      const res = await fetch(NEWS_URL);
-      const data = await res.json();
-      const items = Array.isArray(data.items) ? data.items.slice(0, 12) : [];
+      const feedGroups = await Promise.allSettled(feedSources.map(fetchFeed));
+      const items = mergeFeedItems(feedGroups
+        .filter((result) => result.status === "fulfilled")
+        .map((result) => result.value)
+      );
       if (!items.length) throw new Error("Feed vacío");
 
-      newsEvents = items.map((item, index) => {
+      newsEvents = items.slice(0, 24).map((item, index) => {
         const type = classifyThreat(item.title);
         const to = inferLocation(item.title, index);
         const from = locations[(index * 5 + 3) % locations.length];
-        return { type, from, to, title: item.title, link: item.link };
+        return { type, from, to, title: item.title, link: item.link, source: item.source };
       });
 
       renderNews(items);
       if (activityCount) activityCount.textContent = String(newsEvents.length);
-      if (threatSource) threatSource.textContent = "feed real + visualización estimada";
-      newsEvents.slice(0, 8).forEach((event) => createAttack(event));
+      if (threatSource) threatSource.textContent = `${feedSources.length} fuentes abiertas + visualización estimada`;
+      newsEvents.slice(0, 12).forEach((event) => createAttack(event));
     } catch (error) {
       console.error("Error cargando feed de amenazas:", error);
       if (threatSource) threatSource.textContent = "modo visual estimado";
       if (activityCount) activityCount.textContent = "sim";
       if (noticiasContenedor) {
         renderNews([
-          { title: "Campañas recientes de malware y phishing detectadas en fuentes abiertas", link: "https://thehackernews.com", pubDate: new Date().toISOString() },
-          { title: "Explotación de vulnerabilidades críticas sigue siendo una vía común de ataque", link: "https://thehackernews.com", pubDate: new Date().toISOString() }
+          { title: "Campañas recientes de malware y phishing detectadas en fuentes abiertas", link: "https://thehackernews.com", pubDate: new Date().toISOString(), source: "The Hacker News" },
+          { title: "Explotación de vulnerabilidades críticas sigue siendo una vía común de ataque", link: "https://www.securityweek.com", pubDate: new Date().toISOString(), source: "SecurityWeek" }
         ]);
       }
     }
