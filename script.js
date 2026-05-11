@@ -128,9 +128,13 @@ const learningRoutes = {
         badge: "Nuevo"
       },
       {
-        title: "Spyware: cuando te espían sin que lo sepas",
+        title: "Spyware: acceso a cámaras y cómo evitarlo",
         category: "Ataques",
-        type: "placeholder"
+        type: "youtube",
+        url: "https://youtu.be/0Tlr-gDakCs",
+        thumbnailUrl: "spyware-cover.jpg?v=1",
+        thumbnailFallback: "https://i.ytimg.com/vi/0Tlr-gDakCs/hqdefault.jpg",
+        badge: "Nuevo"
       },
       {
         title: "DDoS: ataques que tumban servicios",
