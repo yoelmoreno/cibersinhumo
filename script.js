@@ -168,7 +168,7 @@ const learningRoutes = {
         resources: [
           {
             label: "HackCCTV",
-            url: "https://github.com/HackingIntoYourHeart/awesome-hacking"
+            url: "https://github.com/mohammadmahdi-termux/hackCCTV"
           },
           {
             label: "Diapositivas PDF",
