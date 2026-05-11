@@ -116,7 +116,17 @@ const learningRoutes = {
         url: "https://youtu.be/6_L84s6Jn4s",
         thumbnailUrl: "phishing-cover.jpg?v=2",
         thumbnailFallback: "https://i.ytimg.com/vi/6_L84s6Jn4s/hqdefault.jpg",
-        badge: "Nuevo"
+        badge: "Nuevo",
+        resources: [
+          {
+            label: "MADPhisher",
+            url: "https://github.com/Ignitetch/MadPhisher"
+          },
+          {
+            label: "Ejemplos Malwarebytes",
+            url: "https://www.malwarebytes.com/es/cybersecurity/basics/phishing-email"
+          }
+        ]
       },
       {
         title: "Troyanos: qué son y cómo evitarlos",
@@ -241,6 +251,21 @@ function videoMedia(video) {
   return `<div class="video-placeholder"><span>Próximamente</span></div>`;
 }
 
+function videoResources(video) {
+  if (!video.resources || !video.resources.length) return "";
+
+  return `
+    <div class="video-resources" aria-label="Recursos del vídeo">
+      <span class="video-resources-label">Recursos</span>
+      <div class="video-resource-links">
+        ${video.resources.map((resource) => `
+          <a href="${resource.url}" target="_blank" rel="noopener noreferrer">${resource.label}</a>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
 function renderRouteVideos() {
   if (!activeRoute || !routeVideoGrid) return;
 
@@ -256,6 +281,7 @@ function renderRouteVideos() {
       <div class="video-hover-info">
         <span class="video-category">${video.category}</span>
         <h3 class="video-title">${video.url ? `<a href="${video.url}" target="_blank" rel="noopener noreferrer">${video.title}</a>` : video.title}</h3>
+        ${videoResources(video)}
       </div>
     </article>
   `).join("") : `<div class="video-empty">Todavía no hay vídeos en esta categoría.</div>`;
