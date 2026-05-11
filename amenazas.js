@@ -2,425 +2,445 @@ window.addEventListener("load", () => {
   const canvas = document.getElementById("globo");
   const ctx = canvas.getContext("2d");
   const wrapper = canvas.parentElement;
+  const noticiasContenedor = document.getElementById("noticias-burbujas");
+  const activityCount = document.getElementById("activity-count");
+  const threatSource = document.getElementById("threat-source");
+
+  const NEWS_URL = "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/TheHackersNews";
 
   function resize() {
-    canvas.width = wrapper.clientWidth;
-    canvas.height = wrapper.clientHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(wrapper.clientWidth * dpr);
+    canvas.height = Math.floor(wrapper.clientHeight * dpr);
+    canvas.style.width = `${wrapper.clientWidth}px`;
+    canvas.style.height = `${wrapper.clientHeight}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   resize();
   window.addEventListener("resize", resize);
 
-  const getR = () => Math.min(canvas.width, canvas.height) * 0.42;
-  let rotX = 0, rotY = 0;
-  let dragging = false, lastX, lastY, velY = 0.002;
+  const width = () => wrapper.clientWidth;
+  const height = () => wrapper.clientHeight;
+  const getR = () => Math.min(width(), height()) * 0.41;
+  let rotX = -0.12;
+  let rotY = 0.45;
+  let dragging = false;
+  let lastX = 0;
+  let lastY = 0;
+  let velY = 0.0015;
   let geoData = null;
+  let attacks = [];
+  let newsEvents = [];
+  let liveIndex = 0;
 
-  canvas.addEventListener("pointerdown", e => {
-    dragging = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
-    velY = 0;
-    if (canvas.setPointerCapture) {
-      canvas.setPointerCapture(e.pointerId);
-    }
-  });
+  const locations = [
+    { name: "España", lat: 40.4, lon: -3.7, aliases: ["spain", "spanish", "españa"] },
+    { name: "EE. UU.", lat: 37.0, lon: -95.7, aliases: ["u.s.", "us ", "usa", "america", "american", "united states"] },
+    { name: "Reino Unido", lat: 55.3, lon: -3.4, aliases: ["uk", "britain", "british", "united kingdom"] },
+    { name: "Alemania", lat: 51.1, lon: 10.4, aliases: ["germany", "german"] },
+    { name: "Francia", lat: 46.2, lon: 2.2, aliases: ["france", "french"] },
+    { name: "Italia", lat: 41.8, lon: 12.5, aliases: ["italy", "italian"] },
+    { name: "Rusia", lat: 55.7, lon: 37.6, aliases: ["russia", "russian"] },
+    { name: "China", lat: 35.8, lon: 104.1, aliases: ["china", "chinese"] },
+    { name: "Japón", lat: 36.2, lon: 138.2, aliases: ["japan", "japanese"] },
+    { name: "Corea", lat: 37.0, lon: 127.0, aliases: ["korea", "korean"] },
+    { name: "India", lat: 20.5, lon: 78.9, aliases: ["india", "indian"] },
+    { name: "Brasil", lat: -14.2, lon: -51.9, aliases: ["brazil", "brazilian"] },
+    { name: "México", lat: 23.6, lon: -102.5, aliases: ["mexico", "mexican"] },
+    { name: "Canadá", lat: 56.1, lon: -106.3, aliases: ["canada", "canadian"] },
+    { name: "Australia", lat: -25.2, lon: 133.7, aliases: ["australia", "australian"] },
+    { name: "Singapur", lat: 1.0, lon: 104.0, aliases: ["singapore"] },
+    { name: "Irán", lat: 35.0, lon: 51.0, aliases: ["iran", "iranian"] },
+    { name: "Ucrania", lat: 48.0, lon: 31.0, aliases: ["ukraine", "ukrainian"] },
+    { name: "Oriente Medio", lat: 25.0, lon: 45.0, aliases: ["middle east", "saudi", "qatar", "uae"] },
+    { name: "África", lat: 1.0, lon: 20.0, aliases: ["africa", "african"] }
+  ];
 
-  canvas.addEventListener("pointermove", e => {
-    if (!dragging) return;
-    e.preventDefault();
-    velY = (e.clientX - lastX) * 0.005;
-    rotY += velY;
-    rotX += (e.clientY - lastY) * 0.005;
-    rotX = Math.max(-Math.PI/2.5, Math.min(Math.PI/2.5, rotX));
-    lastX = e.clientX; lastY = e.clientY;
-  });
+  const attackColors = {
+    ransomware: "#ff4444",
+    phishing: "#ff9900",
+    spyware: "#b6ff00",
+    malware: "#00ff88",
+    ddos: "#00aaff",
+    exploit: "#b56cff"
+  };
 
-  function stopDrag(e) {
-    dragging = false;
-    if (e && canvas.hasPointerCapture && canvas.hasPointerCapture(e.pointerId)) {
-      canvas.releasePointerCapture(e.pointerId);
-    }
-  }
-
-  canvas.addEventListener("pointerup", stopDrag);
-  canvas.addEventListener("pointercancel", stopDrag);
-  canvas.addEventListener("pointerleave", stopDrag);
-
-  canvas.addEventListener("touchstart", e => {
-    if (!e.touches.length) return;
-    e.preventDefault();
-    dragging = true;
-    lastX = e.touches[0].clientX;
-    lastY = e.touches[0].clientY;
-    velY = 0;
-  }, { passive: false });
-
-  canvas.addEventListener("touchmove", e => {
-    if (!dragging || !e.touches.length) return;
-    e.preventDefault();
-    const touch = e.touches[0];
-    velY = (touch.clientX - lastX) * 0.005;
-    rotY += velY;
-    rotX += (touch.clientY - lastY) * 0.005;
-    rotX = Math.max(-Math.PI/2.5, Math.min(Math.PI/2.5, rotX));
-    lastX = touch.clientX;
-    lastY = touch.clientY;
-  }, { passive: false });
-
-  canvas.addEventListener("touchend", () => dragging = false);
-  canvas.addEventListener("touchcancel", () => dragging = false);
+  const attackLabels = {
+    ransomware: "Ransomware",
+    phishing: "Phishing",
+    spyware: "Spyware",
+    malware: "Malware",
+    ddos: "DDoS",
+    exploit: "Exploit"
+  };
 
   function latLonTo3D(lat, lon, r) {
-      const phi = (90 - lat) * Math.PI / 180;
-      const theta = (lon + 180) * Math.PI / 180;
-      return {
-        x: -r * Math.sin(phi) * Math.cos(theta),
-        y:  r * Math.cos(phi),
-        z:  r * Math.sin(phi) * Math.sin(theta)
-      };
-    
-  }
-
-  function project(p, r) {
-    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-  
-    // Primero rotar en Y (longitud)
-    const x1 =  p.x * cosY - p.z * sinY;
-    const z1 =  p.x * sinY + p.z * cosY;
-  
-    // Luego rotar en X (latitud)
-    const y2 =  p.y * cosX + z1 * sinX;
-    const z2 = -p.y * sinX + z1 * cosX;
-  
+    const phi = (90 - lat) * Math.PI / 180;
+    const theta = (lon + 180) * Math.PI / 180;
     return {
-      x: canvas.width  / 2 + x1,
-      y: canvas.height / 2 - y2,
-      z: z2,
-      visible: z2 > 0
+      x: -r * Math.sin(phi) * Math.cos(theta),
+      y: r * Math.cos(phi),
+      z: r * Math.sin(phi) * Math.sin(theta)
     };
   }
-  
+
+  function project(p) {
+    const cosX = Math.cos(rotX);
+    const sinX = Math.sin(rotX);
+    const cosY = Math.cos(rotY);
+    const sinY = Math.sin(rotY);
+    const x1 = p.x * cosY - p.z * sinY;
+    const z1 = p.x * sinY + p.z * cosY;
+    const y2 = p.y * cosX + z1 * sinX;
+    const z2 = -p.y * sinX + z1 * cosX;
+    return {
+      x: width() / 2 + x1,
+      y: height() / 2 - y2,
+      z: z2,
+      visible: z2 > -getR() * 0.08
+    };
+  }
 
   function drawPolygon(coords, r) {
     ctx.beginPath();
     let started = false;
-    for (let i = 0; i < coords.length; i++) {
-      const p3d = latLonTo3D(coords[i][1], coords[i][0], r * 1.001);
-      const p = project(p3d, r);
-      if (!p.visible) { started = false; continue; }
-      if (!started) { ctx.moveTo(p.x, p.y); started = true; }
-      else ctx.lineTo(p.x, p.y);
-    }
-    ctx.strokeStyle = "rgba(0,255,136,0.35)";
-    ctx.lineWidth = 0.6;
+    coords.forEach((coord) => {
+      const p = project(latLonTo3D(coord[1], coord[0], r * 1.002));
+      if (!p.visible) {
+        started = false;
+        return;
+      }
+      if (!started) {
+        ctx.moveTo(p.x, p.y);
+        started = true;
+      } else {
+        ctx.lineTo(p.x, p.y);
+      }
+    });
+    ctx.strokeStyle = "rgba(0,255,136,0.28)";
+    ctx.lineWidth = 0.55;
     ctx.stroke();
-    ctx.fillStyle = "rgba(0,255,136,0.04)";
+    ctx.fillStyle = "rgba(0,255,136,0.025)";
     ctx.fill();
   }
 
   function drawGeoJSON(r) {
     if (!geoData) return;
-    geoData.features.forEach(feature => {
+    geoData.features.forEach((feature) => {
       const geom = feature.geometry;
       if (!geom) return;
       if (geom.type === "Polygon") {
-        geom.coordinates.forEach(ring => drawPolygon(ring, r));
+        geom.coordinates.forEach((ring) => drawPolygon(ring, r));
       } else if (geom.type === "MultiPolygon") {
-        geom.coordinates.forEach(poly => poly.forEach(ring => drawPolygon(ring, r)));
+        geom.coordinates.forEach((poly) => poly.forEach((ring) => drawPolygon(ring, r)));
       }
     });
   }
 
-  const countries = [
-    { lat: 40.4,  lon: -3.7   },
-    { lat: 37.0,  lon: -95.7  },
-    { lat: 55.7,  lon: 37.6   },
-    { lat: 35.8,  lon: 104.1  },
-    { lat: 51.1,  lon: 10.4   },
-    { lat: -14.2, lon: -51.9  },
-    { lat: 20.5,  lon: 78.9   },
-    { lat: 55.3,  lon: -3.4   },
-    { lat: 46.2,  lon: 2.2    },
-    { lat: 40.3,  lon: 127.5  },
-    { lat: 36.2,  lon: 138.2  },
-    { lat: -25.2, lon: 133.7  },
-    { lat: 56.1,  lon: -106.3 },
-    { lat: 23.6,  lon: -102.5 },
-    { lat: 41.8,  lon: 12.5   },
-    { lat: 9.0,   lon: 8.6    },
-    { lat: 64.0,  lon: 26.0   },
-    { lat: 60.0,  lon: 10.0   },
-    { lat: 52.0,  lon: 20.0   },
-    { lat: 48.0,  lon: 16.0   },
-    { lat: 40.0,  lon: 22.0   },
-    { lat: 39.0,  lon: 35.0   },
-    { lat: 31.0,  lon: 35.0   },
-    { lat: 24.0,  lon: 45.0   },
-    { lat: 35.0,  lon: 51.0   },
-    { lat: 33.0,  lon: 44.0   },
-    { lat: 1.0,   lon: 38.0   },
-    { lat: -26.0, lon: 28.0   },
-    { lat: 30.0,  lon: 31.0   },
-    { lat: -34.0, lon: -64.0  },
-    { lat: -13.0, lon: -76.0  },
-    { lat: 4.0,   lon: -74.0  },
-    { lat: 14.0,  lon: 101.0  },
-    { lat: 3.0,   lon: 108.0  },
-    { lat: 37.0,  lon: 127.0  },
-    { lat: 1.0,   lon: 104.0  },
-    { lat: 48.0,  lon: 31.0   },
-    { lat: 25.0,  lon: 51.0   },
-    { lat: 15.0,  lon: 32.0   },
-    { lat: -4.0,  lon: 15.0   },
-  ];
+  function classifyThreat(text) {
+    const value = text.toLowerCase();
+    if (/ransom|encrypt|extortion/.test(value)) return "ransomware";
+    if (/phish|credential|login|scam/.test(value)) return "phishing";
+    if (/spy|camera|keylog|surveillance|stalker/.test(value)) return "spyware";
+    if (/ddos|botnet|traffic flood/.test(value)) return "ddos";
+    if (/zero-day|0-day|vulnerability|exploit|cve|patch/.test(value)) return "exploit";
+    return "malware";
+  }
 
-  const attackColors = {
-    ransomware: "#ff4444",
-    phishing:   "#ff9900",
-    malware:    "#00ff88",
-    ddos:       "#00aaff"
-  };
-  const attackTypes = Object.keys(attackColors);
-  let attacks = [];
+  function inferLocation(text, fallbackIndex = 0) {
+    const value = text.toLowerCase();
+    const match = locations.find((loc) => loc.aliases.some((alias) => value.includes(alias)));
+    return match || locations[fallbackIndex % locations.length];
+  }
 
-  function generateAttack() {
-    const from = countries[Math.floor(Math.random() * countries.length)];
-    let to;
-    do { to = countries[Math.floor(Math.random() * countries.length)]; } while (to === from);
+  function createAttack(event = null) {
+    const type = event ? event.type : Object.keys(attackColors)[Math.floor(Math.random() * Object.keys(attackColors).length)];
+    const from = event ? event.from : locations[Math.floor(Math.random() * locations.length)];
+    let to = event ? event.to : locations[Math.floor(Math.random() * locations.length)];
+    if (from === to) {
+      to = locations[(locations.indexOf(from) + 5) % locations.length];
+    }
     attacks.push({
-      from, to,
-      type: attackTypes[Math.floor(Math.random() * attackTypes.length)],
+      from,
+      to,
+      type,
       progress: 0,
-      speed: 0.002 + Math.random() * 0.004
+      speed: 0.003 + Math.random() * 0.003,
+      pulse: 0.6 + Math.random() * 0.8
     });
   }
 
-  for (let i = 0; i < 6000; i++) generateAttack();
-  setInterval(generateAttack, 250);
+  function seedDemoTraffic() {
+    for (let i = 0; i < 38; i++) createAttack();
+  }
+
+  function drawGrid(r) {
+    for (let lat = -80; lat <= 80; lat += 10) {
+      ctx.beginPath();
+      let first = true;
+      for (let lon = -180; lon <= 180; lon += 4) {
+        const p = project(latLonTo3D(lat, lon, r));
+        if (!p.visible) {
+          first = true;
+          continue;
+        }
+        first ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
+        first = false;
+      }
+      ctx.strokeStyle = lat === 0 ? "rgba(0,255,136,0.16)" : "rgba(0,255,136,0.055)";
+      ctx.lineWidth = lat === 0 ? 0.9 : 0.45;
+      ctx.stroke();
+    }
+
+    for (let lon = -180; lon <= 180; lon += 15) {
+      ctx.beginPath();
+      let first = true;
+      for (let lat = -85; lat <= 85; lat += 4) {
+        const p = project(latLonTo3D(lat, lon, r));
+        if (!p.visible) {
+          first = true;
+          continue;
+        }
+        first ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
+        first = false;
+      }
+      ctx.strokeStyle = "rgba(0,255,136,0.05)";
+      ctx.lineWidth = 0.45;
+      ctx.stroke();
+    }
+  }
+
+  function drawAttack(a, r) {
+    a.progress += a.speed;
+    const t = Math.min(a.progress, 1);
+    const fp = project(latLonTo3D(a.from.lat, a.from.lon, r));
+    const tp = project(latLonTo3D(a.to.lat, a.to.lon, r));
+    if (!fp.visible && !tp.visible) return;
+
+    const color = attackColors[a.type] || attackColors.malware;
+    const mx = (fp.x + tp.x) / 2;
+    const my = (fp.y + tp.y) / 2 - r * (0.22 + a.pulse * 0.12);
+    const x = (1 - t) * (1 - t) * fp.x + 2 * (1 - t) * t * mx + t * t * tp.x;
+    const y = (1 - t) * (1 - t) * fp.y + 2 * (1 - t) * t * my + t * t * tp.y;
+
+    ctx.save();
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.moveTo(fp.x, fp.y);
+    ctx.quadraticCurveTo(mx, my, x, y);
+    ctx.strokeStyle = color;
+    ctx.globalAlpha = 0.72 * (1 - t * 0.25);
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(x, y, 3.4 + Math.sin(t * Math.PI) * 2, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.95;
+    ctx.fill();
+
+    if (t > 0.82) {
+      ctx.beginPath();
+      ctx.arc(tp.x, tp.y, 8 + (t - 0.82) * 42, 0, Math.PI * 2);
+      ctx.strokeStyle = color;
+      ctx.globalAlpha = Math.max(0, 1 - t) * 4;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
 
   function drawGlobe() {
     const r = getR();
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
+    const cx = width() / 2;
+    const cy = height() / 2;
+    ctx.clearRect(0, 0, width(), height());
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Clip al círculo del globo — nada sale fuera
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.clip();
 
-    // Glow interior
-    const grad = ctx.createRadialGradient(cx, cy, r * 0.3, cx, cy, r);
-    grad.addColorStop(0, "rgba(0,255,136,0.07)");
-    grad.addColorStop(1, "rgba(0,10,5,0.95)");
+    const grad = ctx.createRadialGradient(cx - r * 0.25, cy - r * 0.25, r * 0.1, cx, cy, r);
+    grad.addColorStop(0, "rgba(0,255,136,0.13)");
+    grad.addColorStop(0.48, "rgba(0,60,34,0.15)");
+    grad.addColorStop(1, "rgba(0,8,5,0.98)");
     ctx.fillStyle = grad;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
-    // Grid
-    for (let i = 0; i <= 100; i++) {
-      const lat = -90 + 10 * i;
-      ctx.beginPath();
-      let first = true;
-      for (let j = 0; j <= 82; j++) {
-        const p = project(latLonTo3D(lat, -180 + 5 * j, r), r);
-        if (!p.visible) { first = true; continue; }
-        first ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
-        first = false;
-      }
-      ctx.strokeStyle = "rgba(0,255,136,0.06)";
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-    }
-    for (let i = 0; i <= 62; i++) {
-      const lon = -180 + 10 * i;
-      ctx.beginPath();
-      let first = true;
-      for (let j = 0; j <= 62; j++) {
-        const p = project(latLonTo3D(-90 + 5 * j, lon, r), r);
-        if (!p.visible) { first = true; continue; }
-        first ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
-        first = false;
-      }
-      ctx.strokeStyle = "rgba(0,255,136,0.06)";
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-    }
-
-    // Países
+    drawGrid(r);
     drawGeoJSON(r);
 
-    // Puntos
-    countries.forEach(c => {
-      const p = project(latLonTo3D(c.lat, c.lon, r), r);
+    locations.forEach((loc) => {
+      const p = project(latLonTo3D(loc.lat, loc.lon, r));
       if (!p.visible) return;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, 5.5, 0, Math.PI * 2);
       ctx.fillStyle = "rgba(0,255,136,0.08)";
       ctx.fill();
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, 2.2, 0, Math.PI * 2);
       ctx.fillStyle = "rgba(0,255,136,0.9)";
       ctx.fill();
     });
 
-    // Ataques
-    attacks = attacks.filter(a => a.progress <= 1);
-    attacks.forEach(a => {
-      a.progress += a.speed;
-      const t = a.progress;
-      const fp = project(latLonTo3D(a.from.lat, a.from.lon, r), r);
-      const tp = project(latLonTo3D(a.to.lat, a.to.lon, r), r);
-      if (!fp.visible || !tp.visible) return;
-      const mx = (fp.x + tp.x) / 2;
-      const my = (fp.y + tp.y) / 2 - r * 0.4;
-      const x = (1-t)*(1-t)*fp.x + 2*(1-t)*t*mx + t*t*tp.x;
-      const y = (1-t)*(1-t)*fp.y + 2*(1-t)*t*my + t*t*tp.y;
-      const color = attackColors[a.type];
-
-      ctx.beginPath();
-      ctx.moveTo(fp.x, fp.y);
-      ctx.quadraticCurveTo(mx, my, x, y);
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 1.2;
-      ctx.globalAlpha = 0.7 * (1 - t * 0.3);
-      ctx.stroke();
-      ctx.globalAlpha = 1;
-
-      ctx.beginPath();
-      ctx.arc(x, y, 3, 0, Math.PI * 2);
-      ctx.fillStyle = color;
-      ctx.globalAlpha = 0.9;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-    });
-
+    attacks = attacks.filter((a) => a.progress <= 1);
+    attacks.forEach((a) => drawAttack(a, r));
     ctx.restore();
 
-    // Borde exterior del globo
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(0,255,136,0.3)";
+    ctx.strokeStyle = "rgba(0,255,136,0.42)";
     ctx.lineWidth = 1.5;
+    ctx.shadowColor = "rgba(0,255,136,0.45)";
+    ctx.shadowBlur = 18;
     ctx.stroke();
+    ctx.shadowBlur = 0;
   }
 
   function animate() {
     if (!dragging) {
       rotY += velY;
-      if (Math.abs(velY) < 0.001) velY = 0.002;
+      if (Math.abs(velY) < 0.001) velY = 0.0015;
     }
     drawGlobe();
     requestAnimationFrame(animate);
   }
 
+  function pointerStart(x, y) {
+    dragging = true;
+    lastX = x;
+    lastY = y;
+    velY = 0;
+  }
+
+  function pointerMove(x, y) {
+    if (!dragging) return;
+    velY = (x - lastX) * 0.005;
+    rotY += velY;
+    rotX += (y - lastY) * 0.005;
+    rotX = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, rotX));
+    lastX = x;
+    lastY = y;
+  }
+
+  canvas.addEventListener("pointerdown", (e) => {
+    pointerStart(e.clientX, e.clientY);
+    canvas.setPointerCapture?.(e.pointerId);
+  });
+  canvas.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    e.preventDefault();
+    pointerMove(e.clientX, e.clientY);
+  });
+  ["pointerup", "pointercancel", "pointerleave"].forEach((eventName) => {
+    canvas.addEventListener(eventName, (e) => {
+      dragging = false;
+      if (e && canvas.hasPointerCapture?.(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
+    });
+  });
+  canvas.addEventListener("touchstart", (e) => {
+    if (!e.touches.length) return;
+    e.preventDefault();
+    pointerStart(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: false });
+  canvas.addEventListener("touchmove", (e) => {
+    if (!e.touches.length) return;
+    e.preventDefault();
+    pointerMove(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: false });
+  canvas.addEventListener("touchend", () => dragging = false);
+  canvas.addEventListener("touchcancel", () => dragging = false);
+
+  function tiempoRelativo(fecha) {
+    const ahora = new Date();
+    const diff = Math.floor((ahora - fecha) / 1000 / 60);
+    if (diff < 60) return `hace ${Math.max(diff, 1)} min`;
+    if (diff < 1440) return `hace ${Math.floor(diff / 60)} h`;
+    return `hace ${Math.floor(diff / 1440)} días`;
+  }
+
+  function formatearFechaNoticia(fecha) {
+    return new Date(fecha).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
+  }
+
+  function renderNews(items) {
+    if (!noticiasContenedor) return;
+    noticiasContenedor.innerHTML = "";
+    items.slice(0, 7).forEach((item, index) => {
+      const type = classifyThreat(item.title);
+      const location = inferLocation(item.title, index);
+      const div = document.createElement("div");
+      div.className = "burbuja clickable";
+      div.innerHTML = `
+        <div class="burbuja-tag ${type}">${attackLabels[type]}</div>
+        <p class="burbuja-texto">${item.title}</p>
+        <div class="burbuja-meta">
+          <span class="burbuja-pais">${location.name}</span>
+          <span class="burbuja-tiempo">${item.pubDate ? tiempoRelativo(new Date(item.pubDate)) : formatearFechaNoticia(new Date())}</span>
+        </div>
+        <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="burbuja-link">Fuente original →</a>
+      `;
+      noticiasContenedor.appendChild(div);
+    });
+  }
+
+  async function loadThreatFeed() {
+    if (threatSource) threatSource.textContent = "conectando feed...";
+    try {
+      const res = await fetch(NEWS_URL);
+      const data = await res.json();
+      const items = Array.isArray(data.items) ? data.items.slice(0, 12) : [];
+      if (!items.length) throw new Error("Feed vacío");
+
+      newsEvents = items.map((item, index) => {
+        const type = classifyThreat(item.title);
+        const to = inferLocation(item.title, index);
+        const from = locations[(index * 5 + 3) % locations.length];
+        return { type, from, to, title: item.title, link: item.link };
+      });
+
+      renderNews(items);
+      if (activityCount) activityCount.textContent = String(newsEvents.length);
+      if (threatSource) threatSource.textContent = "feed real + visualización estimada";
+      newsEvents.slice(0, 8).forEach((event) => createAttack(event));
+    } catch (error) {
+      console.error("Error cargando feed de amenazas:", error);
+      if (threatSource) threatSource.textContent = "modo visual estimado";
+      if (activityCount) activityCount.textContent = "sim";
+      if (noticiasContenedor) {
+        renderNews([
+          { title: "Campañas recientes de malware y phishing detectadas en fuentes abiertas", link: "https://thehackernews.com", pubDate: new Date().toISOString() },
+          { title: "Explotación de vulnerabilidades críticas sigue siendo una vía común de ataque", link: "https://thehackernews.com", pubDate: new Date().toISOString() }
+        ]);
+      }
+    }
+  }
+
+  seedDemoTraffic();
+  setInterval(() => {
+    if (newsEvents.length) {
+      createAttack(newsEvents[liveIndex % newsEvents.length]);
+      liveIndex += 1;
+    } else {
+      createAttack();
+    }
+  }, 700);
+
   fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
-    .then(r => r.json())
-    .then(topology => {
+    .then((r) => r.json())
+    .then((topology) => {
       const script = document.createElement("script");
       script.src = "https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js";
       script.onload = () => {
         geoData = topojson.feature(topology, topology.objects.countries);
-        animate();
       };
       document.head.appendChild(script);
     })
-    .catch(() => animate());
+    .catch((error) => console.error("Error cargando mapa:", error));
 
-
-  // NOTICIAS RSS EN TIEMPO REAL
-async function cargarNoticias() {
-  const rssUrl = "https://feeds.feedburner.com/TheHackersNews";
-  const apiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-
-    if (data.status !== "ok") throw new Error("Error RSS");
-
-    const panel = document.getElementById("noticias-burbujas");
-    panel.innerHTML = "";
-
-    const tipos = ["ransomware", "phishing", "malware", "ddos"];
-    const tiposNombre = ["Ransomware", "Phishing", "Malware", "DDoS"];
-
-    data.items.forEach((item, i) => {
-      const tipo = tipos[i % tipos.length];
-      const nombre = tiposNombre[i % tiposNombre.length];
-      const fecha = new Date(item.pubDate);
-      const hace = tiempoRelativo(fecha);
-
-      const burbuja = document.createElement("div");
-      burbuja.className = "burbuja";
-      burbuja.innerHTML = `
-        <div class="burbuja-tag ${tipo}">${nombre}</div>
-        <p class="burbuja-texto">${item.title}</p>
-        <div class="burbuja-meta">
-          <span class="burbuja-tiempo">${hace}</span>
-        </div>
-        <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="burbuja-link">Leer fuente original →</a>
-      `;
-      panel.appendChild(burbuja);
-    });
-
-  } catch (error) {
-    console.error("Error cargando noticias:", error);
-    // Si falla mantiene las noticias estáticas del HTML
-  }
-}
-
-const noticiasContenedor = document.getElementById("noticias-burbujas");
-const NEWS_URL = "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/TheHackersNews";
-
-function tiempoRelativo(fecha) {
-  const ahora = new Date();
-  const diff = Math.floor((ahora - fecha) / 1000 / 60);
-  if (diff < 60) return `hace ${diff} min`;
-  if (diff < 1440) return `hace ${Math.floor(diff/60)} h`;
-  return `hace ${Math.floor(diff/1440)} días`;
-}
-
-cargarNoticias();
-setInterval(cargarNoticias, 300000);
-
-async function cargarNoticiasReales() {
-  if (!noticiasContenedor) return;
-
-  try {
-    const res = await fetch(NEWS_URL);
-    const data = await res.json();
-
-    noticiasContenedor.innerHTML = "";
-
-    data.items.slice(0, 5).forEach((n) => {
-      const div = document.createElement("div");
-      div.className = "burbuja clickable";
-
-      div.innerHTML = `
-        <div class="burbuja-tag">The Hacker News</div>
-        <p class="burbuja-texto">${n.title}</p>
-        <div class="burbuja-meta">
-          <span class="burbuja-tiempo">${formatearFechaNoticia(n.pubDate)}</span>
-        </div>
-        <a href="${n.link}" target="_blank" rel="noopener noreferrer" class="burbuja-link">Más información →</a>
-      `;
-
-      noticiasContenedor.appendChild(div);
-    });
-  } catch (error) {
-    console.error("Error cargando noticias:", error);
-  }
-}
-
-function formatearFechaNoticia(fecha) {
-  const d = new Date(fecha);
-  return d.toLocaleDateString("es-ES", {
-    day: "numeric",
-    month: "short"
-  });
-}
-
-cargarNoticiasReales();
+  animate();
+  loadThreatFeed();
+  setInterval(loadThreatFeed, 300000);
 });

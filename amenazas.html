@@ -46,6 +46,12 @@
     <div class="globo-wrapper">
       <canvas id="globo"></canvas>
 
+      <div class="threat-hud">
+        <span class="hud-kicker">feed activo</span>
+        <strong><span id="activity-count">...</span> señales</strong>
+        <span id="threat-source">conectando feed...</span>
+      </div>
+
       <div class="globo-legend">
         <div class="legend-item">
           <span class="legend-dot" style="background:#ff4444"></span>
@@ -60,8 +66,16 @@
           <span>Malware</span>
         </div>
         <div class="legend-item">
+          <span class="legend-dot" style="background:#b6ff00"></span>
+          <span>Spyware</span>
+        </div>
+        <div class="legend-item">
           <span class="legend-dot" style="background:#00aaff"></span>
           <span>DDoS</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#b56cff"></span>
+          <span>Exploit</span>
         </div>
       </div>
     </div>
@@ -87,6 +101,6 @@
 </main>
 
 <script src="script.js?v=8"></script>
-<script src="amenazas.js"></script>
+<script src="amenazas.js?v=2"></script>
 </body>
 </html>

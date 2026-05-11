@@ -49,6 +49,28 @@
   overflow: hidden;
 }
 
+.globo-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgba(0, 255, 136, 0.08);
+  border-radius: 18px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.globo-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0,255,136,0.035) 1px, transparent 1px),
+    linear-gradient(rgba(0,255,136,0.026) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(circle at center, rgba(0,0,0,0.8), transparent 72%);
+  pointer-events: none;
+}
+
 #globo {
   position: absolute;
   inset: 0;
@@ -77,6 +99,40 @@
   border: 1px solid rgba(0, 255, 136, 0.09);
   border-radius: 10px;
   backdrop-filter: blur(4px);
+}
+
+.threat-hud {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 210px;
+  padding: 14px 16px;
+  border: 1px solid rgba(0, 255, 136, 0.14);
+  border-radius: 12px;
+  background: rgba(2, 12, 7, 0.66);
+  box-shadow: 0 0 28px rgba(0, 255, 136, 0.07);
+  backdrop-filter: blur(7px);
+}
+
+.hud-kicker,
+.threat-hud span:last-child {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.threat-hud strong {
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .legend-item {
@@ -254,6 +310,18 @@
   border: 1px solid rgba(0, 170, 255, 0.26);
 }
 
+.burbuja-tag.spyware {
+  background: rgba(182, 255, 0, 0.12);
+  color: #c9ff3a;
+  border: 1px solid rgba(182, 255, 0, 0.28);
+}
+
+.burbuja-tag.exploit {
+  background: rgba(181, 108, 255, 0.14);
+  color: #c997ff;
+  border: 1px solid rgba(181, 108, 255, 0.28);
+}
+
 .burbuja-texto {
   font-size: 0.92rem;
   color: var(--text);
@@ -328,6 +396,21 @@
 
   .globo-wrapper {
     min-height: 420px;
+  }
+
+  .threat-hud {
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    min-width: 0;
+  }
+
+  .globo-legend {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .divider {
