@@ -117,6 +117,7 @@ const learningRoutes = {
         thumbnailUrl: "phishing-cover.jpg?v=2",
         thumbnailFallback: "https://i.ytimg.com/vi/6_L84s6Jn4s/hqdefault.jpg",
         badge: "Nuevo",
+        description: "Qué es el phishing, cómo reconocer correos falsos y qué señales revisar antes de hacer clic.",
         resources: [
           {
             label: "MADPhisher",
@@ -135,7 +136,18 @@ const learningRoutes = {
         url: "https://youtu.be/KnIAbzji1EM",
         thumbnailUrl: "troyano-cover.jpg?v=1",
         thumbnailFallback: "https://i.ytimg.com/vi/KnIAbzji1EM/hqdefault.jpg",
-        badge: "Nuevo"
+        badge: "Nuevo",
+        description: "Explicación de qué es un troyano y una demo visual para entender cómo puede ocultarse una amenaza.",
+        resources: [
+          {
+            label: "Diapositivas PDF",
+            url: "recursos/diapositivas-troyanos-ciberseguridad.pdf"
+          },
+          {
+            label: "Demo Pacman",
+            url: "recursos/demo-troyano-pacman.html"
+          }
+        ]
       },
       {
         title: "Spyware: acceso a cámaras y cómo evitarlo",
@@ -144,7 +156,18 @@ const learningRoutes = {
         url: "https://youtu.be/0Tlr-gDakCs",
         thumbnailUrl: "spyware-cover.jpg?v=1",
         thumbnailFallback: "https://i.ytimg.com/vi/0Tlr-gDakCs/hqdefault.jpg",
-        badge: "Nuevo"
+        badge: "Nuevo",
+        description: "Cómo el spyware puede abusar del acceso a cámaras y qué medidas tomar para reducir riesgos.",
+        resources: [
+          {
+            label: "HackCCTV",
+            url: "https://github.com/HackingIntoYourHeart/awesome-hacking"
+          },
+          {
+            label: "Diapositivas PDF",
+            url: "recursos/diapositivas-spyware-camaras.pdf"
+          }
+        ]
       },
       {
         title: "Spyware: keyloggers y robo de teclas",
@@ -281,6 +304,7 @@ function renderRouteVideos() {
       <div class="video-hover-info">
         <span class="video-category">${video.category}</span>
         <h3 class="video-title">${video.url ? `<a href="${video.url}" target="_blank" rel="noopener noreferrer">${video.title}</a>` : video.title}</h3>
+        ${video.description ? `<p class="video-desc">${video.description}</p>` : ""}
         ${videoResources(video)}
       </div>
     </article>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>PACMAN GRATIS</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: #00ff66;
+      font-family: Consolas, monospace;
+      overflow: hidden;
+    }
+
+    .pantalla {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      color: red;
+      font-size: 55px;
+      text-shadow: 0 0 20px red;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: #00ff66;
+      font-size: 28px;
+      text-shadow: 0 0 15px #00ff66;
+    }
+
+    .terminal {
+      margin-top: 30px;
+      width: 80%;
+      max-width: 900px;
+      background: #050505;
+      border: 2px solid #00ff66;
+      padding: 20px;
+      text-align: left;
+      box-shadow: 0 0 25px #00ff66;
+      font-size: 18px;
+      min-height: 180px;
+    }
+
+    .linea {
+      margin: 8px 0;
+    }
+
+    .rojo {
+      color: red;
+    }
+
+    .amarillo {
+      color: yellow;
+    }
+
+    .boton {
+      margin-top: 30px;
+      padding: 15px 25px;
+      background: red;
+      color: white;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 8px;
+      box-shadow: 0 0 15px red;
+    }
+
+    .boton:hover {
+      background: darkred;
+    }
+
+    .aviso {
+      margin-top: 25px;
+      color: white;
+      font-size: 20px;
+      max-width: 800px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="pantalla">
+    <h1>⚠ ALERTA ⚠</h1>
+    <h2>Simulación de troyano activada</h2>
+
+    <div class="terminal" id="terminal">
+      <div class="linea">Cargando PACMAN GRATIS...</div>
+    </div>
+
+    <p class="aviso">
+      Esto es una simulación educativa. No se ha infectado el equipo ni se ha tocado ningún archivo.
+    </p>
+
+    <button class="boton" onclick="cerrarSimulacion()">Cerrar simulación</button>
+  </div>
+
+  <script>
+    const terminal = document.getElementById("terminal");
+
+    const lineas = [
+      "Ejecutando archivo: PACMAN_GRATIS...",
+      "Analizando comportamiento del programa...",
+      "Detectando permisos sospechosos...",
+      "Conexión externa simulada...",
+      "Acceso remoto simulado...",
+      "Robo de datos simulado...",
+      "Instalación oculta simulada...",
+      "Resultado: esto NO es un virus real.",
+      "Explicación: un troyano se disfraza de programa legítimo."
+    ];
+
+    let i = 0;
+
+    function escribirLinea() {
+      if (i < lineas.length) {
+        const nuevaLinea = document.createElement("div");
+        nuevaLinea.classList.add("linea");
+
+        if (i >= 2 && i <= 6) {
+          nuevaLinea.classList.add("rojo");
+        }
+
+        if (i === 8) {
+          nuevaLinea.classList.add("amarillo");
+        }
+
+        nuevaLinea.textContent = "> " + lineas[i];
+        terminal.appendChild(nuevaLinea);
+        i++;
+        setTimeout(escribirLinea, 900);
+      }
+    }
+
+    setTimeout(escribirLinea, 1000);
+
+    function cerrarSimulacion() {
+      document.body.innerHTML = `
+        <div style="
+          height: 100vh;
+          background: black;
+          color: white;
+          font-family: Consolas, monospace;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+        ">
+          <h1 style="color:#00ff66;">SIMULACIÓN FINALIZADA</h1>
+          <p style="font-size:22px; max-width:800px;">
+            Un troyano no suele parecer peligroso.  
+            Normalmente se disfraza de juego, crack, factura, actualización o archivo normal.
+          </p>
+        </div>
+      `;
+    }
+  </script>
+
+</body>
+</html>
