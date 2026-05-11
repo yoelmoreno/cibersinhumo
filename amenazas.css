@@ -6,7 +6,10 @@
 }
 
 .amenazas-header {
-  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
 }
 
 .amenazas-title {
@@ -26,12 +29,14 @@
 
 .amenazas-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 1px 380px;
-  min-height: 72vh;
+  grid-template-columns: minmax(0, 1.28fr) 1px 360px;
+  min-height: 76vh;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 8px;
   overflow: hidden;
-  background: rgba(2, 12, 7, 0.72);
+  background:
+    radial-gradient(circle at 36% 44%, rgba(0, 255, 136, 0.06), transparent 38%),
+    rgba(2, 12, 7, 0.72);
   backdrop-filter: blur(6px);
   box-shadow:
     0 0 0 1px rgba(0, 255, 136, 0.04),
@@ -40,7 +45,7 @@
 
 .globo-wrapper {
   position: relative;
-  min-height: 520px;
+  min-height: 590px;
   touch-action: none;
   overscroll-behavior: contain;
   background:
@@ -160,11 +165,13 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  background: rgba(1, 10, 6, 0.72);
+  background:
+    linear-gradient(180deg, rgba(0, 255, 136, 0.035), transparent 32%),
+    rgba(1, 10, 6, 0.82);
 }
 
 .noticias-panel-header {
-  padding: 22px 22px 16px;
+  padding: 20px 20px 14px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -200,14 +207,13 @@
 
 .noticias-burbujas {
   display: flex;
-  flex-direction: column;   /* 🔥 vuelve a vertical */
-  gap: 12px;
-
-  max-height: 420px;        /* 🔥 limita altura */
-  overflow-y: auto;         /* 🔥 activa scroll vertical */
+  flex-direction: column;
+  gap: 10px;
+  max-height: 520px;
+  overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  padding: 10px;
+  padding: 12px;
 }
 
 .noticias-burbujas::-webkit-scrollbar {
@@ -232,14 +238,14 @@
 }
 
 .burbuja {
-  background: rgba(5, 18, 11, 0.82);
-  border: 1px solid var(--border);
-  border-radius: 14px 14px 14px 4px;
-  padding: 15px;
+  background: rgba(2, 12, 7, 0.72);
+  border: 1px solid rgba(0, 255, 136, 0.1);
+  border-radius: 6px;
+  padding: 13px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-width: 300px;
+  max-width: none;
   flex: 0 0 auto;
   scroll-snap-align: start;
   transition:
@@ -254,9 +260,9 @@
 }
 
 .burbuja:hover {
-  transform: translateY(-2px);
+  transform: translateX(2px);
   border-color: var(--green-mid);
-  background: rgba(8, 24, 15, 0.9);
+  background: rgba(4, 18, 10, 0.92);
 }
 
 .burbuja::before {
@@ -278,12 +284,12 @@
 .burbuja-tag {
   display: inline-block;
   width: fit-content;
-  padding: 3px 8px;
+  padding: 3px 7px;
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 .burbuja-tag.ransomware {
@@ -323,9 +329,9 @@
 }
 
 .burbuja-texto {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   color: var(--text);
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
 .burbuja-meta {

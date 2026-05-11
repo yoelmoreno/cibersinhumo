@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="mantislabs-icon.png">
   <link rel="apple-touch-icon" href="mantislabs-icon.png">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="amenazas.css">
+  <link rel="stylesheet" href="amenazas.css?v=2">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -34,15 +34,14 @@
 
 <main class="amenazas-main">
   <div class="amenazas-header">
-    <span class="section-tag">en tiempo real</span>
+    <span class="section-tag">fuentes abiertas</span>
     <h1 class="amenazas-title">Mapa de <span class="hero-accent">Amenazas</span></h1>
     <p class="amenazas-desc">
-      Visualización de ataques y campañas recientes. Explora el mapa y consulta ejemplos reales.
+      Visualización estimada basada en noticias y señales públicas de ciberseguridad.
     </p>
   </div>
 
   <div class="amenazas-layout">
-
     <div class="globo-wrapper">
       <canvas id="globo"></canvas>
 
@@ -84,20 +83,20 @@
 
     <div class="noticias-panel">
       <div class="noticias-panel-header">
-        <span class="section-tag">últimas amenazas</span>
-        <h3 class="noticias-title">Actividad reciente</h3>
-        <p class="noticias-subtitle">Ejemplos reales de ataques y campañas activas.</p>
+        <span class="section-tag">feed abierto</span>
+        <h3 class="noticias-title">Señales recientes</h3>
+        <p class="noticias-subtitle">Noticias clasificadas por tipo de amenaza para alimentar el mapa.</p>
       </div>
 
-      <div class="noticias-burbujas" id="noticias-burbujas">
-      </div>
+      <div class="noticias-burbujas" id="noticias-burbujas"></div>
 
-  <div class="noticias-ver-mas">
-  <a href="https://thehackernews.com" target="_blank" class="btn-ver-mas">
-    Ver más noticias →
-  </a>
-</div>
-        
+      <div class="noticias-ver-mas">
+        <a href="https://thehackernews.com" target="_blank" rel="noopener noreferrer" class="btn-ver-mas">
+          Ver más noticias →
+        </a>
+      </div>
+    </div>
+  </div>
 </main>
 
 <script src="script.js?v=8"></script>
