@@ -179,8 +179,12 @@ const learningRoutes = {
       {
         title: "Spyware: keyloggers y robo de teclas",
         category: "Ataques",
-        type: "placeholder",
-        description: "Próximo vídeo sobre cómo funcionan los keyloggers y por qué pueden robar lo que escribes.",
+        type: "youtube",
+        url: "https://youtu.be/dY1H9PCTYyM",
+        thumbnailUrl: "keylogger-cover.jpg?v=1",
+        thumbnailFallback: "https://i.ytimg.com/vi/dY1H9PCTYyM/hqdefault.jpg",
+        badge: "Nuevo",
+        description: "Cómo funcionan los keyloggers, qué pueden registrar y qué señales ayudan a protegerte.",
         resources: [
           {
             label: "Diapositivas PDF",
