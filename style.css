@@ -1331,6 +1331,10 @@ select {
   transform: scale(1.055);
 }
 
+.path-card:nth-child(1) .path-illustration img {
+  object-position: center 22%;
+}
+
 .path-num {
   position: absolute;
   top: 18px;
