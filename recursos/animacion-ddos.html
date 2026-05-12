@@ -1,0 +1,296 @@
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0A0E1A; }
+canvas { display: block; }
+#wrap { background: #0A0E1A; width: 100%; border-radius: 12px; overflow: hidden; }
+#controls { display: flex; gap: 12px; align-items: center; justify-content: center; padding: 10px 0 14px; background: #0A0E1A; }
+button { background: #1F2937; color: #F9FAFB; border: 1px solid #374151; border-radius: 8px; padding: 8px 20px; font-size: 13px; cursor: pointer; }
+button:hover { background: #374151; }
+#info { color: #6B7280; font-size: 12px; font-family: monospace; min-width: 180px; text-align: center; }
+</style>
+
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="controls">
+    <button id="btn">&#9654; Reproducir</button>
+    <span id="info">Escena 1 de 3</span>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = 680, H = 360;
+canvas.width = W; canvas.height = H;
+
+const C = {
+  bg: '#0A0E1A', dark2: '#111827', dark3: '#1F2937',
+  red: '#EF4444', green: '#10B981', blue: '#3B82F6',
+  yellow: '#F59E0B', orange: '#F97316', purple: '#8B5CF6',
+  white: '#FFFFFF', gray: '#6B7280', light: '#D1D5DB'
+};
+
+let scene = 0, sceneT = 0, playing = false, animId = null;
+const SCENE_DUR = [200, 220, 200];
+
+function easeOut(t) { return 1 - Math.pow(1 - Math.max(0, Math.min(1, t)), 3); }
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+function roundRect(x, y, w, h, r, fill, stroke, lw) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw || 1.5; ctx.stroke(); }
+}
+
+function drawServer(x, y, w, h, color, label, alpha) {
+  ctx.globalAlpha = alpha;
+  roundRect(x, y, w, h, 6, '#111827', color, 2);
+  for (let i = 0; i < 3; i++) {
+    roundRect(x + 8, y + 10 + i * 18, w - 16, 10, 2, '#1F2937', color, 0.8);
+    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x + w - 18, y + 15 + i * 18, 3, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.fillStyle = color; ctx.font = 'bold 11px monospace'; ctx.textAlign = 'center';
+  ctx.fillText(label, x + w / 2, y + h + 14);
+  ctx.globalAlpha = 1;
+}
+
+function drawPC(x, y, color, label, alpha) {
+  ctx.globalAlpha = alpha;
+  roundRect(x - 20, y, 40, 28, 3, '#1F2937', color, 1.5);
+  ctx.fillStyle = '#0D1117'; ctx.fillRect(x - 16, y + 4, 32, 18);
+  ctx.fillStyle = '#374151'; ctx.fillRect(x - 10, y + 28, 20, 5);
+  ctx.fillRect(x - 14, y + 32, 28, 3);
+  ctx.fillStyle = color; ctx.font = '10px monospace'; ctx.textAlign = 'center';
+  ctx.fillText(label, x, y + 44);
+  ctx.globalAlpha = 1;
+}
+
+function drawPacket(x, y, size, color, alpha) {
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+// ── Scene 0: The attacker builds a botnet ──────────────────────────
+const botPositions = [
+  [80, 80], [180, 60], [280, 90], [380, 65], [480, 85], [580, 70],
+  [60, 180], [160, 200], [260, 170], [360, 195], [460, 175], [560, 190],
+  [100, 280], [200, 260], [300, 285], [400, 270], [500, 255], [600, 280]
+];
+
+function drawScene0(st) {
+  const prog = clamp(st / SCENE_DUR[0], 0, 1);
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = C.white; ctx.font = 'bold 15px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Escena 1 — El atacante infecta miles de dispositivos', W / 2, 28);
+  ctx.fillStyle = C.gray; ctx.font = '12px sans-serif';
+  ctx.fillText('Cada PC infectado se convierte en un "zombie" de la botnet', W / 2, 46);
+
+  const numVisible = Math.floor(prog * botPositions.length);
+  botPositions.forEach(([bx, by], i) => {
+    if (i >= numVisible) return;
+    const infected = i < Math.floor(prog * botPositions.length * 0.8);
+    const col = infected ? C.red : C.gray;
+    const a = easeOut(clamp((prog * botPositions.length - i) * 0.5, 0, 1));
+    drawPC(bx, by, col, infected ? '⚠ zombie' : 'normal', a);
+    if (infected && i % 3 === 0) {
+      ctx.globalAlpha = a * 0.3;
+      ctx.strokeStyle = C.red; ctx.lineWidth = 0.8; ctx.setLineDash([3, 4]);
+      ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(W / 2, H / 2 + 30); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+  });
+
+  const attackerA = easeOut(clamp((prog - 0.4) * 3, 0, 1));
+  roundRect(W / 2 - 50, H / 2 - 5, 100, 36, 6, '#1A0A00', C.orange, 2);
+  ctx.fillStyle = C.orange; ctx.font = 'bold 12px monospace'; ctx.textAlign = 'center';
+  ctx.globalAlpha = attackerA;
+  ctx.fillText('ATACANTE', W / 2, H / 2 + 16);
+  ctx.globalAlpha = 1;
+
+  const countA = easeOut(clamp((prog - 0.6) * 4, 0, 1));
+  ctx.globalAlpha = countA;
+  roundRect(W / 2 - 70, H / 2 + 45, 140, 28, 6, '#1A1000', C.yellow, 1.5);
+  ctx.fillStyle = C.yellow; ctx.font = 'bold 13px monospace'; ctx.textAlign = 'center';
+  ctx.fillText(`${Math.floor(numVisible * 0.8).toLocaleString()} zombies activos`, W / 2, H / 2 + 64);
+  ctx.globalAlpha = 1;
+}
+
+// ── Scene 1: DDoS flood ──────────────────────────────────────────────
+let packets = [];
+let serverHealth = 100;
+
+function initScene1() { packets = []; serverHealth = 100; }
+
+function drawScene1(st) {
+  const prog = clamp(st / SCENE_DUR[1], 0, 1);
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = C.white; ctx.font = 'bold 15px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Escena 2 — Ataque masivo: miles de peticiones simultáneas', W / 2, 28);
+  ctx.fillStyle = C.gray; ctx.font = '12px sans-serif';
+  ctx.fillText('El servidor se ve desbordado y no puede responder a usuarios legítimos', W / 2, 46);
+
+  const targetX = W / 2 + 220, targetY = 185;
+
+  const botSlice = [
+    [60, 110], [60, 185], [60, 260],
+    [145, 95], [145, 185], [145, 275]
+  ];
+
+  botSlice.forEach(([bx, by]) => {
+    drawPC(bx, by, C.red, 'zombie', 1);
+    ctx.strokeStyle = C.red; ctx.lineWidth = 0.5; ctx.setLineDash([3, 4]); ctx.globalAlpha = 0.25;
+    ctx.beginPath(); ctx.moveTo(bx, by + 15); ctx.lineTo(targetX - 30, targetY); ctx.stroke();
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+  });
+
+  if (st % 5 === 0 && packets.length < 60) {
+    const src = botSlice[Math.floor(Math.random() * botSlice.length)];
+    packets.push({
+      x: src[0] + (Math.random() - 0.5) * 20,
+      y: src[1] + (Math.random() - 0.5) * 20,
+      tx: targetX - 28 + (Math.random() - 0.5) * 10,
+      ty: targetY + (Math.random() - 0.5) * 20,
+      prog: 0, speed: 0.015 + Math.random() * 0.015,
+      size: 3 + Math.random() * 3
+    });
+  }
+
+  packets.forEach(p => {
+    p.prog = Math.min(1, p.prog + p.speed);
+    const cx = p.x + (p.tx - p.x) * easeOut(p.prog);
+    const cy = p.y + (p.ty - p.y) * easeOut(p.prog);
+    if (p.prog < 1) drawPacket(cx, cy, p.size, C.red, 0.85);
+    else if (p.prog >= 1 && !p.hit) { p.hit = true; serverHealth = Math.max(0, serverHealth - 0.8); }
+  });
+  packets = packets.filter(p => p.prog < 1.1);
+
+  const healthColor = serverHealth > 60 ? C.green : serverHealth > 30 ? C.yellow : C.red;
+  drawServer(targetX - 28, targetY - 60, 60, 80, healthColor, 'servidor', 1);
+
+  roundRect(targetX - 40, targetY + 36, 84, 16, 4, '#0D1117', healthColor, 1);
+  ctx.fillStyle = healthColor;
+  ctx.fillRect(targetX - 38, targetY + 38, Math.max(0, 80 * serverHealth / 100), 12);
+  ctx.fillStyle = C.white; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center';
+  ctx.fillText(`${Math.round(serverHealth)}%`, targetX - 2, targetY + 49);
+
+  if (serverHealth < 30) {
+    ctx.fillStyle = C.red; ctx.font = 'bold 13px monospace'; ctx.textAlign = 'center';
+    ctx.fillText('⚠ SERVIDOR CAÍDO', targetX, targetY + 75);
+  }
+
+  const rpsA = easeOut(clamp(prog * 3, 0, 1));
+  ctx.globalAlpha = rpsA;
+  roundRect(230, 310, 200, 36, 6, '#1A0000', C.red, 1.5);
+  ctx.fillStyle = C.red; ctx.font = 'bold 12px monospace'; ctx.textAlign = 'center';
+  ctx.fillText(`${Math.round(prog * 980000).toLocaleString()} req/s`, 330, 332);
+  ctx.globalAlpha = 1;
+}
+
+// ── Scene 2: Consequences + protection ──────────────────────────────
+function drawScene2(st) {
+  const prog = clamp(st / SCENE_DUR[2], 0, 1);
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = C.white; ctx.font = 'bold 15px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Escena 3 — Consecuencias y cómo protegerse', W / 2, 28);
+  ctx.fillStyle = C.gray; ctx.font = '12px sans-serif';
+  ctx.fillText('El servicio queda inaccesible para usuarios reales', W / 2, 46);
+
+  const consA = easeOut(clamp(prog * 2.5, 0, 1));
+
+  const cons = [
+    { c: C.red, t: 'Servicio caído', s: 'Web, app o API inaccesible para todos los usuarios' },
+    { c: C.orange, t: 'Pérdidas económicas', s: 'Cada minuto caído puede costar miles de euros' },
+    { c: C.yellow, t: 'Daño reputacional', s: 'Los usuarios pierden la confianza en el servicio' },
+  ];
+
+  cons.forEach((item, i) => {
+    const a = easeOut(clamp((prog * 3 - i * 0.6), 0, 1));
+    ctx.globalAlpha = a;
+    roundRect(30, 70 + i * 70, 310, 56, 6, '#111827', item.c, 1.5);
+    ctx.fillStyle = '#111827'; ctx.fillRect(30, 70 + i * 70, 6, 56);
+    ctx.fillStyle = item.c; ctx.fillRect(30, 70 + i * 70, 6, 56);
+    ctx.fillStyle = item.c; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(item.t, 46, 92 + i * 70);
+    ctx.fillStyle = C.light; ctx.font = '11px sans-serif';
+    ctx.fillText(item.s, 46, 110 + i * 70);
+    ctx.globalAlpha = 1;
+  });
+
+  const protA = easeOut(clamp((prog - 0.4) * 3, 0, 1));
+  ctx.globalAlpha = protA;
+  roundRect(360, 65, 290, 46, 6, '#001A00', C.green, 2);
+  ctx.fillStyle = C.green; ctx.font = 'bold 13px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('✓  CÓMO PROTEGERSE', 505, 94);
+  ctx.globalAlpha = 1;
+
+  const tips = [
+    { c: C.green, t: 'CDN + Cloudflare', s: 'Absorbe el tráfico masivo en la nube' },
+    { c: C.blue, t: 'Rate limiting', s: 'Limita peticiones por IP por segundo' },
+    { c: C.purple, t: 'Firewall WAF', s: 'Filtra tráfico malicioso automáticamente' },
+    { c: C.yellow, t: 'Anycast routing', s: 'Distribuye el tráfico entre múltiples centros' },
+  ];
+
+  tips.forEach((tip, i) => {
+    const a = easeOut(clamp((prog - 0.5 - i * 0.08) * 4, 0, 1));
+    ctx.globalAlpha = a;
+    roundRect(360, 122 + i * 52, 290, 42, 5, '#111827', tip.c, 1.2);
+    ctx.fillStyle = tip.c; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(tip.t, 376, 140 + i * 52);
+    ctx.fillStyle = '#9CA3AF'; ctx.font = '10px sans-serif';
+    ctx.fillText(tip.s, 376, 155 + i * 52);
+    ctx.globalAlpha = 1;
+  });
+
+  const warnA = easeOut(clamp((prog - 0.8) * 6, 0, 1));
+  ctx.globalAlpha = warnA;
+  roundRect(30, 295, 620, 40, 6, '#1A1000', C.yellow, 1.5);
+  ctx.fillStyle = C.yellow; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('⚠  Un ataque DDoS no roba datos, pero deja tu servicio completamente inoperativo', W / 2, 320);
+  ctx.globalAlpha = 1;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  if (scene === 0) drawScene0(sceneT);
+  else if (scene === 1) drawScene1(sceneT);
+  else drawScene2(sceneT);
+  document.getElementById('info').textContent = `Escena ${scene + 1} de 3`;
+}
+
+function step() {
+  if (!playing) return;
+  sceneT++;
+  if (sceneT >= SCENE_DUR[scene]) {
+    sceneT = 0;
+    scene = (scene + 1) % 3;
+    if (scene === 1) initScene1();
+  }
+  draw();
+  animId = requestAnimationFrame(step);
+}
+
+draw();
+
+document.getElementById('btn').addEventListener('click', () => {
+  playing = !playing;
+  document.getElementById('btn').textContent = playing ? '⏸ Pausar' : '▶ Reproducir';
+  if (playing) step();
+  else cancelAnimationFrame(animId);
+});
+</script>

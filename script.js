@@ -199,7 +199,18 @@ const learningRoutes = {
       {
         title: "DDoS: ataques que tumban servicios",
         category: "Ataques",
-        type: "placeholder"
+        type: "placeholder",
+        description: "Próximo vídeo sobre ataques de denegación de servicio y cómo saturan una web o servicio.",
+        resources: [
+          {
+            label: "Diapositivas PDF",
+            url: "recursos/diapositivas-ddos-ciber-sin-humo.pdf"
+          },
+          {
+            label: "Animación DDoS",
+            url: "recursos/animacion-ddos.html"
+          }
+        ]
       },
       {
         title: "MITM: el ataque del intermediario",
