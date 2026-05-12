@@ -1333,6 +1333,11 @@ select {
 
 .path-card:nth-child(1) .path-illustration img {
   object-position: center 22%;
+  transform: translateY(-18px) scale(1.02);
+}
+
+.path-card:nth-child(1):hover .path-illustration img {
+  transform: translateY(-18px) scale(1.055);
 }
 
 .path-num {
