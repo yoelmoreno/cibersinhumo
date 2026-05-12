@@ -1369,7 +1369,7 @@ select {
   line-height: 1.05;
 }
 
-.path-card > span:not(.path-num):not(.path-kicker):not(.path-folders) {
+.path-card > span:not(.path-num):not(.path-kicker):not(.path-folders):not(.path-illustration) {
   position: relative;
   z-index: 3;
   color: var(--text-muted);
