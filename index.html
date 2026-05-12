@@ -6,7 +6,7 @@
   <title>Ciber Sin Humo — Ciberseguridad</title>
   <link rel="icon" type="image/png" href="cibersinhumoicon.png?v=2">
   <link rel="apple-touch-icon" href="cibersinhumoicon.png?v=2">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -87,6 +87,45 @@
     <div class="section-header">
       <h2 class="section-title">Vídeos</h2>
       <p class="section-desc">Aprende con contenido claro y directo, organizado por temática.</p>
+    </div>
+
+    <div class="video-discovery">
+      <div class="start-guide">
+        <span class="section-tag">empieza por aquí</span>
+        <h3>Si vienes de cero, sigue esta ruta</h3>
+        <ol class="start-steps">
+          <li>Introducción al canal</li>
+          <li>Phishing</li>
+          <li>Troyanos</li>
+          <li>Spyware</li>
+          <li>Keyloggers</li>
+        </ol>
+        <button class="btn btn-primary" type="button" data-open-route="principiante">Ver ruta desde cero</button>
+      </div>
+
+      <div class="video-search-panel">
+        <label class="video-search-label" for="video-search">Buscar contenido</label>
+        <div class="video-search-box">
+          <input id="video-search" type="search" placeholder="Busca phishing, spyware, PDF, DDoS..." autocomplete="off">
+          <button class="video-search-clear" id="video-search-clear" type="button" aria-label="Limpiar búsqueda">×</button>
+        </div>
+        <p class="video-search-hint">Busca por tema, ataque, herramienta, recurso o estado.</p>
+      </div>
+    </div>
+
+    <div class="search-view" id="search-view" hidden>
+      <div class="route-topbar">
+        <button class="route-back" id="search-back" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          Volver
+        </button>
+        <div>
+          <span class="section-tag">resultados</span>
+          <h3 class="route-title" id="search-title">Resultados</h3>
+          <p class="route-desc" id="search-desc"></p>
+        </div>
+      </div>
+      <div class="video-grid route-video-grid" id="search-video-grid"></div>
     </div>
 
     <div class="learning-paths" id="learning-paths">
@@ -335,6 +374,6 @@
   </div>
 </div>
 
-<script src="script.js?v=15"></script>
+<script src="script.js?v=16"></script>
 </body>
 </html>

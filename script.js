@@ -283,6 +283,12 @@ const routeTitle = document.getElementById("route-title");
 const routeDesc = document.getElementById("route-desc");
 const routeFilters = document.getElementById("route-filters");
 const routeVideoGrid = document.getElementById("route-video-grid");
+const searchView = document.getElementById("search-view");
+const searchBack = document.getElementById("search-back");
+const searchInput = document.getElementById("video-search");
+const searchClear = document.getElementById("video-search-clear");
+const searchDesc = document.getElementById("search-desc");
+const searchVideoGrid = document.getElementById("search-video-grid");
 let activeRoute = null;
 let activeFilter = "Todos";
 
@@ -322,12 +328,8 @@ function videoResources(video) {
   `;
 }
 
-function renderRouteVideos() {
-  if (!activeRoute || !routeVideoGrid) return;
-
-  const videos = activeRoute.videos.filter((video) => activeFilter === "Todos" || video.category === activeFilter);
-
-  routeVideoGrid.innerHTML = videos.length ? videos.map((video) => `
+function renderVideoCards(videos) {
+  return videos.length ? videos.map((video) => `
     <article class="video-card" data-cat="${video.category}">
       <div class="video-thumb">
         ${videoMedia(video)}
@@ -342,6 +344,13 @@ function renderRouteVideos() {
       </div>
     </article>
   `).join("") : `<div class="video-empty">Todavía no hay vídeos en esta categoría.</div>`;
+}
+
+function renderRouteVideos() {
+  if (!activeRoute || !routeVideoGrid) return;
+
+  const videos = activeRoute.videos.filter((video) => activeFilter === "Todos" || video.category === activeFilter);
+  routeVideoGrid.innerHTML = renderVideoCards(videos);
 }
 
 function renderRouteFilters() {
@@ -364,6 +373,8 @@ function openRoute(routeKey) {
   activeFilter = "Todos";
   if (!activeRoute || !learningPaths || !routeView) return;
 
+  if (searchView) searchView.hidden = true;
+  if (searchInput) searchInput.value = "";
   routeTag.textContent = activeRoute.tag;
   routeTitle.textContent = activeRoute.title;
   routeDesc.textContent = activeRoute.desc;
@@ -379,9 +390,14 @@ if (learningPaths && routeView) {
   });
 }
 
+document.querySelectorAll("[data-open-route]").forEach((button) => {
+  button.addEventListener("click", () => openRoute(button.dataset.openRoute));
+});
+
 if (routeBack && learningPaths && routeView) {
   routeBack.addEventListener("click", () => {
     routeView.hidden = true;
+    if (searchView) searchView.hidden = true;
     learningPaths.classList.remove("is-hidden");
     activeRoute = null;
   });
@@ -394,6 +410,88 @@ if (routeFilters) {
     activeFilter = button.dataset.filter;
     renderRouteFilters();
     renderRouteVideos();
+  });
+}
+
+function normalizeSearch(value) {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function getAllVideos() {
+  return Object.entries(learningRoutes).flatMap(([routeKey, route]) =>
+    route.videos.map((video) => ({
+      ...video,
+      routeKey,
+      routeTitle: route.title
+    }))
+  );
+}
+
+function getVideoSearchText(video) {
+  return normalizeSearch([
+    video.title,
+    video.category,
+    video.description,
+    video.type === "placeholder" ? "proximamente próximo pendiente" : "video publicado youtube",
+    video.routeTitle,
+    ...(video.resources || []).flatMap((resource) => [resource.label, resource.url])
+  ].filter(Boolean).join(" "));
+}
+
+function closeSearch() {
+  if (searchView) searchView.hidden = true;
+  if (learningPaths) learningPaths.classList.remove("is-hidden");
+  if (routeView) routeView.hidden = true;
+  activeRoute = null;
+}
+
+function renderSearchResults() {
+  if (!searchInput || !searchView || !searchVideoGrid || !learningPaths) return;
+
+  const query = normalizeSearch(searchInput.value.trim());
+  if (!query) {
+    closeSearch();
+    return;
+  }
+
+  const terms = query.split(/\s+/).filter(Boolean);
+  const results = getAllVideos().filter((video) => {
+    const text = getVideoSearchText(video);
+    return terms.every((term) => text.includes(term));
+  });
+
+  learningPaths.classList.add("is-hidden");
+  if (routeView) routeView.hidden = true;
+  searchView.hidden = false;
+  if (searchDesc) {
+    searchDesc.textContent = results.length
+      ? `${results.length} resultado${results.length === 1 ? "" : "s"} para "${searchInput.value.trim()}".`
+      : `No hay resultados para "${searchInput.value.trim()}".`;
+  }
+  searchVideoGrid.innerHTML = results.length
+    ? renderVideoCards(results)
+    : `<div class="video-empty">No hay resultados. Prueba con phishing, spyware, PDF, ataques o recursos.</div>`;
+}
+
+if (searchInput) {
+  searchInput.addEventListener("input", renderSearchResults);
+}
+
+if (searchClear && searchInput) {
+  searchClear.addEventListener("click", () => {
+    searchInput.value = "";
+    searchInput.focus();
+    closeSearch();
+  });
+}
+
+if (searchBack && searchInput) {
+  searchBack.addEventListener("click", () => {
+    searchInput.value = "";
+    closeSearch();
   });
 }
 
