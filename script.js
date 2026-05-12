@@ -287,7 +287,6 @@ const routeVideoGrid = document.getElementById("route-video-grid");
 const searchView = document.getElementById("search-view");
 const searchBack = document.getElementById("search-back");
 const searchInput = document.getElementById("video-search");
-const searchClear = document.getElementById("video-search-clear");
 const searchDesc = document.getElementById("search-desc");
 const searchVideoGrid = document.getElementById("search-video-grid");
 const searchChips = document.querySelectorAll("[data-search-chip]");
@@ -482,14 +481,6 @@ function renderSearchResults() {
 
 if (searchInput) {
   searchInput.addEventListener("input", renderSearchResults);
-}
-
-if (searchClear && searchInput) {
-  searchClear.addEventListener("click", () => {
-    searchInput.value = "";
-    searchInput.focus();
-    closeSearch();
-  });
 }
 
 if (searchBack && searchInput) {
