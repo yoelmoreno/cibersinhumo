@@ -6,7 +6,7 @@
   <title>Ciber Sin Humo — Ciberseguridad</title>
   <link rel="icon" type="image/png" href="cibersinhumoicon.png?v=2">
   <link rel="apple-touch-icon" href="cibersinhumoicon.png?v=2">
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -90,25 +90,24 @@
     </div>
 
     <div class="video-discovery">
-      <div class="start-guide">
-        <span class="section-tag">empieza por aquí</span>
-        <h3>Si vienes de cero, entra por aquí</h3>
-        <ol class="start-steps">
-          <li>Primero, una intro rápida al canal.</li>
-          <li>Después, los ataques más comunes.</li>
-          <li>Luego, hábitos de privacidad.</li>
-          <li>Y al final, todos los vídeos juntos.</li>
-        </ol>
-        <button class="btn btn-primary" type="button" data-open-route="principiante">Entrar desde cero</button>
-      </div>
-
       <div class="video-search-panel">
-        <label class="video-search-label" for="video-search">Buscar contenido</label>
-        <div class="video-search-box">
-          <input id="video-search" type="search" placeholder="Busca phishing, spyware, PDF, DDoS..." autocomplete="off">
-          <button class="video-search-clear" id="video-search-clear" type="button" aria-label="Limpiar búsqueda">×</button>
+        <div class="search-radar" aria-hidden="true">
+          <span></span>
         </div>
-        <p class="video-search-hint">Busca por tema, ataque, herramienta, recurso o estado.</p>
+        <div class="video-search-content">
+          <label class="video-search-label" for="video-search">Buscar contenido</label>
+          <div class="video-search-box">
+            <input id="video-search" type="search" placeholder="Busca phishing, spyware, PDF, DDoS..." autocomplete="off">
+            <button class="video-search-clear" id="video-search-clear" type="button" aria-label="Limpiar búsqueda">×</button>
+          </div>
+          <div class="search-chips" aria-label="Búsquedas rápidas">
+            <button type="button" data-search-chip="phishing">Phishing</button>
+            <button type="button" data-search-chip="spyware">Spyware</button>
+            <button type="button" data-search-chip="troyanos">Troyanos</button>
+            <button type="button" data-search-chip="PDF">PDF</button>
+          </div>
+          <p class="video-search-hint">Busca por tema, ataque, herramienta, recurso o estado.</p>
+        </div>
       </div>
     </div>
 
@@ -373,6 +372,6 @@
   </div>
 </div>
 
-<script src="script.js?v=17"></script>
+<script src="script.js?v=18"></script>
 </body>
 </html>

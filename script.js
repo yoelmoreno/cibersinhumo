@@ -290,6 +290,7 @@ const searchInput = document.getElementById("video-search");
 const searchClear = document.getElementById("video-search-clear");
 const searchDesc = document.getElementById("search-desc");
 const searchVideoGrid = document.getElementById("search-video-grid");
+const searchChips = document.querySelectorAll("[data-search-chip]");
 let activeRoute = null;
 let activeFilter = "Todos";
 
@@ -495,6 +496,16 @@ if (searchBack && searchInput) {
   searchBack.addEventListener("click", () => {
     searchInput.value = "";
     closeSearch();
+  });
+}
+
+if (searchChips.length && searchInput) {
+  searchChips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      searchInput.value = chip.dataset.searchChip;
+      renderSearchResults();
+      searchInput.focus();
+    });
   });
 }
 
