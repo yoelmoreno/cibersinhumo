@@ -1,0 +1,413 @@
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0A0E1A; }
+canvas { display: block; }
+#wrap { background: #0A0E1A; width: 100%; border-radius: 12px; overflow: hidden; padding: 0; }
+#controls { display: flex; gap: 12px; align-items: center; justify-content: center; padding: 12px 0 16px; background: #0A0E1A; }
+button { background: #1F2937; color: #F9FAFB; border: 1px solid #374151; border-radius: 8px; padding: 8px 20px; font-size: 13px; cursor: pointer; transition: background 0.2s; }
+button:hover { background: #374151; }
+#scene-label { color: #6B7280; font-size: 12px; font-family: monospace; min-width: 160px; text-align: center; }
+</style>
+
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="controls">
+    <button id="btn">&#9654; Reproducir</button>
+    <span id="scene-label">Escena 1 de 3</span>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = 680, H = 360;
+canvas.width = W; canvas.height = H;
+
+let t = 0, scene = 0, animId = null, playing = false;
+const SCENE_DUR = [180, 180, 200];
+let sceneT = 0;
+
+const C = {
+  bg: '#0A0E1A', dark2: '#111827', dark3: '#1F2937',
+  red: '#EF4444', green: '#10B981', blue: '#3B82F6',
+  yellow: '#F59E0B', orange: '#F97316',
+  white: '#FFFFFF', gray: '#6B7280', light: '#D1D5DB'
+};
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+function easeIn(t) { return t * t * t; }
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+function roundRect(x, y, w, h, r, fill, stroke, lw) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw || 1.5; ctx.stroke(); }
+}
+
+function drawKeyboard(x, y, w, h, alpha, highlightKey) {
+  ctx.globalAlpha = alpha;
+  roundRect(x, y, w, h, 10, '#1F2937', '#374151', 1);
+  const rows = [
+    ['Q','W','E','R','T','Y','U','I','O','P'],
+    ['A','S','D','F','G','H','J','K','L'],
+    ['Z','X','C','V','B','N','M']
+  ];
+  const kw = 28, kh = 24, gap = 4;
+  rows.forEach((row, ri) => {
+    const totalW = row.length * (kw + gap) - gap;
+    const startX = x + (w - totalW) / 2;
+    row.forEach((key, ki) => {
+      const kx = startX + ki * (kw + gap);
+      const ky = y + 14 + ri * (kh + gap);
+      const isHL = key === highlightKey;
+      roundRect(kx, ky, kw, kh, 4,
+        isHL ? C.red : '#374151',
+        isHL ? '#EF4444' : '#4B5563', 1);
+      ctx.fillStyle = isHL ? '#fff' : '#9CA3AF';
+      ctx.font = `bold 10px monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText(key, kx + kw/2, ky + kh/2 + 4);
+    });
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawMonitor(x, y, w, h, alpha) {
+  ctx.globalAlpha = alpha;
+  roundRect(x, y, w, h, 8, '#111827', '#3B82F6', 2);
+  roundRect(x+6, y+6, w-12, h-28, 4, '#0D1117', null);
+  ctx.fillStyle = '#374151';
+  ctx.fillRect(x + w/2 - 15, y + h - 18, 30, 6);
+  ctx.fillRect(x + w/2 - 25, y + h - 12, 50, 4);
+  ctx.globalAlpha = 1;
+}
+
+function drawTerminal(x, y, w, h, alpha, lines) {
+  ctx.globalAlpha = alpha;
+  roundRect(x, y, w, h, 8, '#0D1117', '#10B981', 1.5);
+  roundRect(x, y, w, 22, 8, '#1F2937', null);
+  ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(x+14, y+11, 5, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = C.yellow; ctx.beginPath(); ctx.arc(x+26, y+11, 5, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = C.green; ctx.beginPath(); ctx.arc(x+38, y+11, 5, 0, Math.PI*2); ctx.fill();
+  ctx.font = '12px monospace';
+  ctx.textAlign = 'left';
+  lines.forEach((line, i) => {
+    ctx.fillStyle = line.c || '#10B981';
+    ctx.fillText(line.t, x + 12, y + 40 + i * 18);
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawPacket(x, y, size, color, alpha) {
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, size, 0, Math.PI*2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+function drawArrow(x1, y1, x2, y2, color, alpha, dash) {
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  if (dash) ctx.setLineDash([6, 4]);
+  else ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - 12 * Math.cos(angle - 0.4), y2 - 12 * Math.sin(angle - 0.4));
+  ctx.lineTo(x2 - 12 * Math.cos(angle + 0.4), y2 - 12 * Math.sin(angle + 0.4));
+  ctx.closePath();
+  ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+function drawBug(x, y, alpha) {
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = C.red;
+  ctx.beginPath();
+  ctx.ellipse(x, y, 14, 18, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.strokeStyle = '#7f1d1d';
+  ctx.lineWidth = 1;
+  for (let i = -1; i <= 1; i++) {
+    ctx.beginPath(); ctx.moveTo(x, y + i*6); ctx.lineTo(x + 18 + Math.abs(i)*4, y + i*6 - 8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x, y + i*6); ctx.lineTo(x - 18 - Math.abs(i)*4, y + i*6 - 8); ctx.stroke();
+  }
+  ctx.fillStyle = '#7f1d1d';
+  ctx.beginPath(); ctx.ellipse(x, y - 16, 8, 6, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#fef2f2';
+  ctx.beginPath(); ctx.arc(x - 4, y - 17, 2.5, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x + 4, y - 17, 2.5, 0, Math.PI*2); ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+function drawHacker(x, y, alpha) {
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = C.orange;
+  ctx.beginPath(); ctx.arc(x, y - 28, 18, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#7c2d12';
+  ctx.fillRect(x - 22, y - 46, 44, 12);
+  ctx.beginPath(); ctx.arc(x, y - 46, 22, Math.PI, 0); ctx.fill();
+  ctx.fillStyle = C.dark3;
+  ctx.beginPath(); ctx.moveTo(x - 18, y - 12); ctx.lineTo(x + 18, y - 12); ctx.lineTo(x + 24, y + 20); ctx.lineTo(x - 24, y + 20); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#1f2937';
+  ctx.fillRect(x - 14, y - 16, 6, 8);
+  ctx.fillRect(x + 8, y - 16, 6, 8);
+  ctx.globalAlpha = 1;
+}
+
+const keys = 'ASDFGHJKLQWERTYUIOP'.split('');
+let keySeq = ['P','A','S','S','W','O','R','D'];
+let keyIdx = 0;
+let keyTimer = 0;
+let currentKey = '';
+
+function drawScene0(st) {
+  const prog = clamp(st / SCENE_DUR[0], 0, 1);
+
+  ctx.fillStyle = C.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = C.white;
+  ctx.font = 'bold 15px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Escena 1 — El usuario escribe normalmente', W/2, 28);
+
+  ctx.fillStyle = C.gray;
+  ctx.font = '12px sans-serif';
+  ctx.fillText('El keylogger opera en silencio, invisible para la víctima', W/2, 48);
+
+  drawMonitor(60, 80, 260, 200, 1);
+
+  const loginAlpha = easeOut(clamp(prog * 3, 0, 1));
+  ctx.globalAlpha = loginAlpha;
+  roundRect(80, 100, 220, 160, 6, '#111827', '#374151', 1);
+  ctx.fillStyle = '#3B82F6';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Iniciar sesión', 190, 128);
+  roundRect(90, 136, 200, 22, 4, '#1F2937', '#4B5563', 1);
+  ctx.fillStyle = '#9CA3AF';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('usuario@ejemplo.com', 96, 152);
+  roundRect(90, 168, 200, 22, 4, '#1F2937', '#4B5563', 1);
+
+  const pass = '●●●●●●●●';
+  const shownPass = pass.slice(0, Math.floor(prog * 10));
+  ctx.fillStyle = C.red;
+  ctx.fillText(shownPass, 96, 184);
+  roundRect(90, 200, 200, 22, 4, '#3B82F6', '#2563eb', 1);
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.fillText('Acceder', 190, 215);
+  ctx.globalAlpha = 1;
+
+  if (st % 22 < 11) currentKey = keySeq[Math.floor(st / 22) % keySeq.length];
+  else currentKey = '';
+  drawKeyboard(60, 290, 260, 58, 1, currentKey);
+
+  const bugPulse = 0.6 + 0.4 * Math.sin(st * 0.08);
+  const bugAlpha = easeOut(clamp((prog - 0.3) * 3, 0, 1));
+  drawBug(430, 160, bugAlpha * bugPulse);
+
+  if (bugAlpha > 0.3) {
+    ctx.globalAlpha = bugAlpha * 0.7;
+    ctx.fillStyle = C.red;
+    ctx.font = 'bold 12px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('[ KEYLOGGER ACTIVO ]', 430, 205);
+    ctx.fillStyle = '#9CA3AF';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('Registrando pulsaciones...', 430, 222);
+    ctx.globalAlpha = 1;
+  }
+
+  const dotCount = Math.floor(prog * 8) + 1;
+  if (bugAlpha > 0.2) {
+    for (let i = 0; i < dotCount; i++) {
+      const bx = 350 + Math.sin(i * 1.1 + st * 0.04) * 30;
+      const by = 140 + i * 8;
+      drawPacket(bx, by, 4, C.red, bugAlpha * 0.6);
+    }
+  }
+
+  ctx.fillStyle = '#374151';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('→ pulsación capturada silenciosamente', 360, 260);
+}
+
+let packets = [];
+function drawScene1(st) {
+  const prog = clamp(st / SCENE_DUR[1], 0, 1);
+
+  ctx.fillStyle = C.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = C.white;
+  ctx.font = 'bold 15px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Escena 2 — Los datos viajan al servidor del atacante', W/2, 28);
+  ctx.fillStyle = C.gray;
+  ctx.font = '12px sans-serif';
+  ctx.fillText('El malware empaqueta y envía la información cifrada', W/2, 48);
+
+  drawMonitor(40, 80, 160, 120, 1);
+  ctx.fillStyle = '#374151';
+  ctx.font = '10px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('VÍCTIMA', 120, 220);
+
+  roundRect(480, 90, 160, 110, 8, '#0D1117', C.red, 2);
+  ctx.fillStyle = C.red;
+  ctx.font = 'bold 11px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('SERVIDOR C2', 560, 113);
+  ctx.fillStyle = '#374151';
+  ctx.font = '10px monospace';
+  ctx.fillText('del atacante', 560, 128);
+  const bars = [0.3,0.7,0.5,0.9,0.4,0.8];
+  bars.forEach((b, i) => {
+    roundRect(490 + i * 22, 175 - b*45, 14, b*45, 2, '#991b1b', null);
+  });
+  ctx.fillStyle = '#9CA3AF';
+  ctx.font = '9px sans-serif';
+  ctx.fillText('datos recibidos', 560, 215);
+
+  const numPackets = Math.floor(prog * 12);
+  if (st % 15 === 0 && packets.length < 15) {
+    packets.push({ x: 200, y: 140 + (Math.random()-0.5)*40, speed: 2.5 + Math.random()*1.5, size: 5 + Math.random()*4 });
+  }
+  packets = packets.filter(p => p.x < 490);
+  packets.forEach(p => {
+    p.x += p.speed;
+    p.y += (140 - p.y) * 0.03;
+    drawPacket(p.x, p.y, p.size, C.red, 0.85);
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = C.red;
+    ctx.beginPath(); ctx.arc(p.x - 12, p.y, p.size*0.6, 0, Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+
+  const dashAlpha = easeOut(clamp(prog * 2, 0, 1));
+  ctx.globalAlpha = dashAlpha * 0.5;
+  ctx.strokeStyle = C.red;
+  ctx.lineWidth = 1;
+  ctx.setLineDash([8, 6]);
+  ctx.beginPath(); ctx.moveTo(200, 140); ctx.lineTo(480, 140); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.globalAlpha = 1;
+
+  const shieldAlpha = easeOut(clamp((prog - 0.5) * 3, 0, 1));
+  ctx.globalAlpha = shieldAlpha;
+  ctx.fillStyle = '#1F2937';
+  roundRect(240, 60, 170, 70, 8, '#1F2937', C.yellow, 1.5);
+  ctx.fillStyle = C.yellow;
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('⚠ Tráfico sospechoso', 325, 83);
+  ctx.fillStyle = '#9CA3AF';
+  ctx.font = '10px monospace';
+  ctx.fillText('dst: 185.x.x.x:4444', 325, 100);
+  ctx.fillText('proto: TCP  enc: AES', 325, 116);
+  ctx.globalAlpha = 1;
+}
+
+function drawScene2(st) {
+  const prog = clamp(st / SCENE_DUR[2], 0, 1);
+
+  ctx.fillStyle = C.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = C.white;
+  ctx.font = 'bold 15px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Escena 3 — El atacante tiene tus credenciales', W/2, 28);
+  ctx.fillStyle = C.gray;
+  ctx.font = '12px sans-serif';
+  ctx.fillText('Acceso total a tus cuentas sin que lo sepas', W/2, 48);
+
+  drawHacker(560, 220, 1);
+
+  const termAlpha = easeOut(clamp(prog * 2, 0, 1));
+  const termLines = [
+    { t: '$ cat keylog_2024.txt', c: '#10B981' },
+    { t: 'email: u****@ejemplo.com', c: prog > 0.25 ? '#FBBF24' : '#374151' },
+    { t: 'pass:  ●●●●●●●●', c: prog > 0.4 ? '#EF4444' : '#374151' },
+    { t: 'banco: ●●●● ●●●● ●●●● ●●●●', c: prog > 0.55 ? '#EF4444' : '#374151' },
+    { t: prog > 0.7 ? '[ ACCESO CONCEDIDO ✓ ]' : '...', c: prog > 0.7 ? '#10B981' : '#374151' },
+  ];
+  drawTerminal(40, 80, 360, 210, termAlpha, termLines);
+
+  const lockAlpha = easeOut(clamp((prog - 0.6) * 3, 0, 1));
+  ctx.globalAlpha = lockAlpha;
+  roundRect(40, 310, 360, 38, 6, '#1A1000', C.yellow, 1.5);
+  ctx.fillStyle = C.yellow;
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('⚠  Activa el 2FA para evitar esto', 220, 334);
+  ctx.globalAlpha = 1;
+
+  const arrowAlpha = easeOut(clamp((prog - 0.3) * 3, 0, 1));
+  if (arrowAlpha > 0) {
+    drawArrow(400, 180, 510, 180, C.red, arrowAlpha, false);
+    ctx.globalAlpha = arrowAlpha;
+    ctx.fillStyle = C.red;
+    ctx.font = 'bold 10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('accede', 455, 170);
+    ctx.globalAlpha = 1;
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  if (scene === 0) drawScene0(sceneT);
+  else if (scene === 1) drawScene1(sceneT);
+  else drawScene2(sceneT);
+
+  document.getElementById('scene-label').textContent = `Escena ${scene + 1} de 3`;
+}
+
+function step() {
+  if (!playing) return;
+  sceneT++;
+  if (sceneT >= SCENE_DUR[scene]) {
+    sceneT = 0;
+    scene = (scene + 1) % 3;
+    if (scene === 0) packets = [];
+  }
+  draw();
+  animId = requestAnimationFrame(step);
+}
+
+draw();
+
+document.getElementById('btn').addEventListener('click', () => {
+  playing = !playing;
+  document.getElementById('btn').textContent = playing ? '⏸ Pausar' : '▶ Reproducir';
+  if (playing) step();
+  else cancelAnimationFrame(animId);
+});
+</script>

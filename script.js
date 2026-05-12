@@ -179,7 +179,18 @@ const learningRoutes = {
       {
         title: "Spyware: keyloggers y robo de teclas",
         category: "Ataques",
-        type: "placeholder"
+        type: "placeholder",
+        description: "Próximo vídeo sobre cómo funcionan los keyloggers y por qué pueden robar lo que escribes.",
+        resources: [
+          {
+            label: "Diapositivas PDF",
+            url: "recursos/diapositivas-keylogger.pdf"
+          },
+          {
+            label: "Animación Keylogger",
+            url: "recursos/animacion-keylogger.html"
+          }
+        ]
       },
       {
         title: "DDoS: ataques que tumban servicios",
