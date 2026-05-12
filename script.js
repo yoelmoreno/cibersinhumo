@@ -232,31 +232,43 @@ const learningRoutes = {
   },
   privacidad: {
     tag: "ruta 02",
-    title: "Quiero mejorar mi privacidad",
-    desc: "Reduce exposición, mejora tus cuentas y entiende qué datos dejas por Internet.",
+    title: "Aplicar la teoría a la práctica",
+    desc: "Herramientas, pruebas guiadas y pequeños laboratorios para aprender haciendo.",
+    filterOrder: ["Pruebas prácticas", "Redes", "Contraseñas", "Análisis", "Todos"],
     videos: [
       {
-        title: "Privacidad digital: por dónde empezar",
-        category: "Privacidad",
+        title: "Escaneo de puertos: qué hay abierto y por qué importa",
+        category: "Pruebas prácticas",
         type: "placeholder"
       },
       {
-        title: "VPN: cuándo sí y cuándo no sirven",
-        category: "Privacidad",
+        title: "Wireshark: mirar el tráfico de red sin perderte",
+        category: "Redes",
         type: "placeholder"
       },
       {
-        title: "Cómo proteger tu móvil en 10 minutos",
-        category: "Móvil",
+        title: "John the Ripper: cómo se prueban contraseñas",
+        category: "Contraseñas",
+        type: "placeholder"
+      },
+      {
+        title: "Mini laboratorio: practicar sin liarla en tu ordenador",
+        category: "Pruebas prácticas",
         type: "placeholder"
       }
     ]
   },
   sistema: {
     tag: "ruta 03",
-    title: "Quiero entender cómo funciona todo esto",
-    desc: "Una ruta para conectar redes, web, OSINT, herramientas y amenazas reales.",
+    title: "Entender informática para entender ciber",
+    desc: "Conceptos de informática que luego se aplican a redes, análisis, sistemas y seguridad.",
+    filterOrder: ["Redes", "Web", "Sistemas", "Conceptos", "Todos"],
     videos: [
+      {
+        title: "Redes desde cero: IP, puertos y protocolos",
+        category: "Redes",
+        type: "placeholder"
+      },
       {
         title: "Cómo viaja una petición por Internet",
         category: "Redes",
@@ -264,12 +276,12 @@ const learningRoutes = {
       },
       {
         title: "Qué pasa cuando entras en una web",
-        category: "Conceptos",
+        category: "Web",
         type: "placeholder"
       },
       {
-        title: "OSINT básico: buscar información pública",
-        category: "OSINT",
+        title: "Sistemas operativos: procesos, permisos y archivos",
+        category: "Sistemas",
         type: "placeholder"
       }
     ]
