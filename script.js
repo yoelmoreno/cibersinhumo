@@ -99,6 +99,7 @@ const learningRoutes = {
     tag: "ruta 01",
     title: "No sé nada de ciber",
     desc: "Empieza por lo esencial: amenazas comunes, hábitos seguros y conceptos base.",
+    filterOrder: ["Introducción", "Ataques", "Privacidad", "Todos"],
     videos: [
       {
         title: "Introducción al canal",
@@ -357,12 +358,14 @@ function renderRouteFilters() {
   if (!activeRoute || !routeFilters) return;
 
   const routeCategories = [...new Set(activeRoute.videos.map((video) => video.category))];
-  const preferredOrder = ["Ataques", "Introducción", "Conceptos", "Privacidad", "Móvil", "Redes", "OSINT"];
-  const orderedCategories = [
-    ...preferredOrder.filter((category) => routeCategories.includes(category)),
-    ...routeCategories.filter((category) => !preferredOrder.includes(category))
+  const preferredOrder = activeRoute.filterOrder || ["Todos", "Ataques", "Introducción", "Conceptos", "Privacidad", "Móvil", "Redes", "OSINT"];
+  const orderedCategories = preferredOrder.includes("Todos")
+    ? preferredOrder
+    : ["Todos", ...preferredOrder];
+  const categories = [
+    ...orderedCategories.filter((category) => category === "Todos" || routeCategories.includes(category) || activeRoute.filterOrder?.includes(category)),
+    ...routeCategories.filter((category) => !orderedCategories.includes(category))
   ];
-  const categories = ["Todos", ...orderedCategories];
   routeFilters.innerHTML = categories.map((category) => `
     <button class="filter-chip ${category === activeFilter ? "active" : ""}" type="button" data-filter="${category}">${category}</button>
   `).join("");
@@ -370,7 +373,7 @@ function renderRouteFilters() {
 
 function openRoute(routeKey) {
   activeRoute = learningRoutes[routeKey];
-  activeFilter = "Todos";
+  activeFilter = activeRoute?.filterOrder?.find((category) => category !== "Todos") || "Todos";
   if (!activeRoute || !learningPaths || !routeView) return;
 
   if (searchView) searchView.hidden = true;
