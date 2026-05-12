@@ -603,8 +603,8 @@ select {
 
 .videos-layout {
   display: grid;
-  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.75fr) minmax(220px, 0.72fr);
-  gap: 18px;
+  grid-template-columns: minmax(150px, 0.45fr) minmax(680px, 2.9fr) minmax(150px, 0.45fr);
+  gap: 12px;
   align-items: start;
 }
 
@@ -613,7 +613,7 @@ select {
 }
 
 .video-side-card {
-  padding: 16px;
+  padding: 12px;
 }
 
 .video-side-card.about-personal {
@@ -622,12 +622,12 @@ select {
 
 .video-side-card .about-photo-frame {
   min-height: 0;
-  aspect-ratio: 4 / 3;
-  margin-bottom: 14px;
+  height: 128px;
+  margin-bottom: 12px;
 }
 
 .video-side-card .about-photo {
-  object-position: 48% 38%;
+  object-position: 48% 34%;
 }
 
 .video-side-card .about-copy {
@@ -635,23 +635,28 @@ select {
 }
 
 .video-side-card .about-copy h3 {
-  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  margin: 10px 0 8px;
+  font-size: clamp(1.05rem, 1.5vw, 1.32rem);
 }
 
 .video-side-card .about-copy p {
-  font-size: 0.94rem;
-  line-height: 1.55;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.video-side-card .about-copy p:nth-of-type(n+2) {
+  display: none;
 }
 
 .video-side-card .about-project-mark {
-  width: 86px;
-  height: 86px;
-  margin-bottom: 18px;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 14px;
 }
 
 .video-side-card .about-project-mark img {
-  width: 66px;
-  height: 66px;
+  width: 42px;
+  height: 42px;
 }
 
 /* ---------------- CATEGORÍAS ---------------- */
@@ -901,12 +906,6 @@ select {
   color: var(--text-muted);
   line-height: 1.5;
   font-size: 0.95rem;
-}
-
-.videos-layout {
-  display: flex;
-  gap: 20px;
-  align-items: stretch;
 }
 
 .nivel-slider-wrapper {
@@ -2120,6 +2119,15 @@ select {
 
   .about-project.video-side-card {
     order: 3;
+  }
+
+  .video-side-card .about-copy p:nth-of-type(n+2) {
+    display: block;
+  }
+
+  .video-side-card .about-photo-frame {
+    height: auto;
+    min-height: 360px;
   }
 
   .about-grid,
