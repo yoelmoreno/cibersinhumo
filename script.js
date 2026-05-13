@@ -198,10 +198,14 @@ const learningRoutes = {
         ]
       },
       {
-        title: "DDoS: ataques que tumban servicios",
+        title: "DDoS: qué es y cómo funciona",
         category: "Ataques",
-        type: "placeholder",
-        description: "Próximo vídeo sobre ataques de denegación de servicio y cómo saturan una web o servicio.",
+        type: "youtube",
+        url: "https://youtu.be/4p54sndQGYU",
+        thumbnailUrl: "https://i.ytimg.com/vi/4p54sndQGYU/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/4p54sndQGYU/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Qué es un ataque DDoS, cómo puede saturar una web o servicio y ejemplos para entenderlo fácil.",
         resources: [
           {
             label: "Diapositivas PDF",
