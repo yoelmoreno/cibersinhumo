@@ -1826,7 +1826,7 @@ select {
 
 .blog-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: 1fr;
   gap: 18px;
 }
 
@@ -1891,6 +1891,25 @@ select {
   margin: 0 0 16px;
   color: var(--text-muted);
   line-height: 1.55;
+}
+
+.blog-article {
+  max-width: 920px;
+}
+
+.blog-article .blog-title {
+  font-size: clamp(1.75rem, 3vw, 2.45rem);
+}
+
+.blog-article p {
+  margin: 0 0 14px;
+  color: var(--text-muted);
+  font-size: 1.02rem;
+  line-height: 1.68;
+}
+
+.blog-article p:last-child {
+  margin-bottom: 0;
 }
 
 .blog-link {
