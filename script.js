@@ -225,7 +225,18 @@ const learningRoutes = {
       {
         title: "Ransomware: cuando secuestran tus archivos",
         category: "Ataques",
-        type: "placeholder"
+        type: "placeholder",
+        description: "Próximo vídeo sobre ransomware, cifrado de archivos y cómo una infección puede bloquear tus datos.",
+        resources: [
+          {
+            label: "Diapositivas PDF",
+            url: "recursos/diapositivas-ransomware.pdf"
+          },
+          {
+            label: "Animación Ransomware",
+            url: "recursos/animacion-ransomware.html"
+          }
+        ]
       },
       {
         title: "Contraseñas seguras sin complicarte",
