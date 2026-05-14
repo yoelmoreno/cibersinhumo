@@ -1,0 +1,352 @@
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0A0E1A; }
+canvas { display: block; }
+#wrap { background: #0A0E1A; width: 100%; border-radius: 12px; overflow: hidden; }
+#controls { display: flex; gap: 12px; align-items: center; justify-content: center; padding: 10px 0 14px; background: #0A0E1A; }
+button { background: #1F2937; color: #F9FAFB; border: 1px solid #374151; border-radius: 8px; padding: 8px 20px; font-size: 13px; cursor: pointer; }
+button:hover { background: #374151; }
+#info { color: #6B7280; font-size: 12px; font-family: monospace; min-width: 180px; text-align: center; }
+</style>
+
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="controls">
+    <button id="btn">&#9654; Reproducir</button>
+    <span id="info">Escena 1 de 3</span>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = 680, H = 360;
+canvas.width = W; canvas.height = H;
+
+const C = {
+  bg: '#0A0E1A', dark2: '#111827', dark3: '#1F2937',
+  red: '#EF4444', green: '#10B981', blue: '#3B82F6',
+  yellow: '#F59E0B', orange: '#F97316', purple: '#8B5CF6',
+  white: '#FFFFFF', gray: '#6B7280', light: '#D1D5DB'
+};
+
+let scene = 0, sceneT = 0, playing = false, animId = null;
+const SCENE_DUR = [210, 230, 200];
+
+function easeOut(t) { return 1 - Math.pow(1 - Math.max(0, Math.min(1, t)), 3); }
+function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+function roundRect(x, y, w, h, r, fill, stroke, lw) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y);
+  ctx.arcTo(x+w, y, x+w, y+r, r);
+  ctx.lineTo(x+w, y+h-r);
+  ctx.arcTo(x+w, y+h, x+w-r, y+h, r);
+  ctx.lineTo(x+r, y+h);
+  ctx.arcTo(x, y+h, x, y+h-r, r);
+  ctx.lineTo(x, y+r);
+  ctx.arcTo(x, y, x+r, y, r);
+  ctx.closePath();
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw||1.5; ctx.stroke(); }
+}
+
+function drawFileIcon(x, y, name, color, locked, alpha) {
+  ctx.globalAlpha = alpha;
+  roundRect(x, y, 44, 52, 3, color === 'gray' ? '#1F2937' : '#1A0A00', color === 'gray' ? '#374151' : color, 1.5);
+  ctx.fillStyle = color === 'gray' ? '#374151' : color;
+  ctx.beginPath(); ctx.moveTo(x+28, y); ctx.lineTo(x+44, y+16); ctx.lineTo(x+28, y+16); ctx.closePath(); ctx.fill();
+  if (locked) {
+    ctx.fillStyle = C.red;
+    ctx.beginPath(); ctx.arc(x+22, y+30, 7, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#0A0E1A';
+    ctx.fillRect(x+17, y+30, 10, 8);
+    ctx.strokeStyle = C.red; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x+22, y+26, 4, Math.PI, 0); ctx.stroke();
+  } else {
+    ctx.fillStyle = '#9CA3AF'; ctx.font = '8px monospace'; ctx.textAlign = 'center';
+    ctx.fillText(name, x+20, y+38);
+  }
+  if (locked) {
+    ctx.fillStyle = '#EF4444'; ctx.font = 'bold 7px monospace'; ctx.textAlign = 'center';
+    ctx.fillText('.locked', x+22, y+48);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawProgressBar(x, y, w, h, prog, col) {
+  roundRect(x, y, w, h, h/2, '#0D1117', col, 1);
+  if (prog > 0) {
+    ctx.beginPath();
+    ctx.moveTo(x+h/2, y+1);
+    const fw = Math.max(0, (w-2)*prog);
+    if (fw > h-2) {
+      ctx.lineTo(x+1+fw-(h/2-1), y+1);
+      ctx.arcTo(x+1+fw, y+1, x+1+fw, y+h/2, h/2-1);
+      ctx.arcTo(x+1+fw, y+h-1, x+1+fw-(h/2-1), y+h-1, h/2-1);
+      ctx.lineTo(x+h/2, y+h-1);
+    } else {
+      ctx.arc(x+h/2, y+h/2, h/2-1, -Math.PI/2, Math.PI/2, true);
+    }
+    ctx.arcTo(x+1, y+h-1, x+1, y+h/2, h/2-1);
+    ctx.arcTo(x+1, y+1, x+h/2, y+1, h/2-1);
+    ctx.closePath();
+    ctx.fillStyle = col; ctx.fill();
+  }
+}
+
+// Scene 0: Infection via phishing email
+function drawScene0(st) {
+  const prog = clamp(st / SCENE_DUR[0], 0, 1);
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = C.white; ctx.font = 'bold 15px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Escena 1 — El ransomware entra por un email de phishing', W/2, 28);
+  ctx.fillStyle = C.gray; ctx.font = '12px sans-serif';
+  ctx.fillText('El usuario descarga un adjunto aparentemente legítimo', W/2, 46);
+
+  // Email client mockup
+  const emailA = easeOut(clamp(prog * 3, 0, 1));
+  ctx.globalAlpha = emailA;
+  roundRect(40, 65, 300, 200, 8, '#111827', '#374151', 1);
+  roundRect(40, 65, 300, 28, 8, '#1F2937', null);
+  ctx.fillStyle = C.gray; ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('📧  Bandeja de entrada', 56, 83);
+
+  const emails = [
+    { from: 'RRHH Empresa', sub: 'Nómina Diciembre - URGENTE', c: C.red, bold: true },
+    { from: 'soporte@banco.es', sub: 'Verifique su cuenta ahora', c: C.orange, bold: true },
+    { from: 'newsletter@tienda', sub: 'Tu pedido ha llegado', c: C.gray, bold: false },
+  ];
+  emails.forEach((e, i) => {
+    const ea = easeOut(clamp((prog*4 - i*0.4), 0, 1));
+    ctx.globalAlpha = ea * emailA;
+    if (i === 0) roundRect(48, 100 + i*52, 284, 46, 4, '#1A0500', C.red, 1);
+    else roundRect(48, 100 + i*52, 284, 46, 4, '#111827', '#1F2937', 0.5);
+    ctx.fillStyle = e.bold ? e.c : C.gray;
+    ctx.font = `${e.bold?'bold ':''} 11px sans-serif`;
+    ctx.fillText(e.from, 60, 118 + i*52);
+    ctx.fillStyle = C.light; ctx.font = '10px sans-serif';
+    ctx.fillText(e.sub, 60, 133 + i*52);
+    if (i === 0) {
+      roundRect(270, 106 + i*52, 54, 14, 3, C.red, null);
+      ctx.fillStyle = C.white; ctx.font = 'bold 8px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('📎 Abrir', 297, 116 + i*52);
+    }
+  });
+  ctx.globalAlpha = 1;
+
+  // Arrow
+  const arrA = easeOut(clamp((prog - 0.5)*3, 0, 1));
+  if (arrA > 0) {
+    ctx.globalAlpha = arrA;
+    ctx.strokeStyle = C.red; ctx.lineWidth = 2; ctx.setLineDash([5,3]);
+    ctx.beginPath(); ctx.moveTo(342, 165); ctx.lineTo(398, 165); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = C.red;
+    ctx.beginPath(); ctx.moveTo(398, 165); ctx.lineTo(390, 159); ctx.lineTo(390, 171); ctx.closePath(); ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // PC + infection
+  const pcA = easeOut(clamp((prog - 0.45)*3, 0, 1));
+  ctx.globalAlpha = pcA;
+  roundRect(400, 110, 220, 140, 8, '#111827', C.blue, 1.5);
+  ctx.fillStyle = '#0D1117'; ctx.fillRect(408, 118, 204, 100);
+
+  if (prog > 0.55) {
+    const infProg = clamp((prog - 0.55)*5, 0, 1);
+    ctx.fillStyle = C.red; ctx.globalAlpha = pcA * infProg;
+    ctx.font = 'bold 13px monospace'; ctx.textAlign = 'center';
+    ctx.fillText('⚠ EJECUTANDO...', 510, 155);
+    ctx.fillStyle = C.gray; ctx.font = '10px monospace';
+    ctx.fillText('factura_dic.pdf.exe', 510, 172);
+    drawProgressBar(420, 185, 180, 12, infProg, C.red);
+    ctx.fillStyle = C.red; ctx.font = '9px monospace'; ctx.textAlign = 'center';
+    ctx.fillText(`Instalando... ${Math.round(infProg*100)}%`, 510, 212);
+  } else {
+    ctx.fillStyle = C.gray; ctx.font = '11px monospace'; ctx.textAlign = 'center';
+    ctx.fillText('PC del usuario', 510, 168);
+  }
+  ctx.globalAlpha = 1;
+
+  // Warning
+  const wA = easeOut(clamp((prog - 0.85)*8, 0, 1));
+  ctx.globalAlpha = wA;
+  roundRect(40, 280, 600, 36, 6, '#1A0000', C.red, 1.5);
+  ctx.fillStyle = C.red; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('⚠  Nunca abras adjuntos de remitentes desconocidos o sospechosos', W/2, 303);
+  ctx.globalAlpha = 1;
+}
+
+// Scene 1: Files being encrypted
+const fileNames = ['doc','xlsx','jpg','pdf','mp4','txt','pptx','zip','png','db'];
+let encProgress = [];
+function initScene1() { encProgress = fileNames.map(() => 0); }
+
+function drawScene1(st) {
+  const prog = clamp(st / SCENE_DUR[1], 0, 1);
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = C.white; ctx.font = 'bold 15px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Escena 2 — El ransomware cifra todos tus archivos', W/2, 28);
+  ctx.fillStyle = C.gray; ctx.font = '12px sans-serif';
+  ctx.fillText('Opera en silencio mientras el cifrado avanza archivo por archivo', W/2, 46);
+
+  // Files grid
+  const cols = 5;
+  fileNames.forEach((name, i) => {
+    const col = i % cols, row = Math.floor(i / cols);
+    const fx = 40 + col * 100, fy = 70 + row * 100;
+    const threshold = i / fileNames.length;
+    const locked = prog > threshold + 0.05;
+    const locking = prog > threshold && !locked;
+    const fa = easeOut(clamp((prog*3 - i*0.1), 0, 1));
+
+    if (locking) encProgress[i] = Math.min(1, encProgress[i] + 0.04);
+    else if (locked) encProgress[i] = 1;
+
+    const col_c = locked ? C.red : C.gray;
+    drawFileIcon(fx, fy, name, col_c, locked, fa);
+
+    if (locking || (locked && encProgress[i] < 1)) {
+      roundRect(fx, fy+56, 44, 8, 4, '#0D1117', C.red, 1);
+      ctx.fillStyle = C.red;
+      ctx.beginPath(); ctx.roundRect(fx+1, fy+57, 42*encProgress[i], 6, 3); ctx.fill();
+    }
+  });
+
+  // Cipher stream on right
+  const streamA = easeOut(clamp((prog-0.2)*2, 0, 1));
+  ctx.globalAlpha = streamA;
+  roundRect(550, 65, 118, 220, 8, '#0D1117', C.red, 1.5);
+  ctx.fillStyle = C.red; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('CIFRADO AES-256', 609, 82);
+  ctx.fillStyle = '#374151'; ctx.font = '9px monospace';
+  for (let row = 0; row < 11; row++) {
+    let line = '';
+    for (let col = 0; col < 7; col++) {
+      line += String.fromCharCode(65 + Math.floor((st * 0.3 + row * 7 + col * 13) % 26));
+    }
+    const lineA = easeOut(clamp((prog*3 - row*0.2), 0, 1));
+    ctx.globalAlpha = streamA * lineA * (0.4 + 0.6 * (row / 11));
+    ctx.fillStyle = row < Math.floor(prog * 12) ? C.red : '#374151';
+    ctx.fillText(line, 609, 98 + row * 17);
+  }
+  ctx.globalAlpha = 1;
+
+  const lockedCount = fileNames.filter((_, i) => prog > i/fileNames.length + 0.05).length;
+  const cA = easeOut(clamp((prog-0.1)*2, 0, 1));
+  ctx.globalAlpha = cA;
+  roundRect(40, 280, 498, 36, 6, '#1A0000', C.red, 1.5);
+  ctx.fillStyle = C.red; ctx.font = 'bold 13px monospace'; ctx.textAlign = 'center';
+  ctx.fillText(`${lockedCount} / ${fileNames.length} archivos cifrados`, 289, 303);
+  ctx.globalAlpha = 1;
+}
+
+// Scene 2: Ransom note
+function drawScene2(st) {
+  const prog = clamp(st / SCENE_DUR[2], 0, 1);
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = C.white; ctx.font = 'bold 15px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Escena 3 — La nota de rescate y cómo prevenirlo', W/2, 28);
+  ctx.fillStyle = C.gray; ctx.font = '12px sans-serif';
+  ctx.fillText('El atacante exige un pago para devolver el acceso a tus archivos', W/2, 46);
+
+  // Ransom note
+  const noteA = easeOut(clamp(prog * 3, 0, 1));
+  ctx.globalAlpha = noteA;
+  roundRect(30, 65, 340, 210, 8, '#0D1117', C.red, 2);
+  roundRect(30, 65, 340, 32, 8, '#1A0000', null);
+  ctx.fillStyle = C.red; ctx.font = 'bold 13px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('⚠  YOUR FILES ARE ENCRYPTED  ⚠', 200, 86);
+
+  const lines = [
+    { t: 'Todos tus archivos han sido cifrados.', c: C.light, s: 12 },
+    { t: 'Para recuperarlos debes pagar:', c: C.light, s: 12 },
+    { t: '0.05 BTC ≈ 2.800 €', c: C.yellow, s: 16, bold: true },
+    { t: 'Tienes 72 horas antes de que', c: '#9CA3AF', s: 11 },
+    { t: 'el precio se duplique.', c: '#9CA3AF', s: 11 },
+    { t: 'No contactes con la policía.', c: '#6B7280', s: 10 },
+  ];
+  let yy = 112;
+  lines.forEach((l, i) => {
+    const la = easeOut(clamp((prog*4 - i*0.3), 0, 1));
+    ctx.globalAlpha = noteA * la;
+    ctx.fillStyle = l.c;
+    ctx.font = `${l.bold?'bold ':''} ${l.s}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(l.t, 200, yy);
+    yy += l.s + 10;
+  });
+
+  // Timer
+  const timerA = easeOut(clamp((prog-0.4)*3, 0, 1));
+  ctx.globalAlpha = noteA * timerA;
+  roundRect(70, 225, 260, 36, 6, '#1A0000', C.red, 1.5);
+  const secs = Math.floor(72*3600 - prog * 3600);
+  const h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60), s = secs%60;
+  ctx.fillStyle = C.red; ctx.font = 'bold 16px monospace'; ctx.textAlign = 'center';
+  ctx.fillText(`⏱  ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`, 200, 248);
+  ctx.globalAlpha = 1;
+
+  // Prevention tips
+  const tips = [
+    { c: C.green, t: 'Backups offline regulares', s: 'Copias en disco desconectado o nube' },
+    { c: C.blue, t: 'No abrir adjuntos sospechosos', s: 'Verifica siempre el remitente' },
+    { c: C.purple, t: 'Antivirus actualizado', s: 'Detecta muchos ransomware antes de actuar' },
+    { c: C.yellow, t: 'Nunca pagar el rescate', s: 'No garantiza recuperar los archivos' },
+  ];
+
+  tips.forEach((tip, i) => {
+    const ta = easeOut(clamp((prog - 0.4 - i*0.1)*4, 0, 1));
+    ctx.globalAlpha = ta;
+    roundRect(385, 68 + i*52, 268, 42, 5, '#111827', tip.c, 1.2);
+    ctx.fillStyle = tip.c; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(tip.t, 400, 86 + i*52);
+    ctx.fillStyle = '#9CA3AF'; ctx.font = '10px sans-serif';
+    ctx.fillText(tip.s, 400, 101 + i*52);
+    ctx.globalAlpha = 1;
+  });
+
+  const wA = easeOut(clamp((prog-0.85)*8, 0, 1));
+  ctx.globalAlpha = wA;
+  roundRect(30, 290, 622, 36, 6, '#001A00', C.green, 1.5);
+  ctx.fillStyle = C.green; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('✓  La mejor defensa: backups offline + no ejecutar archivos de desconocidos', W/2, 313);
+  ctx.globalAlpha = 1;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  if (scene === 0) drawScene0(sceneT);
+  else if (scene === 1) drawScene1(sceneT);
+  else drawScene2(sceneT);
+  document.getElementById('info').textContent = `Escena ${scene + 1} de 3`;
+}
+
+function step() {
+  if (!playing) return;
+  sceneT++;
+  if (sceneT >= SCENE_DUR[scene]) {
+    sceneT = 0;
+    scene = (scene + 1) % 3;
+    if (scene === 1) initScene1();
+  }
+  draw();
+  animId = requestAnimationFrame(step);
+}
+
+initScene1();
+draw();
+
+document.getElementById('btn').addEventListener('click', () => {
+  playing = !playing;
+  document.getElementById('btn').textContent = playing ? '⏸ Pausar' : '▶ Reproducir';
+  if (playing) step();
+  else cancelAnimationFrame(animId);
+});
+</script>
