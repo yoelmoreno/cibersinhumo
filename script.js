@@ -218,11 +218,6 @@ const learningRoutes = {
         ]
       },
       {
-        title: "MITM: el ataque del intermediario",
-        category: "Ataques",
-        type: "placeholder"
-      },
-      {
         title: "Ransomware: qué es y cómo funciona",
         category: "Ataques",
         type: "youtube",
@@ -241,6 +236,11 @@ const learningRoutes = {
             url: "recursos/animacion-ransomware.html"
           }
         ]
+      },
+      {
+        title: "MITM: el ataque del intermediario",
+        category: "Ataques",
+        type: "placeholder"
       },
       {
         title: "Contraseñas seguras sin complicarte",
