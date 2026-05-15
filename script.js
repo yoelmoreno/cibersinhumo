@@ -223,10 +223,14 @@ const learningRoutes = {
         type: "placeholder"
       },
       {
-        title: "Ransomware: cuando secuestran tus archivos",
+        title: "Ransomware: qué es y cómo funciona",
         category: "Ataques",
-        type: "placeholder",
-        description: "Próximo vídeo sobre ransomware, cifrado de archivos y cómo una infección puede bloquear tus datos.",
+        type: "youtube",
+        url: "https://youtu.be/aD9RRjgCsW4",
+        thumbnailUrl: "https://i.ytimg.com/vi/aD9RRjgCsW4/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/aD9RRjgCsW4/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Qué es un ransomware, cómo puede cifrar archivos y por qué puede bloquear tus datos.",
         resources: [
           {
             label: "Diapositivas PDF",
