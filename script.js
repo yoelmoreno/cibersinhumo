@@ -238,10 +238,14 @@ const learningRoutes = {
         ]
       },
       {
-        title: "MITM: el ataque del intermediario",
+        title: "MITM: qué es un ataque del intermediario",
         category: "Ataques",
-        type: "placeholder",
-        description: "Próximo vídeo sobre ataques Man-in-the-Middle y cómo un intermediario puede espiar o modificar una comunicación.",
+        type: "youtube",
+        url: "https://youtu.be/qZityrltI0k",
+        thumbnailUrl: "https://i.ytimg.com/vi/qZityrltI0k/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/qZityrltI0k/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Qué es un ataque Man-in-the-Middle y cómo un intermediario puede espiar o modificar una comunicación.",
         resources: [
           {
             label: "Diapositivas PDF",
