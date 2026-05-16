@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ataque MITM — Man in the Middle</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #07091A; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: monospace; overflow: hidden; }
+#title { color: #F87171; font-size: 15px; letter-spacing: 3px; margin-bottom: 12px; text-transform: uppercase; }
+#wrap { position: relative; border: 2px solid #1E293B; border-radius: 16px; overflow: hidden; }
+canvas { display: block; }
+#controls {
+  display: flex; gap: 20px; align-items: center; justify-content: center;
+  padding: 14px 0 18px; background: #07091A;
+}
+button {
+  background: #1E2235; color: #F1F5F9;
+  border: 1.5px solid #334155; border-radius: 10px;
+  padding: 10px 32px; font-size: 14px; cursor: pointer;
+  letter-spacing: 1px; font-family: monospace;
+  transition: background .2s;
+}
+button:hover { background: #334155; }
+#scn { color: #475569; font-size: 13px; font-family: monospace; min-width: 220px; text-align: center; }
+#credit { color: #1E293B; font-size: 11px; margin-top: 10px; font-family: monospace; }
+</style>
+</head>
+<body>
+<div id="title">● Man In The Middle — Concienciación</div>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="controls">
+    <button id="btn">▶  Reproducir</button>
+    <span id="scn">Escena 1 de 4</span>
+  </div>
+</div>
+<div id="credit">Ciberseguridad · Solo con fines educativos</div>
+
+<script>
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+
+const W = Math.min(1200, window.innerWidth - 40);
+const H = Math.round(W * 0.52);
+cv.width = W; cv.height = H;
+document.getElementById('wrap').style.width = W + 'px';
+
+const S = W / 960;
+
+const P = {
+  bg:'#07091A', bg2:'#0D1130', bg3:'#111827',
+  blue:'#38BDF8', blue2:'#0EA5E9',
+  green:'#34D399', green2:'#10B981',
+  red:'#F87171', red2:'#EF4444',
+  orange:'#FB923C',
+  purple:'#A78BFA', purple2:'#7C3AED',
+  yellow:'#FCD34D',
+  teal:'#2DD4BF',
+  white:'#F8FAFC', gray:'#94A3B8', gray2:'#475569', gray3:'#1E293B'
+};
+
+let scene = 0, st = 0, playing = false, animId = null;
+const DUR = [240, 260, 260, 220];
+
+function cl(v,a,b){return Math.max(a,Math.min(b,v))}
+function eo(t){return 1-Math.pow(1-cl(t,0,1),3)}
+function lerp(a,b,t){return a+(b-a)*cl(t,0,1)}
+
+function sc(v){ return v * S; }
+
+function rr(x,y,w,h,r,fill,stroke,lw){
+  x=sc(x);y=sc(y);w=sc(w);h=sc(h);r=sc(r);
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
+  ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+h-r);
+  ctx.arcTo(x+w,y+h,x+w-r,y+h,r);ctx.lineTo(x+r,y+h);
+  ctx.arcTo(x,y+h,x,y+h-r,r);ctx.lineTo(x,y+r);
+  ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=(lw||2)*S;ctx.stroke();}
+}
+
+function txt(x,y,text,col,size,align,bold){
+  ctx.fillStyle=col;
+  ctx.font=`${bold?'bold ':''}${sc(size)}px monospace`;
+  ctx.textAlign=align||'center';
+  ctx.fillText(text,sc(x),sc(y));
+}
+
+function monitor(x,y,w,h,col,title,alpha){
+  ctx.globalAlpha=alpha;
+  rr(x,y,w,h,10,P.bg3,col,2.5);
+  rr(x+8,y+34,w-16,h-54,4,'#0A0F1E',null);
+  rr(x,y,w,30,10,col,null);
+  ctx.fillStyle='rgba(0,0,0,0.35)';
+  ctx.fillRect(sc(x),sc(y+20),sc(w),sc(10));
+  txt(x+w/2,y+20,title,P.white,11,'center',true);
+  ctx.fillStyle=col;ctx.beginPath();ctx.arc(sc(x+14),sc(y+15),sc(5),0,Math.PI*2);ctx.fill();
+  [28,42].forEach(dx=>{
+    ctx.fillStyle='rgba(255,255,255,0.2)';ctx.beginPath();ctx.arc(sc(x+dx),sc(y+15),sc(5),0,Math.PI*2);ctx.fill();
+  });
+  ctx.fillStyle=P.gray2;
+  ctx.fillRect(sc(x+w/2-22),sc(y+h-18),sc(44),sc(7));
+  ctx.fillRect(sc(x+w/2-34),sc(y+h-11),sc(68),sc(5));
+  ctx.globalAlpha=1;
+}
+
+function hacker(cx,cy,col,alpha){
+  ctx.globalAlpha=alpha;
+  ctx.fillStyle=P.bg3;ctx.strokeStyle=col;ctx.lineWidth=sc(2.5);
+  ctx.beginPath();ctx.arc(sc(cx),sc(cy-32),sc(30),0,Math.PI*2);ctx.fill();ctx.stroke();
+  txt(cx,cy-22,'?',col,24,'center',true);
+  ctx.fillStyle=P.bg3;ctx.strokeStyle=col;ctx.lineWidth=sc(2.5);
+  ctx.beginPath();
+  ctx.moveTo(sc(cx-40),sc(cy+2));ctx.lineTo(sc(cx+40),sc(cy+2));
+  ctx.lineTo(sc(cx+50),sc(cy+65));ctx.lineTo(sc(cx-50),sc(cy+65));
+  ctx.closePath();ctx.fill();ctx.stroke();
+  txt(cx,cy+40,'ATACANTE',col,11,'center',true);
+  txt(cx,cy+56,'MITM',col,10,'center');
+  ctx.globalAlpha=1;
+}
+
+function packet(x,y,size,col,label,alpha){
+  x=sc(x);y=sc(y);size=sc(size);
+  ctx.globalAlpha=alpha;
+  ctx.fillStyle=col+'44';ctx.strokeStyle=col;ctx.lineWidth=sc(1.5);
+  ctx.beginPath();ctx.roundRect(x-size,y-size*.7,size*2,size*1.4,sc(4));ctx.fill();ctx.stroke();
+  if(label){ctx.fillStyle=P.white;ctx.font=`bold ${sc(9)}px monospace`;ctx.textAlign='center';ctx.fillText(label,x,y+sc(4));}
+  ctx.globalAlpha=1;
+}
+
+function arrowLine(x1,y1,x2,y2,col,alpha,dash,lw){
+  ctx.globalAlpha=alpha;
+  ctx.strokeStyle=col;ctx.lineWidth=(lw||2.5)*S;
+  ctx.setLineDash(dash?dash.map(d=>d*S):[]);
+  ctx.beginPath();ctx.moveTo(sc(x1),sc(y1));ctx.lineTo(sc(x2),sc(y2));ctx.stroke();
+  ctx.setLineDash([]);
+  const a=Math.atan2(y2-y1,x2-x1);
+  ctx.fillStyle=col;
+  ctx.beginPath();ctx.moveTo(sc(x2),sc(y2));
+  ctx.lineTo(sc(x2)-sc(14)*Math.cos(a-.45),sc(y2)-sc(14)*Math.sin(a-.45));
+  ctx.lineTo(sc(x2)-sc(14)*Math.cos(a+.45),sc(y2)-sc(14)*Math.sin(a+.45));
+  ctx.closePath();ctx.fill();
+  ctx.globalAlpha=1;
+}
+
+// Scene 0: Normal connection
+let pkts0=[];
+function initS0(){pkts0=[];}
+function drawS0(t){
+  const prog=cl(t/DUR[0],0,1);
+  ctx.fillStyle=P.bg;ctx.fillRect(0,0,W,H);
+
+  txt(480,36,'Escena 1 — Conexión normal sin atacante',P.white,17,'center',true);
+  txt(480,58,'El usuario se conecta directamente al servidor. La comunicación es segura.',P.gray,12,'center');
+
+  const ua=eo(cl(prog*3,0,1)),sa=eo(cl(prog*3-.3,0,1));
+  monitor(48,85,200,175,P.blue,'USUARIO',ua);
+  monitor(712,85,200,175,P.green,'SERVIDOR',sa);
+
+  if(prog>.2){
+    const la=eo(cl((prog-.2)*3,0,1));
+    ctx.globalAlpha=la*.35;
+    ctx.strokeStyle=P.green;ctx.lineWidth=sc(3);ctx.setLineDash([sc(12),sc(6)]);
+    ctx.beginPath();ctx.moveTo(sc(248),sc(172));ctx.lineTo(sc(712),sc(172));ctx.stroke();
+    ctx.setLineDash([]);ctx.globalAlpha=1;
+  }
+
+  if(t%28===0&&pkts0.length<8&&prog>.3){
+    const dir=Math.random()>.5?1:-1;
+    pkts0.push({x:dir>0?248:712,tx:dir>0?712:248,y:155+(Math.random()-0.5)*20,prog:0,sp:.012+Math.random()*.008,col:dir>0?P.blue:P.green,lbl:dir>0?'REQ':'RES'});
+  }
+  pkts0.forEach(p=>{
+    p.prog=Math.min(1,p.prog+p.sp);
+    packet(lerp(p.x,p.tx,eo(p.prog)),p.y,18,p.col,p.lbl,1);
+  });
+  pkts0=pkts0.filter(p=>p.prog<1);
+
+  const shA=eo(cl((prog-.5)*2,0,1));
+  ctx.globalAlpha=shA;
+  rr(380,140,200,62,10,P.green+'22',P.green,2);
+  txt(480,163,'🔒 HTTPS / TLS',P.green,13,'center',true);
+  txt(480,181,'Cifrado extremo a extremo',P.gray,11,'center');
+  ctx.globalAlpha=1;
+
+  const tipA=eo(cl((prog-.8)*5,0,1));
+  ctx.globalAlpha=tipA;
+  rr(180,310,600,48,10,P.green+'22',P.green,1.5);
+  txt(480,340,'✓  Esta es la conexión que debería ser siempre: directa y cifrada',P.green,12,'center',true);
+  ctx.globalAlpha=1;
+
+  txt(148,290,'IP: 192.168.1.10',P.gray2,10,'center');
+  txt(812,290,'IP: 93.184.216.34',P.gray2,10,'center');
+}
+
+// Scene 1: ARP Poisoning
+let arpPkts=[];
+function initS1(){arpPkts=[];}
+function drawS1(t){
+  const prog=cl(t/DUR[1],0,1);
+  ctx.fillStyle=P.bg;ctx.fillRect(0,0,W,H);
+
+  txt(480,36,'Escena 2 — El atacante se posiciona en el medio (ARP Spoofing)',P.white,17,'center',true);
+  txt(480,58,'Envía paquetes ARP falsos para engañar a ambos lados de la red local',P.gray,12,'center');
+
+  monitor(28,85,185,160,P.blue,'USUARIO',1);
+  monitor(747,85,185,160,P.green,'SERVIDOR',1);
+
+  const hackA=eo(cl(prog*4,0,1));
+  hacker(480,195,P.red,hackA);
+
+  if(prog>.15){
+    const arpA=eo(cl((prog-.15)*3,0,1));
+    if(t%18===0&&arpPkts.length<14){
+      const toUser=Math.random()>.5;
+      arpPkts.push({x:480,y:228,tx:toUser?215:745,ty:175,prog:0,sp:.016,col:P.red,lbl:'ARP'});
+    }
+    arpPkts.forEach(p=>{
+      p.prog=Math.min(1,p.prog+p.sp);
+      packet(lerp(p.x,p.tx,eo(p.prog)),lerp(p.y,p.ty,eo(p.prog)),14,p.col,p.lbl,arpA);
+    });
+    arpPkts=arpPkts.filter(p=>p.prog<1);
+  }
+
+  if(prog>.4){
+    const a=eo(cl((prog-.4)*3,0,1));
+    ctx.globalAlpha=a;
+    ctx.strokeStyle=P.red;ctx.lineWidth=sc(2);ctx.setLineDash([sc(8),sc(5)]);
+    ctx.beginPath();ctx.moveTo(sc(213),sc(175));ctx.lineTo(sc(438),sc(223));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(sc(747),sc(175));ctx.lineTo(sc(522),sc(223));ctx.stroke();
+    ctx.setLineDash([]);ctx.globalAlpha=1;
+
+    ctx.globalAlpha=a;
+    rr(330,395,300,48,10,P.red+'22',P.red,2);
+    txt(480,424,'⚠ ARP CACHE ENVENENADA',P.red,13,'center',true);
+    ctx.globalAlpha=1;
+  }
+
+  if(prog>.65){
+    const a=eo(cl((prog-.65)*4,0,1));
+    ctx.globalAlpha=a;
+    txt(140,310,'Usuario cree que',P.blue,11,'center');
+    txt(140,326,'el atacante es el servidor',P.blue,11,'center');
+    txt(820,310,'Servidor cree que',P.green,11,'center');
+    txt(820,326,'el atacante es el usuario',P.green,11,'center');
+    ctx.globalAlpha=1;
+  }
+
+  const tipA=eo(cl((prog-.85)*6,0,1));
+  ctx.globalAlpha=tipA;
+  rr(140,455,680,48,12,P.orange+'22',P.orange,1.5);
+  txt(480,484,'⚠  El atacante ahora puede interceptar TODO el tráfico de la red',P.orange,13,'center',true);
+  ctx.globalAlpha=1;
+}
+
+// Scene 2: Data interception
+let flow=[];
+function initS2(){flow=[];}
+function drawS2(t){
+  const prog=cl(t/DUR[2],0,1);
+  ctx.fillStyle=P.bg;ctx.fillRect(0,0,W,H);
+
+  txt(480,36,'Escena 3 — Intercepción y lectura de datos en tránsito',P.white,17,'center',true);
+  txt(480,58,'El atacante lee, copia y reenvía cada paquete sin que nadie lo detecte',P.gray,12,'center');
+
+  monitor(22,80,185,160,P.blue,'USUARIO',1);
+  monitor(753,80,185,160,P.green,'SERVIDOR',1);
+
+  rr(385,72,190,240,14,P.bg3,P.red,2.5);
+  txt(480,98,'ATACANTE',P.red,13,'center',true);
+  txt(480,114,'interceptando...',P.gray,10,'center');
+
+  rr(397,128,166,60,8,'#1A0A0A',P.red,1);
+  txt(480,147,'PAQUETES ROBADOS',P.red,10,'center',true);
+  const stolen=Math.floor(prog*247);
+  txt(480,170,stolen.toString(),P.yellow,18,'center',true);
+  txt(480,184,'paquetes leídos',P.gray,9,'center');
+
+  rr(397,200,166,100,8,'#0A0A1A',P.purple,1);
+  txt(480,218,'SNIFFER ACTIVO',P.purple,10,'center',true);
+  const sniffLines=['usr: admin',`pass: ${'•'.repeat(3+Math.floor(prog*5))}`,'card: 4xxx...'];
+  sniffLines.forEach((l,i)=>{
+    const la=eo(cl((prog*4-i*.5),0,1));
+    ctx.globalAlpha=la;
+    txt(480,236+i*18,l,i===1?P.red:P.purple,10,'center');
+    ctx.globalAlpha=1;
+  });
+
+  if(t%16===0&&flow.length<18){
+    const toRight=Math.random()>.5;
+    flow.push({x:toRight?207:753,tx:toRight?385:575,y:150+(Math.random()-0.5)*30,prog:0,sp:.013+Math.random()*.007,col:toRight?P.blue:P.green,lbl:toRight?'DATA':'RES',phase:1});
+  }
+  flow.forEach(p=>{
+    if(p.phase===1){
+      p.prog=Math.min(1,p.prog+p.sp);
+      packet(lerp(p.x,p.tx,eo(p.prog)),p.y,16,p.col,p.lbl,1);
+      if(p.prog>=1){p.phase=2;p.prog=0;p.x2=p.tx;p.tx2=p.col===P.blue?575:207;p.col2=P.red;}
+    } else if(p.phase===2){
+      p.prog=Math.min(1,p.prog+p.sp);
+      packet(lerp(p.x2,p.tx2,eo(p.prog)),p.y,16,p.col2,'FWD',.8);
+    }
+  });
+  flow=flow.filter(p=>!(p.phase===2&&p.prog>=1));
+
+  ctx.globalAlpha=.3;
+  ctx.strokeStyle=P.blue;ctx.lineWidth=sc(1.5);ctx.setLineDash([sc(6),sc(4)]);
+  ctx.beginPath();ctx.moveTo(sc(207),sc(162));ctx.lineTo(sc(385),sc(162));ctx.stroke();
+  ctx.strokeStyle=P.green;
+  ctx.beginPath();ctx.moveTo(sc(575),sc(162));ctx.lineTo(sc(753),sc(162));ctx.stroke();
+  ctx.setLineDash([]);ctx.globalAlpha=1;
+
+  const tipA=eo(cl((prog-.7)*4,0,1));
+  ctx.globalAlpha=tipA;
+  rr(140,430,680,56,12,P.purple+'22',P.purple,1.5);
+  txt(480,456,'El usuario y el servidor siguen comunicándose normalmente',P.purple,12,'center',true);
+  txt(480,474,'pero el atacante lee y copia todo en tiempo real sin dejar rastro',P.gray,11,'center');
+  ctx.globalAlpha=1;
+}
+
+// Scene 3: Protection
+function drawS3(t){
+  const prog=cl(t/DUR[3],0,1);
+  ctx.fillStyle=P.bg;ctx.fillRect(0,0,W,H);
+
+  txt(480,36,'Escena 4 — Cómo detectarlo y protegerte',P.white,17,'center',true);
+  txt(480,58,'Señales de alerta y defensas efectivas contra ataques MITM',P.gray,12,'center');
+
+  const tips=[
+    {col:P.green,title:'HTTPS siempre',sub:'Verifica el candado. Sin HTTPS tus datos viajan en texto claro.',icon:'🔒'},
+    {col:P.blue,title:'VPN de confianza',sub:'Cifra todo tu tráfico y oculta tu comunicación al atacante.',icon:'🛡'},
+    {col:P.purple,title:'Evita WiFi públicas',sub:'Cafeterías y aeropuertos: el entorno favorito para MITM.',icon:'📶'},
+    {col:P.yellow,title:'Certificados SSL',sub:'Si el navegador avisa de certificado inválido, sal inmediatamente.',icon:'📜'},
+    {col:P.orange,title:'Doble factor (2FA)',sub:'Aunque roben tu contraseña, sin 2FA no pueden entrar.',icon:'📱'},
+    {col:P.teal,title:'arp -a en consola',sub:'Entradas ARP duplicadas = señal de envenenamiento de red.',icon:'💻'},
+  ];
+
+  const TW=268, TH=102, GX=28, GY=18;
+  const SX=(960-(3*TW+2*GX))/2;
+  const SY=82;
+
+  tips.forEach((tip,i)=>{
+    const col=i%3, row=Math.floor(i/3);
+    const x=SX+col*(TW+GX), y=SY+row*(TH+GY);
+    const a=eo(cl((prog*3-i*.28),0,1));
+    ctx.globalAlpha=a;
+    rr(x,y,TW,TH,12,P.bg3,tip.col,2);
+    rr(x,y,TW,30,12,tip.col+'33',null);
+    txt(x+TW/2,y+21,tip.icon+'  '+tip.title,tip.col,12,'center',true);
+    const words=tip.sub.split(' ');
+    let line='',ly=sc(y+48);
+    ctx.fillStyle=P.gray;ctx.font=`${sc(10)}px monospace`;ctx.textAlign='left';
+    words.forEach(w=>{
+      const test=line+w+' ';
+      if(ctx.measureText(test).width>sc(TW-24)&&line!==''){
+        ctx.fillText(line.trim(),sc(x+12),ly);line=w+' ';ly+=sc(15);
+      } else line=test;
+    });
+    if(line)ctx.fillText(line.trim(),sc(x+12),ly);
+    ctx.globalAlpha=1;
+  });
+
+  const wA=eo(cl((prog-.85)*8,0,1));
+  ctx.globalAlpha=wA;
+  rr(80,384,800,56,14,P.green+'22',P.green,2);
+  txt(480,410,'✓  MITM se neutraliza con HTTPS + VPN + verificación de certificados',P.green,13,'center',true);
+  txt(480,428,'La concienciación digital es la primera y más efectiva línea de defensa',P.gray,11,'center');
+  ctx.globalAlpha=1;
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  if(scene===0)drawS0(st);
+  else if(scene===1)drawS1(st);
+  else if(scene===2)drawS2(st);
+  else drawS3(st);
+  document.getElementById('scn').textContent=`Escena ${scene+1} de 4`;
+}
+
+function step(){
+  if(!playing)return;
+  st++;
+  if(st>=DUR[scene]){
+    st=0;scene=(scene+1)%4;
+    if(scene===0)initS0();
+    else if(scene===1)initS1();
+    else if(scene===2)initS2();
+  }
+  draw();
+  animId=requestAnimationFrame(step);
+}
+
+initS0();draw();
+
+document.getElementById('btn').addEventListener('click',()=>{
+  playing=!playing;
+  document.getElementById('btn').textContent=playing?'⏸  Pausar':'▶  Reproducir';
+  if(playing)step();else cancelAnimationFrame(animId);
+});
+
+window.addEventListener('resize',()=>{
+  const nw=Math.min(1200,window.innerWidth-40);
+  if(Math.abs(nw-W)>20)location.reload();
+});
+</script>
+</body>
+</html>
