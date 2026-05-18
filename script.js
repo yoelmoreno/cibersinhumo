@@ -99,7 +99,7 @@ const learningRoutes = {
     tag: "ruta 01",
     title: "No sé nada de ciber",
     desc: "Empieza por lo esencial: amenazas comunes, hábitos seguros y conceptos base.",
-    filterOrder: ["Introducción", "Ataques", "Privacidad", "Todos"],
+    filterOrder: ["Introducción", "Ataques", "Historia", "Privacidad", "Todos"],
     videos: [
       {
         title: "Introducción al canal",
@@ -116,6 +116,16 @@ const learningRoutes = {
             url: "recursos/presentacion-ciberseguridad-intro.pdf"
           }
         ]
+      },
+      {
+        title: "WannaCry: qué fue y por qué marcó la historia",
+        category: "Historia",
+        type: "youtube",
+        url: "https://youtu.be/a4BePy8pXfA",
+        thumbnailUrl: "https://i.ytimg.com/vi/a4BePy8pXfA/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/a4BePy8pXfA/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Qué fue WannaCry, por qué se volvió tan famoso y qué enseñó sobre la ciberseguridad moderna."
       },
       {
         title: "Phishing: qué es y cómo evitarlo",

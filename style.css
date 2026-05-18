@@ -624,6 +624,10 @@ select {
   display: block;
 }
 
+.video-side-card.about-project {
+  justify-content: flex-start;
+}
+
 .video-side-card .about-photo-frame {
   min-height: 0;
   height: 150px;
