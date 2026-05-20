@@ -128,6 +128,16 @@ const learningRoutes = {
         description: "Qué fue WannaCry, por qué se volvió tan famoso y qué enseñó sobre la ciberseguridad moderna."
       },
       {
+        title: "Pakenham y los USB: qué pasó",
+        category: "Historia",
+        type: "youtube",
+        url: "https://youtu.be/CIIkmf8C9NI",
+        thumbnailUrl: "https://i.ytimg.com/vi/CIIkmf8C9NI/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/CIIkmf8C9NI/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Caso real explicado de forma sencilla: qué pasó en Pakenham con los USB y qué lecciones deja."
+      },
+      {
         title: "Phishing: qué es y cómo evitarlo",
         category: "Ataques",
         type: "youtube",
