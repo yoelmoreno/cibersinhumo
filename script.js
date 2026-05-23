@@ -288,8 +288,18 @@ const learningRoutes = {
     tag: "ruta 02",
     title: "Aplicar la teoría a la práctica",
     desc: "Herramientas, pruebas guiadas y pequeños laboratorios para aprender haciendo.",
-    filterOrder: ["Pruebas prácticas", "Redes", "Contraseñas", "Análisis", "Todos"],
+    filterOrder: ["Intro", "Pruebas prácticas", "Redes", "Contraseñas", "Análisis", "Todos"],
     videos: [
+      {
+        title: "Máquinas virtuales y VirtualBox: intro al laboratorio",
+        category: "Intro",
+        type: "youtube",
+        url: "https://youtu.be/bL8H_mR0BFw",
+        thumbnailUrl: "https://i.ytimg.com/vi/bL8H_mR0BFw/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/bL8H_mR0BFw/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Qué es una máquina virtual, para qué sirve en ciberseguridad y cómo empezar con VirtualBox."
+      },
       {
         title: "Escaneo de puertos: qué hay abierto y por qué importa",
         category: "Pruebas prácticas",
