@@ -2476,10 +2476,10 @@ select {
   }
 
   .video-side-card .about-project-mark img {
-    width: 100%;
-    height: 116%;
-    object-fit: cover;
-    object-position: center 26%;
+    width: 78%;
+    height: 78%;
+    object-fit: contain;
+    object-position: center;
     transform: none;
   }
 
