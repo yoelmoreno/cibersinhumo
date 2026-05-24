@@ -326,8 +326,18 @@ const learningRoutes = {
     tag: "ruta 03",
     title: "Entender informática para entender ciber",
     desc: "Conceptos de informática que luego se aplican a redes, análisis, sistemas y seguridad.",
-    filterOrder: ["Redes", "Web", "Sistemas", "Conceptos", "Todos"],
+    filterOrder: ["Intro", "Redes", "Web", "Sistemas", "Conceptos", "Todos"],
     videos: [
+      {
+        title: "IPs: IPv4, IPv6, públicas y privadas",
+        category: "Intro",
+        type: "youtube",
+        url: "https://youtu.be/eGTbt5cqBXA",
+        thumbnailUrl: "https://i.ytimg.com/vi/eGTbt5cqBXA/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/eGTbt5cqBXA/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Introducción clara a las direcciones IP: IPv4, IPv6, públicas, privadas, fijas y dinámicas."
+      },
       {
         title: "Redes desde cero: IP, puertos y protocolos",
         category: "Redes",
