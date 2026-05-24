@@ -285,7 +285,7 @@ window.addEventListener("load", () => {
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
     drawGrid(r);
-    if (!isMobile()) drawGeoJSON(r);
+    drawGeoJSON(r);
 
     locations.forEach((loc) => {
       const p = project(latLonTo3D(loc.lat, loc.lon, r));
@@ -475,19 +475,17 @@ window.addEventListener("load", () => {
     }
   }, isMobile() ? 260 : 700);
 
-  if (!isMobile()) {
-    fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
-      .then((r) => r.json())
-      .then((topology) => {
-        const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js";
-        script.onload = () => {
-          geoData = topojson.feature(topology, topology.objects.countries);
-        };
-        document.head.appendChild(script);
-      })
-      .catch((error) => console.error("Error cargando mapa:", error));
-  }
+  fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
+    .then((r) => r.json())
+    .then((topology) => {
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js";
+      script.onload = () => {
+        geoData = topojson.feature(topology, topology.objects.countries);
+      };
+      document.head.appendChild(script);
+    })
+    .catch((error) => console.error("Error cargando mapa:", error));
 
   animate();
   if (isMobile()) {

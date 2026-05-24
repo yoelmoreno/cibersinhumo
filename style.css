@@ -2476,9 +2476,11 @@ select {
   }
 
   .video-side-card .about-project-mark img {
-    width: 96%;
-    height: 96%;
-    transform: translateY(-18px);
+    width: 100%;
+    height: 116%;
+    object-fit: cover;
+    object-position: center 26%;
+    transform: none;
   }
 
   .video-discovery {
