@@ -330,18 +330,19 @@ const learningRoutes = {
     videos: [
       {
         title: "IPs: IPv4, IPv6, públicas y privadas",
-        category: "Intro",
+        category: "Redes",
         type: "youtube",
         url: "https://youtu.be/eGTbt5cqBXA",
         thumbnailUrl: "https://i.ytimg.com/vi/eGTbt5cqBXA/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/eGTbt5cqBXA/mqdefault.jpg",
         badge: "Nuevo",
-        description: "Introducción clara a las direcciones IP: IPv4, IPv6, públicas, privadas, fijas y dinámicas."
-      },
-      {
-        title: "Redes desde cero: IP, puertos y protocolos",
-        category: "Redes",
-        type: "placeholder"
+        description: "Introducción clara a las direcciones IP: IPv4, IPv6, públicas, privadas, fijas y dinámicas.",
+        resources: [
+          {
+            label: "Presentación PDF",
+            url: "recursos/presentacion-ip.pdf"
+          }
+        ]
       },
       {
         title: "Cómo viaja una petición por Internet",
