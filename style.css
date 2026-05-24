@@ -2480,7 +2480,7 @@ select {
     height: 78%;
     object-fit: contain;
     object-position: center;
-    transform: translateY(-16px);
+    transform: translateY(-22px);
   }
 
   .video-discovery {
