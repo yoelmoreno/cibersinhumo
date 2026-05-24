@@ -13,8 +13,10 @@ window.addEventListener("load", () => {
     { name: "SecurityWeek", rss: "https://www.securityweek.com/feed/" }
   ];
 
+  const isMobile = () => window.matchMedia("(max-width: 700px)").matches;
+
   function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = isMobile() ? 1 : Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.floor(wrapper.clientWidth * dpr);
     canvas.height = Math.floor(wrapper.clientHeight * dpr);
     canvas.style.width = `${wrapper.clientWidth}px`;
@@ -158,25 +160,33 @@ window.addEventListener("load", () => {
     return match || locations[fallbackIndex % locations.length];
   }
 
-  function createAttack(event = null) {
+  function createAttack(event = null, initialProgress = 0) {
     const type = event ? event.type : Object.keys(attackColors)[Math.floor(Math.random() * Object.keys(attackColors).length)];
     const from = event ? event.from : locations[Math.floor(Math.random() * locations.length)];
     let to = event ? event.to : locations[Math.floor(Math.random() * locations.length)];
     if (from === to) {
       to = locations[(locations.indexOf(from) + 5) % locations.length];
     }
+    const mobileBoost = isMobile() ? 2.7 : 1;
     attacks.push({
       from,
       to,
       type,
-      progress: 0,
-      speed: 0.003 + Math.random() * 0.003,
+      progress: initialProgress,
+      speed: (0.003 + Math.random() * 0.003) * mobileBoost,
       pulse: 0.6 + Math.random() * 0.8
     });
+    const maxAttacks = isMobile() ? 42 : 56;
+    if (attacks.length > maxAttacks) {
+      attacks.splice(0, attacks.length - maxAttacks);
+    }
   }
 
   function seedDemoTraffic() {
-    for (let i = 0; i < 38; i++) createAttack();
+    const count = isMobile() ? 36 : 38;
+    for (let i = 0; i < count; i++) {
+      createAttack(null, Math.random() * (isMobile() ? 0.92 : 0.74));
+    }
   }
 
   function drawGrid(r) {
@@ -275,7 +285,7 @@ window.addEventListener("load", () => {
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
     drawGrid(r);
-    drawGeoJSON(r);
+    if (!isMobile()) drawGeoJSON(r);
 
     locations.forEach((loc) => {
       const p = project(latLonTo3D(loc.lat, loc.lon, r));
@@ -463,21 +473,27 @@ window.addEventListener("load", () => {
     } else {
       createAttack();
     }
-  }, 700);
+  }, isMobile() ? 260 : 700);
 
-  fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
-    .then((r) => r.json())
-    .then((topology) => {
-      const script = document.createElement("script");
-      script.src = "https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js";
-      script.onload = () => {
-        geoData = topojson.feature(topology, topology.objects.countries);
-      };
-      document.head.appendChild(script);
-    })
-    .catch((error) => console.error("Error cargando mapa:", error));
+  if (!isMobile()) {
+    fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
+      .then((r) => r.json())
+      .then((topology) => {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js";
+        script.onload = () => {
+          geoData = topojson.feature(topology, topology.objects.countries);
+        };
+        document.head.appendChild(script);
+      })
+      .catch((error) => console.error("Error cargando mapa:", error));
+  }
 
   animate();
-  loadThreatFeed();
+  if (isMobile()) {
+    setTimeout(loadThreatFeed, 1800);
+  } else {
+    loadThreatFeed();
+  }
   setInterval(loadThreatFeed, 300000);
 });

@@ -2475,6 +2475,12 @@ select {
     min-height: auto;
   }
 
+  .video-side-card .about-project-mark img {
+    width: 96%;
+    height: 96%;
+    transform: translateY(-18px);
+  }
+
   .video-discovery {
     gap: 14px;
   }
