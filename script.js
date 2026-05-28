@@ -936,8 +936,8 @@ function renderIpGlobe() {
 function focusIpGlobe(lat, lon) {
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
   ipMarker = { lat, lon };
-  ipRotX = Math.max(-0.75, Math.min(0.75, -lat * Math.PI / 360));
-  ipRotY = -(lon + 180) * Math.PI / 180;
+  ipRotX = Math.max(-0.95, Math.min(0.95, -lat * Math.PI / 180));
+  ipRotY = (lon + 90) * Math.PI / 180;
   renderIpGlobe();
 }
 
