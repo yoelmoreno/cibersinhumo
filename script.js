@@ -345,9 +345,20 @@ const learningRoutes = {
         ]
       },
       {
-        title: "Cómo viaja una petición por Internet",
+        title: "VPN: qué son y cuándo sirven",
         category: "Redes",
-        type: "placeholder"
+        type: "youtube",
+        url: "https://youtu.be/I6KqB5QsIGo",
+        thumbnailUrl: "https://i.ytimg.com/vi/I6KqB5QsIGo/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/I6KqB5QsIGo/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Qué es una VPN, cuándo aporta privacidad y qué cosas no soluciona por sí sola.",
+        resources: [
+          {
+            label: "Diapositivas PDF",
+            url: "recursos/diapositivas-vpn.pdf"
+          }
+        ]
       },
       {
         title: "Qué pasa cuando entras en una web",
