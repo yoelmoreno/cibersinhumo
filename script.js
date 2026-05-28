@@ -646,22 +646,323 @@ if (sugerenciasForm) {
 const checkIpButton = document.getElementById("check-ip-btn");
 const ipStatus = document.getElementById("ip-status");
 const ipCountryVisual = document.getElementById("ip-country-visual");
-const ipPin = document.getElementById("ip-pin");
+const ipGlobe = document.getElementById("ip-globe");
 const ipFields = document.querySelectorAll("[data-ip-field]");
+let ipGlobeData = null;
+let ipMarker = null;
+let ipRotX = -0.12;
+let ipRotY = 0.35;
+let ipDragging = false;
+let ipLastX = 0;
+let ipLastY = 0;
 
 function setIpField(name, value) {
   const field = document.querySelector(`[data-ip-field="${name}"]`);
   if (field) field.textContent = value || "--";
 }
 
-function moveIpPin(latitude, longitude) {
-  if (!ipPin || typeof latitude !== "number" || typeof longitude !== "number") return;
+function ipNumber(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
 
-  const x = Math.max(18, Math.min(82, ((longitude + 180) / 360) * 100));
-  const y = Math.max(18, Math.min(82, ((90 - latitude) / 180) * 100));
-  ipPin.style.left = `${x}%`;
-  ipPin.style.top = `${y}%`;
-  ipPin.classList.add("is-visible");
+function normalizeIpData(data, providerName) {
+  if (!data || data.success === false || data.status === "fail" || data.error) return null;
+
+  const loc = typeof data.loc === "string" ? data.loc.split(",").map(Number) : [];
+  const latitude = ipNumber(data.latitude ?? data.lat ?? loc[0]);
+  const longitude = ipNumber(data.longitude ?? data.lon ?? loc[1]);
+  const timezone = typeof data.timezone === "object" ? data.timezone.id : data.timezone;
+
+  return {
+    ip: data.ip || data.query,
+    provider: data.connection?.isp || data.connection?.org || data.org || data.isp || data.organization_name || data.asn?.name,
+    country: data.country || data.country_name,
+    city: data.city,
+    region: data.region || data.regionName,
+    timezone,
+    latitude,
+    longitude,
+    source: providerName
+  };
+}
+
+async function fetchWithTimeout(url, timeout = 6500) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      cache: "no-store",
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return await response.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchIpInfo() {
+  const providers = [
+    { name: "ipwho.is", url: "https://ipwho.is/?fields=success,message,ip,country,city,region,latitude,longitude,connection,timezone" },
+    { name: "ipapi.co", url: "https://ipapi.co/json/" },
+    { name: "geojs.io", url: "https://get.geojs.io/v1/ip/geo.json" }
+  ];
+
+  let lastError = null;
+
+  for (const provider of providers) {
+    try {
+      const data = await fetchWithTimeout(provider.url);
+      const normalized = normalizeIpData(data, provider.name);
+      if (normalized?.ip) return normalized;
+      lastError = new Error(data?.message || `Respuesta no vÃ¡lida de ${provider.name}`);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error("No se pudo consultar la IP");
+}
+
+function ipLatLonTo3D(lat, lon, r) {
+  const phi = (90 - lat) * Math.PI / 180;
+  const theta = (lon + 180) * Math.PI / 180;
+  return {
+    x: -r * Math.sin(phi) * Math.cos(theta),
+    y: r * Math.cos(phi),
+    z: r * Math.sin(phi) * Math.sin(theta)
+  };
+}
+
+function ipProject(point, width, height, r) {
+  const cosX = Math.cos(ipRotX);
+  const sinX = Math.sin(ipRotX);
+  const cosY = Math.cos(ipRotY);
+  const sinY = Math.sin(ipRotY);
+  const x1 = point.x * cosY - point.z * sinY;
+  const z1 = point.x * sinY + point.z * cosY;
+  const y2 = point.y * cosX + z1 * sinX;
+  const z2 = -point.y * sinX + z1 * cosX;
+
+  return {
+    x: width / 2 + x1,
+    y: height / 2 - y2,
+    z: z2,
+    visible: z2 > -r * 0.08
+  };
+}
+
+function drawIpPolygon(ctx, coords, width, height, r) {
+  ctx.beginPath();
+  let started = false;
+
+  coords.forEach((coord) => {
+    const projected = ipProject(ipLatLonTo3D(coord[1], coord[0], r * 1.002), width, height, r);
+    if (!projected.visible) {
+      started = false;
+      return;
+    }
+    if (!started) {
+      ctx.moveTo(projected.x, projected.y);
+      started = true;
+    } else {
+      ctx.lineTo(projected.x, projected.y);
+    }
+  });
+
+  if (started) ctx.stroke();
+}
+
+function drawIpCountries(ctx, width, height, r) {
+  if (!ipGlobeData) return;
+
+  ctx.strokeStyle = "rgba(0, 255, 136, 0.34)";
+  ctx.lineWidth = 0.7;
+
+  ipGlobeData.features.forEach((feature) => {
+    const geometry = feature.geometry;
+    if (!geometry) return;
+
+    if (geometry.type === "Polygon") {
+      geometry.coordinates.forEach((ring) => drawIpPolygon(ctx, ring, width, height, r));
+    }
+
+    if (geometry.type === "MultiPolygon") {
+      geometry.coordinates.forEach((polygon) => {
+        polygon.forEach((ring) => drawIpPolygon(ctx, ring, width, height, r));
+      });
+    }
+  });
+}
+
+function drawIpGrid(ctx, width, height, r) {
+  ctx.strokeStyle = "rgba(0, 255, 136, 0.16)";
+  ctx.lineWidth = 0.6;
+
+  for (let lat = -60; lat <= 60; lat += 30) {
+    ctx.beginPath();
+    let started = false;
+    for (let lon = -180; lon <= 180; lon += 6) {
+      const projected = ipProject(ipLatLonTo3D(lat, lon, r), width, height, r);
+      if (!projected.visible) started = false;
+      else if (!started) {
+        ctx.moveTo(projected.x, projected.y);
+        started = true;
+      } else {
+        ctx.lineTo(projected.x, projected.y);
+      }
+    }
+    ctx.stroke();
+  }
+
+  for (let lon = -150; lon <= 180; lon += 30) {
+    ctx.beginPath();
+    let started = false;
+    for (let lat = -85; lat <= 85; lat += 5) {
+      const projected = ipProject(ipLatLonTo3D(lat, lon, r), width, height, r);
+      if (!projected.visible) started = false;
+      else if (!started) {
+        ctx.moveTo(projected.x, projected.y);
+        started = true;
+      } else {
+        ctx.lineTo(projected.x, projected.y);
+      }
+    }
+    ctx.stroke();
+  }
+}
+
+function drawIpMarker(ctx, width, height, r) {
+  if (!ipMarker) return;
+
+  const projected = ipProject(ipLatLonTo3D(ipMarker.lat, ipMarker.lon, r * 1.04), width, height, r);
+  if (!projected.visible) return;
+
+  ctx.beginPath();
+  ctx.arc(projected.x, projected.y, 6, 0, Math.PI * 2);
+  ctx.fillStyle = "#00ff88";
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(projected.x, projected.y, 16, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(0, 255, 136, 0.62)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(projected.x, projected.y + 7);
+  ctx.lineTo(projected.x, projected.y + 28);
+  ctx.strokeStyle = "rgba(0, 255, 136, 0.52)";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
+function renderIpGlobe() {
+  if (!ipGlobe) return;
+
+  const ctx = ipGlobe.getContext("2d");
+  const rect = ipGlobe.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const width = Math.max(240, Math.floor(rect.width || 320));
+  const height = Math.max(240, Math.floor(rect.height || 320));
+  const r = Math.min(width, height) * 0.43;
+
+  if (ipGlobe.width !== Math.floor(width * dpr) || ipGlobe.height !== Math.floor(height * dpr)) {
+    ipGlobe.width = Math.floor(width * dpr);
+    ipGlobe.height = Math.floor(height * dpr);
+    ipGlobe.style.width = `${width}px`;
+    ipGlobe.style.height = `${height}px`;
+  }
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+  ctx.save();
+
+  const gradient = ctx.createRadialGradient(width * 0.36, height * 0.28, r * 0.08, width / 2, height / 2, r);
+  gradient.addColorStop(0, "rgba(120, 255, 184, 0.18)");
+  gradient.addColorStop(0.62, "rgba(0, 255, 136, 0.08)");
+  gradient.addColorStop(1, "rgba(2, 8, 5, 0.96)");
+
+  ctx.beginPath();
+  ctx.arc(width / 2, height / 2, r, 0, Math.PI * 2);
+  ctx.fillStyle = gradient;
+  ctx.fill();
+  ctx.clip();
+
+  drawIpGrid(ctx, width, height, r);
+  drawIpCountries(ctx, width, height, r);
+  drawIpMarker(ctx, width, height, r);
+  ctx.restore();
+
+  ctx.beginPath();
+  ctx.arc(width / 2, height / 2, r, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(0, 255, 136, 0.45)";
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+}
+
+function focusIpGlobe(lat, lon) {
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+  ipMarker = { lat, lon };
+  ipRotX = Math.max(-0.75, Math.min(0.75, -lat * Math.PI / 360));
+  ipRotY = -(lon + 180) * Math.PI / 180;
+  renderIpGlobe();
+}
+
+async function loadIpGlobeMap() {
+  if (!ipGlobe) return;
+
+  try {
+    const topology = await fetchWithTimeout("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json", 9000);
+
+    if (!window.topojson) {
+      await new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js";
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+
+    ipGlobeData = window.topojson.feature(topology, topology.objects.countries);
+    renderIpGlobe();
+  } catch (error) {
+    console.error("Error cargando globo IP:", error);
+    renderIpGlobe();
+  }
+}
+
+if (ipGlobe) {
+  ipGlobe.addEventListener("pointerdown", (event) => {
+    ipDragging = true;
+    ipLastX = event.clientX;
+    ipLastY = event.clientY;
+    ipGlobe.setPointerCapture?.(event.pointerId);
+  });
+
+  ipGlobe.addEventListener("pointermove", (event) => {
+    if (!ipDragging) return;
+    const dx = event.clientX - ipLastX;
+    const dy = event.clientY - ipLastY;
+    ipLastX = event.clientX;
+    ipLastY = event.clientY;
+    ipRotY += dx * 0.01;
+    ipRotX = Math.max(-0.9, Math.min(0.9, ipRotX + dy * 0.01));
+    renderIpGlobe();
+  });
+
+  ["pointerup", "pointercancel", "pointerleave"].forEach((eventName) => {
+    ipGlobe.addEventListener(eventName, () => {
+      ipDragging = false;
+    });
+  });
+
+  window.addEventListener("resize", renderIpGlobe);
+  renderIpGlobe();
+  loadIpGlobeMap();
 }
 
 if (checkIpButton && ipFields.length) {
@@ -670,31 +971,21 @@ if (checkIpButton && ipFields.length) {
     if (ipStatus) ipStatus.textContent = "Consultando tu IP pública...";
 
     try {
-      const response = await fetch("https://ipwho.is/?fields=success,message,ip,country,city,region,latitude,longitude,connection,timezone", {
-        cache: "no-store"
-      });
-      const data = await response.json();
-
-      if (!response.ok || data.success === false) {
-        throw new Error(data.message || "No se pudo consultar la IP");
-      }
-
-      const provider = data.connection?.isp || data.connection?.org || "--";
-      const timezone = typeof data.timezone === "object" ? data.timezone.id : data.timezone;
+      const data = await fetchIpInfo();
 
       setIpField("ip", data.ip);
-      setIpField("provider", provider);
+      setIpField("provider", data.provider);
       setIpField("country", data.country);
       setIpField("city", data.city);
       setIpField("region", data.region);
-      setIpField("timezone", timezone);
+      setIpField("timezone", data.timezone);
 
       if (ipCountryVisual) ipCountryVisual.textContent = data.country || "Ubicación detectada";
-      moveIpPin(data.latitude, data.longitude);
-      if (ipStatus) ipStatus.textContent = "Datos aproximados según la IP pública de tu conexión.";
+      focusIpGlobe(data.latitude, data.longitude);
+      if (ipStatus) ipStatus.textContent = `Datos aproximados según la IP pública de tu conexión. Fuente: ${data.source}.`;
     } catch (error) {
       console.error("Error consultando IP:", error);
-      if (ipStatus) ipStatus.textContent = "No se pudo consultar la IP ahora mismo. Prueba de nuevo en unos segundos.";
+      if (ipStatus) ipStatus.textContent = "No se pudo consultar la IP ahora mismo. Puede ser un bloqueo de red, navegador o proveedor externo.";
     } finally {
       checkIpButton.disabled = false;
     }
