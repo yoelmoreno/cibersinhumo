@@ -1109,6 +1109,6 @@ window.addEventListener("load", () => {
 
     setTimeout(() => {
       splash.style.display = "none";
-    }, 600);
-  }, 3000);
+    }, 450);
+  }, 2100);
 });
