@@ -601,6 +601,22 @@ if (searchChips.length && searchInput) {
 const sugerenciasForm = document.getElementById("sugerencias-form");
 
 if (sugerenciasForm) {
+  const suggestionText = sugerenciasForm.querySelector('textarea[name="mensaje"]');
+  const suggestionCount = document.getElementById("suggestion-count");
+  const suggestionLiveText = document.getElementById("suggestion-live-text");
+
+  if (suggestionText) {
+    suggestionText.addEventListener("input", () => {
+      const length = suggestionText.value.trim().length;
+      if (suggestionCount) suggestionCount.textContent = length.toString();
+      if (suggestionLiveText) {
+        suggestionLiveText.textContent = length
+          ? "Idea detectada. Preparando señal para enviar..."
+          : "Esperando tu idea...";
+      }
+    });
+  }
+
   sugerenciasForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
