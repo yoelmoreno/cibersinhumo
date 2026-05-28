@@ -662,13 +662,13 @@ select {
 }
 
 .video-side-card .about-project-mark img {
-  width: 88%;
-  height: 88%;
+  width: 96%;
+  height: 96%;
   object-fit: contain;
   object-position: center;
   mix-blend-mode: screen;
   filter: brightness(1.18) contrast(1.22) saturate(1.08);
-  transform: none;
+  transform: translateY(-18px);
 }
 
 /* ---------------- CATEGORÍAS ---------------- */
