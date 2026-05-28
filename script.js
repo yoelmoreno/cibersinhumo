@@ -74,7 +74,7 @@ if (catCards.length) {
   });
 }
 
-const fadeEls = document.querySelectorAll(".video-card, .path-card, .recurso-group, .blog-card, .section-header, .sugerencias-form");
+const fadeEls = document.querySelectorAll(".video-card, .path-card, .recurso-group, .blog-card, .section-header, .sugerencias-form, .ip-tool");
 
 if (fadeEls.length) {
   const fadeObserver = new IntersectionObserver((entries) => {
@@ -326,7 +326,7 @@ const learningRoutes = {
     tag: "ruta 03",
     title: "Entender informática para entender ciber",
     desc: "Conceptos de informática que luego se aplican a redes, análisis, sistemas y seguridad.",
-    filterOrder: ["Intro", "Redes", "Web", "Sistemas", "Conceptos", "Todos"],
+    filterOrder: ["Redes", "Web", "Sistemas", "Conceptos", "Todos"],
     videos: [
       {
         title: "IPs: IPv4, IPv6, públicas y privadas",
@@ -639,6 +639,64 @@ if (sugerenciasForm) {
 
     if (status) {
       status.textContent = "Se abrirá tu app de correo con la sugerencia preparada para enviar.";
+    }
+  });
+}
+
+const checkIpButton = document.getElementById("check-ip-btn");
+const ipStatus = document.getElementById("ip-status");
+const ipCountryVisual = document.getElementById("ip-country-visual");
+const ipPin = document.getElementById("ip-pin");
+const ipFields = document.querySelectorAll("[data-ip-field]");
+
+function setIpField(name, value) {
+  const field = document.querySelector(`[data-ip-field="${name}"]`);
+  if (field) field.textContent = value || "--";
+}
+
+function moveIpPin(latitude, longitude) {
+  if (!ipPin || typeof latitude !== "number" || typeof longitude !== "number") return;
+
+  const x = Math.max(18, Math.min(82, ((longitude + 180) / 360) * 100));
+  const y = Math.max(18, Math.min(82, ((90 - latitude) / 180) * 100));
+  ipPin.style.left = `${x}%`;
+  ipPin.style.top = `${y}%`;
+  ipPin.classList.add("is-visible");
+}
+
+if (checkIpButton && ipFields.length) {
+  checkIpButton.addEventListener("click", async () => {
+    checkIpButton.disabled = true;
+    if (ipStatus) ipStatus.textContent = "Consultando tu IP pública...";
+
+    try {
+      const response = await fetch("https://ipwho.is/?fields=success,message,ip,country,city,region,latitude,longitude,connection,timezone", {
+        cache: "no-store"
+      });
+      const data = await response.json();
+
+      if (!response.ok || data.success === false) {
+        throw new Error(data.message || "No se pudo consultar la IP");
+      }
+
+      const provider = data.connection?.isp || data.connection?.org || "--";
+      const timezone = typeof data.timezone === "object" ? data.timezone.id : data.timezone;
+
+      setIpField("ip", data.ip);
+      setIpField("provider", provider);
+      setIpField("country", data.country);
+      setIpField("city", data.city);
+      setIpField("region", data.region);
+      setIpField("timezone", timezone);
+
+      if (ipCountryVisual) ipCountryVisual.textContent = data.country || "Ubicación detectada";
+      moveIpPin(data.latitude, data.longitude);
+      if (ipStatus) ipStatus.textContent = "Datos aproximados según la IP pública de tu conexión.";
+    } catch (error) {
+      console.error("Error consultando IP:", error);
+      if (ipStatus) ipStatus.textContent = "No se pudo consultar la IP ahora mismo. Prueba de nuevo en unos segundos.";
+    } finally {
+      checkIpButton.disabled = false;
     }
   });
 }

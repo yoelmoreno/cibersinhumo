@@ -6,7 +6,7 @@
   <title>Ciber Sin Humo — Ciberseguridad</title>
   <link rel="icon" type="image/jpeg" href="cibersinhumo-logo.jpeg?v=1">
   <link rel="apple-touch-icon" href="cibersinhumo-logo.jpeg?v=1">
-  <link rel="stylesheet" href="style.css?v=27">
+  <link rel="stylesheet" href="style.css?v=29">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -283,6 +283,62 @@
       <h2 class="section-title">Recursos</h2>
       <p class="section-desc">Herramientas, plataformas y materiales para aprender y protegerte mejor.</p>
     </div>
+
+    <div class="ip-tool" id="ip-tool">
+      <div class="ip-orb-card" aria-hidden="true">
+        <div class="ip-orb">
+          <span class="ip-orb-grid"></span>
+          <span class="ip-orb-glow"></span>
+          <span class="ip-pin" id="ip-pin"></span>
+        </div>
+        <div class="ip-orb-caption">
+          <span>Ubicación aproximada</span>
+          <strong id="ip-country-visual">Sin consultar</strong>
+        </div>
+      </div>
+
+      <div class="ip-panel">
+        <span class="section-tag">laboratorio IP</span>
+        <h3>¿Qué revela tu IP pública?</h3>
+        <p>Consulta qué datos básicos puede ver una web sobre tu conexión: IP pública, país, ciudad aproximada y proveedor de red.</p>
+
+        <div class="ip-data-grid">
+          <div class="ip-data-item">
+            <span>IP pública</span>
+            <strong data-ip-field="ip">--</strong>
+          </div>
+          <div class="ip-data-item">
+            <span>Proveedor</span>
+            <strong data-ip-field="provider">--</strong>
+          </div>
+          <div class="ip-data-item">
+            <span>País</span>
+            <strong data-ip-field="country">--</strong>
+          </div>
+          <div class="ip-data-item">
+            <span>Ciudad</span>
+            <strong data-ip-field="city">--</strong>
+          </div>
+          <div class="ip-data-item">
+            <span>Región</span>
+            <strong data-ip-field="region">--</strong>
+          </div>
+          <div class="ip-data-item">
+            <span>Zona horaria</span>
+            <strong data-ip-field="timezone">--</strong>
+          </div>
+        </div>
+
+        <div class="ip-actions">
+          <button type="button" class="btn btn-primary" id="check-ip-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20"/><path d="M12 2a15.3 15.3 0 0 0 0 20"/></svg>
+            Ver mi IP
+          </button>
+          <span class="ip-status" id="ip-status">No se consulta nada hasta que pulses el botón.</span>
+        </div>
+      </div>
+    </div>
+
     <div class="recursos-grid">
       <div class="recurso-group">
         <div class="recurso-group-header">
@@ -421,6 +477,6 @@
   </div>
 </div>
 
-<script src="script.js?v=31"></script>
+<script src="script.js?v=33"></script>
 </body>
 </html>
