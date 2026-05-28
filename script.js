@@ -666,6 +666,34 @@ function ipNumber(value) {
   return Number.isFinite(number) ? number : null;
 }
 
+function normalizeCountryName(value) {
+  const countryMap = {
+    ES: "España",
+    US: "Estados Unidos",
+    GB: "Reino Unido",
+    FR: "Francia",
+    DE: "Alemania",
+    IT: "Italia",
+    PT: "Portugal",
+    MX: "México",
+    AR: "Argentina",
+    CO: "Colombia",
+    CL: "Chile",
+    PE: "Perú",
+    BR: "Brasil"
+  };
+
+  if (!value) return value;
+  const cleanValue = String(value).trim();
+  return countryMap[cleanValue.toUpperCase()] || cleanValue;
+}
+
+function normalizeProviderName(value) {
+  if (!value) return value;
+  const cleanValue = String(value).trim();
+  return /telefonica|telefónica/i.test(cleanValue) ? "Movistar" : cleanValue;
+}
+
 function normalizeIpData(data, providerName) {
   if (!data || data.success === false || data.status === "fail" || data.error) return null;
 
@@ -673,11 +701,13 @@ function normalizeIpData(data, providerName) {
   const latitude = ipNumber(data.latitude ?? data.lat ?? loc[0]);
   const longitude = ipNumber(data.longitude ?? data.lon ?? loc[1]);
   const timezone = typeof data.timezone === "object" ? data.timezone.id : data.timezone;
+  const provider = data.connection?.isp || data.connection?.org || data.org || data.isp || data.organization_name || data.asn?.name;
+  const country = data.country || data.country_name || data.country_code;
 
   return {
     ip: data.ip || data.query,
-    provider: data.connection?.isp || data.connection?.org || data.org || data.isp || data.organization_name || data.asn?.name,
-    country: data.country || data.country_name,
+    provider: normalizeProviderName(provider),
+    country: normalizeCountryName(country),
     city: data.city,
     region: data.region || data.regionName,
     timezone,

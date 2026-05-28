@@ -1790,7 +1790,7 @@ select {
 
 .ip-orb {
   position: relative;
-  width: min(100%, 280px);
+  width: min(100%, 340px);
   aspect-ratio: 1;
   margin: 0 auto;
   border: 1px solid rgba(0, 255, 136, 0.24);
@@ -2658,7 +2658,7 @@ select {
   }
 
   .ip-orb {
-    width: min(100%, 220px);
+    width: min(100%, 280px);
   }
 
   .ip-data-grid {
