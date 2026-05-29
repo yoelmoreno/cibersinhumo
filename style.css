@@ -1549,7 +1549,8 @@ select {
     linear-gradient(135deg, rgba(0, 255, 136, 0.055), transparent 34%),
     rgba(7, 18, 12, 0.86);
   box-shadow: var(--shadow-soft);
-  padding: 22px;
+  min-height: 560px;
+  padding: 26px;
 }
 
 .sugerencias-form::before {
@@ -1700,6 +1701,7 @@ select {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+  align-items: start;
 }
 
 .form-field {
@@ -1740,9 +1742,49 @@ select {
 }
 
 .form-field textarea {
-  min-height: 160px;
+  min-height: 230px;
   resize: vertical;
   line-height: 1.5;
+}
+
+.email-input-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.email-input-row input {
+  min-width: 0;
+}
+
+.ghost-email-btn {
+  min-height: 44px;
+  border: 1px solid rgba(0, 255, 136, 0.22);
+  border-radius: 10px;
+  background: rgba(0, 255, 136, 0.055);
+  color: var(--green);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  padding: 0 12px;
+  text-transform: uppercase;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+  white-space: nowrap;
+}
+
+.ghost-email-btn:hover {
+  border-color: var(--border-hover);
+  background: rgba(0, 255, 136, 0.11);
+  transform: translateY(-1px);
+}
+
+.field-help {
+  color: var(--text-dim);
+  font-size: 0.86rem;
+  line-height: 1.35;
+  margin-top: -3px;
 }
 
 .form-field input::placeholder,
@@ -2826,7 +2868,16 @@ select {
   }
 
   .sugerencias-form {
+    min-height: auto;
     padding: 18px;
+  }
+
+  .email-input-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ghost-email-btn {
+    width: 100%;
   }
 
   .suggestion-console {

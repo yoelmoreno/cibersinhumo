@@ -602,6 +602,8 @@ const sugerenciasForm = document.getElementById("sugerencias-form");
 
 if (sugerenciasForm) {
   const suggestionText = sugerenciasForm.querySelector('textarea[name="mensaje"]');
+  const emailInput = sugerenciasForm.querySelector('input[name="correo"]');
+  const generateEmailButton = document.getElementById("generate-email-btn");
   const suggestionCount = document.getElementById("suggestion-count");
   const suggestionLiveText = document.getElementById("suggestion-live-text");
 
@@ -613,6 +615,17 @@ if (sugerenciasForm) {
         suggestionLiveText.textContent = length
           ? "Idea detectada. Preparando señal para enviar..."
           : "Esperando tu idea...";
+      }
+    });
+  }
+
+  if (generateEmailButton && emailInput) {
+    generateEmailButton.addEventListener("click", () => {
+      const randomId = Math.random().toString(36).slice(2, 8);
+      emailInput.value = `anon-${randomId}@alias.cibersinhumo.es`;
+      emailInput.dispatchEvent(new Event("input", { bubbles: true }));
+      if (suggestionLiveText) {
+        suggestionLiveText.textContent = "Alias generado. Puedes enviar sin dar tu correo real.";
       }
     });
   }
@@ -774,7 +787,7 @@ async function fetchIpInfo() {
       const data = await fetchWithTimeout(provider.url);
       const normalized = normalizeIpData(data, provider.name);
       if (normalized?.ip) return normalized;
-      lastError = new Error(data?.message || `Respuesta no vÃ¡lida de ${provider.name}`);
+      lastError = new Error(data?.message || `Respuesta no v?lida de ${provider.name}`);
     } catch (error) {
       lastError = error;
     }
