@@ -94,6 +94,52 @@ if (fadeEls.length) {
     fadeObserver.observe(el);
   });
 }
+
+const heroTypewriter = document.getElementById("hero-typewriter");
+
+if (heroTypewriter) {
+  const phrases = (heroTypewriter.dataset.phrases || "")
+    .split("|")
+    .map((phrase) => phrase.trim())
+    .filter(Boolean);
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (phrases.length && !reduceMotion) {
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+
+    const typeNext = () => {
+      const currentPhrase = phrases[phraseIndex];
+      heroTypewriter.textContent = currentPhrase.slice(0, charIndex);
+
+      if (!deleting && charIndex < currentPhrase.length) {
+        charIndex += 1;
+        window.setTimeout(typeNext, 58);
+        return;
+      }
+
+      if (!deleting && charIndex >= currentPhrase.length) {
+        deleting = true;
+        window.setTimeout(typeNext, 1450);
+        return;
+      }
+
+      if (deleting && charIndex > 0) {
+        charIndex -= 1;
+        window.setTimeout(typeNext, 32);
+        return;
+      }
+
+      deleting = false;
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+      window.setTimeout(typeNext, 260);
+    };
+
+    heroTypewriter.textContent = "";
+    typeNext();
+  }
+}
 const learningRoutes = {
   principiante: {
     tag: "ruta 01",
