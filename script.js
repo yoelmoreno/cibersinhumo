@@ -140,30 +140,43 @@ if (heroTypewriter) {
     typeNext();
   }
 }
-const heroCommand = document.getElementById("hero-command");
-const heroCommandOutput = document.getElementById("hero-command-output");
-const heroTerminalCard = document.querySelector(".hero-terminal-card");
+const heroCmdForm = document.getElementById("hero-cmd-form");
+const heroCmdInput = document.getElementById("hero-cmd-input");
+const heroCmdOutput = document.getElementById("hero-cmd-output");
 
-if (heroCommand && heroCommandOutput && heroTerminalCard) {
-  const commands = [
-    { command: "whoami", output: "principiante curioso" },
-    { command: "ls videos/ataques", output: "phishing  troyanos  spyware  DDoS" },
-    { command: "cat ruta.txt", output: "empieza facil, sube nivel, practica" },
-    { command: "ping privacidad", output: "respuesta: protege tus datos primero" },
-    { command: "sudo aprender --sin-humo", output: "permiso concedido" },
-  ];
-  let commandIndex = 0;
+if (heroCmdForm && heroCmdInput && heroCmdOutput) {
+  const responses = {
+    help: "Comandos: help, ip, phishing, vpn, redes, videos, clear.",
+    ip: "Tu IP p?blica identifica tu conexi?n en Internet. En recursos tienes una herramienta para verla.",
+    phishing: "Phishing = enga?o para robar datos. Revisa el enlace, el remitente y la urgencia del mensaje.",
+    vpn: "Una VPN cifra tu conexi?n y oculta tu IP a la web final, pero no te vuelve invulnerable.",
+    redes: "Empieza por IP, DNS, puertos y paquetes. Luego Wireshark empieza a tener sentido.",
+    videos: "Abre la secci?n V?deos y empieza por la ruta 'No s? nada de ciber'.",
+    whoami: "Usuario: principiante curioso con permisos para aprender.",
+  };
 
-  window.setInterval(() => {
-    commandIndex = (commandIndex + 1) % commands.length;
-    heroTerminalCard.classList.add("is-switching");
+  const addCmdLine = (html) => {
+    const line = document.createElement("p");
+    line.innerHTML = html;
+    heroCmdOutput.appendChild(line);
+    heroCmdOutput.scrollTop = heroCmdOutput.scrollHeight;
+  };
 
-    window.setTimeout(() => {
-      heroCommand.textContent = commands[commandIndex].command;
-      heroCommandOutput.textContent = commands[commandIndex].output;
-      heroTerminalCard.classList.remove("is-switching");
-    }, 180);
-  }, 2850);
+  heroCmdForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const value = heroCmdInput.value.trim();
+    if (!value) return;
+    const command = value.toLowerCase();
+    heroCmdInput.value = "";
+
+    if (command === "clear" || command === "cls") {
+      heroCmdOutput.innerHTML = "<p>Consola limpia. Escribe <strong>help</strong> para ver comandos.</p>";
+      return;
+    }
+
+    addCmdLine(`<span class="cmd-ok">C:\Users\Yoel&gt;</span> ${value}`);
+    addCmdLine(responses[command] || `<span class="cmd-error">'${value}' no se reconoce.</span> Prueba con <strong>help</strong>.`);
+  });
 }
 
 const learningRoutes = {

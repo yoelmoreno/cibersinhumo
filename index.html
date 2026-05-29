@@ -6,7 +6,7 @@
   <title>Ciber Sin Humo — Ciberseguridad</title>
   <link rel="icon" type="image/png" href="logo-cibersinhumo-transparent.png?v=1">
   <link rel="apple-touch-icon" href="logo-cibersinhumo-transparent.png?v=1">
-  <link rel="stylesheet" href="style.css?v=42">
+  <link rel="stylesheet" href="style.css?v=43">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -39,7 +39,7 @@
   </div>
   <div class="hero-vignette"></div>
 
-  <div class="hero-side hero-side-left" aria-hidden="true">
+  <div class="hero-side hero-side-left">
     <div class="hero-hud hero-hud-left">
       <span class="hud-kicker">rutas activas</span>
       <strong>01</strong>
@@ -47,15 +47,19 @@
       <div class="hud-bars"><span></span><span></span><span></span></div>
     </div>
 
-    <div class="hero-terminal-card">
-      <span class="hud-kicker">terminal de inicio</span>
-      <div class="side-terminal-line"><span class="terminal-user">yoel@ciber</span><span>:</span><span class="terminal-path">~</span><span>$</span></div>
-      <code id="hero-command">nmap --help</code>
-      <p id="hero-command-output">Escanea ideas, no personas.</p>
-    </div>
-
-    <div class="hero-mini-grid">
-      <span>IP</span><span>DNS</span><span>VPN</span><span>OSINT</span>
+    <div class="hero-cmd-window" aria-label="Consola educativa de Ciber Sin Humo">
+      <div class="cmd-titlebar">
+        <span>C:\Windows\System32\cmd.exe</span>
+        <div class="cmd-window-buttons"><i></i><i></i><i></i></div>
+      </div>
+      <div class="cmd-screen" id="hero-cmd-output">
+        <p>Microsoft Windows [Versi?n Ciber Sin Humo]</p>
+        <p>Escribe <strong>help</strong>, <strong>ip</strong>, <strong>phishing</strong>, <strong>vpn</strong> o <strong>clear</strong>.</p>
+      </div>
+      <form class="cmd-input-row" id="hero-cmd-form">
+        <span>C:\Users\Yoel&gt;</span>
+        <input id="hero-cmd-input" type="text" autocomplete="off" spellcheck="false" aria-label="Escribe un comando educativo" placeholder="help">
+      </form>
     </div>
 
     <div class="hero-signal-card">
@@ -613,6 +617,6 @@
   </div>
 </div>
 
-<script src="script.js?v=44"></script>
+<script src="script.js?v=45"></script>
 </body>
 </html>

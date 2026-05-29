@@ -501,6 +501,97 @@ select {
   text-transform: uppercase;
 }
 
+
+.hero-cmd-window {
+  overflow: hidden;
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  border-radius: 10px;
+  background: #030303;
+  box-shadow: 0 0 34px rgba(0, 255, 136, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  pointer-events: auto;
+}
+
+.cmd-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 30px;
+  padding: 0 10px;
+  background: linear-gradient(180deg, #1d1d1d, #101010);
+  color: rgba(255, 255, 255, 0.78);
+  font-family: Consolas, "Share Tech Mono", monospace;
+  font-size: 0.72rem;
+}
+
+.cmd-window-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.cmd-window-buttons i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.28);
+}
+
+.cmd-screen {
+  min-height: 168px;
+  max-height: 230px;
+  overflow-y: auto;
+  padding: 12px;
+  color: #d7ffd7;
+  font-family: Consolas, "Share Tech Mono", monospace;
+  font-size: 0.76rem;
+  line-height: 1.38;
+  background:
+    linear-gradient(rgba(255,255,255,0.025) 50%, transparent 50%),
+    radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.08), transparent 42%),
+    #030303;
+  background-size: 100% 4px, auto, auto;
+}
+
+.cmd-screen p {
+  margin: 0 0 7px;
+}
+
+.cmd-screen strong,
+.cmd-ok {
+  color: var(--green);
+}
+
+.cmd-error {
+  color: #ff6b6b;
+}
+
+.cmd-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px 12px;
+  background: #030303;
+  color: #d7ffd7;
+  font-family: Consolas, "Share Tech Mono", monospace;
+  font-size: 0.76rem;
+}
+
+.cmd-input-row input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--green);
+  caret-color: var(--green);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.cmd-input-row input::placeholder {
+  color: rgba(0, 255, 136, 0.35);
+}
+
 .hero-mini-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
