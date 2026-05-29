@@ -6,7 +6,7 @@
   <title>Ciber Sin Humo — Ciberseguridad</title>
   <link rel="icon" type="image/png" href="logo-cibersinhumo-transparent.png?v=1">
   <link rel="apple-touch-icon" href="logo-cibersinhumo-transparent.png?v=1">
-  <link rel="stylesheet" href="style.css?v=36">
+  <link rel="stylesheet" href="style.css?v=37">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -364,6 +364,53 @@
       </div>
     </div>
 
+    <div class="security-checklist" id="security-checklist">
+      <div class="checklist-visual" aria-hidden="true">
+        <div class="checklist-logo-orbit">
+          <span class="orbit-line"></span>
+          <img src="logo-cibersinhumo-transparent.png?v=1" alt="">
+        </div>
+        <div class="checklist-scan-lines">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <div class="checklist-content">
+        <span class="section-tag">modo protecci?n</span>
+        <h3>Checklist b?sica de seguridad digital</h3>
+        <p>Marca lo que ya tienes cubierto y mira c?mo sube tu nivel. Es una gu?a r?pida para mejorar tu seguridad sin volverte loco.</p>
+
+        <div class="checklist-progress" aria-live="polite">
+          <div class="progress-topline">
+            <span id="security-score-label">Nivel inicial</span>
+            <strong><span id="security-score">0</span>/8</strong>
+          </div>
+          <div class="progress-track"><span id="security-progress-bar"></span></div>
+        </div>
+
+        <div class="checklist-grid">
+          <label class="check-item"><input type="checkbox" data-security-check><span>Contrase?as largas y distintas</span></label>
+          <label class="check-item"><input type="checkbox" data-security-check><span>Verificaci?n en dos pasos activada</span></label>
+          <label class="check-item"><input type="checkbox" data-security-check><span>M?vil, PC y navegador actualizados</span></label>
+          <label class="check-item"><input type="checkbox" data-security-check><span>Copias de seguridad importantes</span></label>
+          <label class="check-item"><input type="checkbox" data-security-check><span>Permisos de c?mara y ubicaci?n revisados</span></label>
+          <label class="check-item"><input type="checkbox" data-security-check><span>Desconf?as de enlaces urgentes o raros</span></label>
+          <label class="check-item"><input type="checkbox" data-security-check><span>Usas gestor de contrase?as</span></label>
+          <label class="check-item"><input type="checkbox" data-security-check><span>Revisas descargas antes de abrirlas</span></label>
+        </div>
+
+        <div class="checklist-actions">
+          <button type="button" class="btn btn-primary" id="reset-security-checks">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+            Reiniciar checklist
+          </button>
+          <span id="security-check-status">Empieza marcando lo que ya haces.</span>
+        </div>
+      </div>
+    </div>
+
     <div class="recursos-grid">
       <div class="recurso-group">
         <div class="recurso-group-header">
@@ -502,6 +549,6 @@
   </div>
 </div>
 
-<script src="script.js?v=40"></script>
+<script src="script.js?v=41"></script>
 </body>
 </html>

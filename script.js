@@ -74,7 +74,7 @@ if (catCards.length) {
   });
 }
 
-const fadeEls = document.querySelectorAll(".video-card, .path-card, .recurso-group, .blog-card, .section-header, .sugerencias-form, .ip-tool");
+const fadeEls = document.querySelectorAll(".video-card, .path-card, .recurso-group, .blog-card, .section-header, .sugerencias-form, .ip-tool, .security-checklist");
 
 if (fadeEls.length) {
   const fadeObserver = new IntersectionObserver((entries) => {
@@ -688,6 +688,12 @@ const ipStatus = document.getElementById("ip-status");
 const ipCountryVisual = document.getElementById("ip-country-visual");
 const ipGlobe = document.getElementById("ip-globe");
 const ipFields = document.querySelectorAll("[data-ip-field]");
+const securityChecks = document.querySelectorAll("[data-security-check]");
+const securityScore = document.getElementById("security-score");
+const securityScoreLabel = document.getElementById("security-score-label");
+const securityProgressBar = document.getElementById("security-progress-bar");
+const securityCheckStatus = document.getElementById("security-check-status");
+const resetSecurityChecks = document.getElementById("reset-security-checks");
 let ipGlobeData = null;
 let ipMarker = null;
 let ipRotX = -0.12;
@@ -695,6 +701,50 @@ let ipRotY = 0.35;
 let ipDragging = false;
 let ipLastX = 0;
 let ipLastY = 0;
+
+function updateSecurityChecklist() {
+  if (!securityChecks.length) return;
+
+  const checked = [...securityChecks].filter((item) => item.checked).length;
+  const total = securityChecks.length;
+  const percent = Math.round((checked / total) * 100);
+
+  if (securityScore) securityScore.textContent = checked.toString();
+  if (securityProgressBar) securityProgressBar.style.width = `${percent}%`;
+
+  let label = "Nivel inicial";
+  let status = "Empieza marcando lo que ya haces.";
+
+  if (checked >= total) {
+    label = "Blindaje muy sólido";
+    status = "Muy bien. Tienes la base bastante cubierta.";
+  } else if (checked >= 6) {
+    label = "Muy buen nivel";
+    status = "Vas fuerte. Te quedan pocos ajustes para cerrar lo básico.";
+  } else if (checked >= 3) {
+    label = "Base en progreso";
+    status = "Buen comienzo. Sigue completando puntos clave.";
+  } else if (checked > 0) {
+    label = "Primeras defensas";
+    status = "Ya has empezado. Cada punto reduce superficie de riesgo.";
+  }
+
+  if (securityScoreLabel) securityScoreLabel.textContent = label;
+  if (securityCheckStatus) securityCheckStatus.textContent = status;
+}
+
+if (securityChecks.length) {
+  securityChecks.forEach((item) => item.addEventListener("change", updateSecurityChecklist));
+  if (resetSecurityChecks) {
+    resetSecurityChecks.addEventListener("click", () => {
+      securityChecks.forEach((item) => {
+        item.checked = false;
+      });
+      updateSecurityChecklist();
+    });
+  }
+  updateSecurityChecklist();
+}
 
 function setIpField(name, value) {
   const field = document.querySelector(`[data-ip-field="${name}"]`);
