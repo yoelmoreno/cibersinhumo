@@ -146,12 +146,18 @@ const heroCmdOutput = document.getElementById("hero-cmd-output");
 
 if (heroCmdForm && heroCmdInput && heroCmdOutput) {
   const responses = {
-    help: "Comandos: help, ip, phishing, vpn, redes, videos, clear.",
-    ip: "Tu IP p?blica identifica tu conexi?n en Internet. En recursos tienes una herramienta para verla.",
-    phishing: "Phishing = enga?o para robar datos. Revisa el enlace, el remitente y la urgencia del mensaje.",
-    vpn: "Una VPN cifra tu conexi?n y oculta tu IP a la web final, pero no te vuelve invulnerable.",
+    help: "Comandos: help, ip, dns, puertos, phishing, malware, vpn, redes, wireshark, hash, firewall, videos, whoami, clear.",
+    ip: "IP pública: dirección con la que sales a Internet. Sirve para identificar tu conexión de forma aproximada.",
+    dns: "DNS traduce nombres como cibersinhumo.es a direcciones IP que los equipos pueden entender.",
+    puertos: "Los puertos son puertas lógicas de comunicación. Por ejemplo: 80 HTTP, 443 HTTPS, 22 SSH.",
+    phishing: "Phishing: engaño para robar datos. Revisa enlace, remitente, urgencia y faltas raras.",
+    malware: "Malware es software malicioso: troyanos, spyware, ransomware, keyloggers y más.",
+    vpn: "Una VPN cifra tu conexión y oculta tu IP a la web final, pero no te vuelve invulnerable.",
     redes: "Empieza por IP, DNS, puertos y paquetes. Luego Wireshark empieza a tener sentido.",
-    videos: "Abre la secci?n V?deos y empieza por la ruta 'No s? nada de ciber'.",
+    wireshark: "Wireshark permite ver paquetes de red. Es como mirar el tráfico que viaja por tu conexión.",
+    hash: "Un hash es una huella digital de datos. Si el archivo cambia, su hash también cambia.",
+    firewall: "Un firewall filtra conexiones permitidas o bloqueadas según reglas de seguridad.",
+    videos: "Abre la sección Vídeos y empieza por la ruta 'No sé nada de ciber'.",
     whoami: "Usuario: principiante curioso con permisos para aprender.",
   };
 
