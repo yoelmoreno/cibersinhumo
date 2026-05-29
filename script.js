@@ -140,6 +140,32 @@ if (heroTypewriter) {
     typeNext();
   }
 }
+const heroCommand = document.getElementById("hero-command");
+const heroCommandOutput = document.getElementById("hero-command-output");
+const heroTerminalCard = document.querySelector(".hero-terminal-card");
+
+if (heroCommand && heroCommandOutput && heroTerminalCard) {
+  const commands = [
+    { command: "whoami", output: "principiante curioso" },
+    { command: "ls videos/ataques", output: "phishing  troyanos  spyware  DDoS" },
+    { command: "cat ruta.txt", output: "empieza facil, sube nivel, practica" },
+    { command: "ping privacidad", output: "respuesta: protege tus datos primero" },
+    { command: "sudo aprender --sin-humo", output: "permiso concedido" },
+  ];
+  let commandIndex = 0;
+
+  window.setInterval(() => {
+    commandIndex = (commandIndex + 1) % commands.length;
+    heroTerminalCard.classList.add("is-switching");
+
+    window.setTimeout(() => {
+      heroCommand.textContent = commands[commandIndex].command;
+      heroCommandOutput.textContent = commands[commandIndex].output;
+      heroTerminalCard.classList.remove("is-switching");
+    }, 180);
+  }, 2850);
+}
+
 const learningRoutes = {
   principiante: {
     tag: "ruta 01",

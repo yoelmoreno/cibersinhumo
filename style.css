@@ -240,7 +240,7 @@ select {
   --mantis-scale: 1.16;
   --mantis-float: 14px;
   position: absolute;
-  top: 52%;
+  top: 59%;
   left: 50%;
   right: auto;
   transform: translateX(var(--mantis-x)) translateY(var(--mantis-y)) scale(var(--mantis-scale));
@@ -373,6 +373,132 @@ select {
     linear-gradient(0deg, transparent 0 46%, rgba(0, 255, 136, 0.12) 48% 52%, transparent 54%);
   opacity: 0.18;
   pointer-events: none;
+}
+
+.hero-side {
+  position: absolute;
+  z-index: 2;
+  width: clamp(240px, 17vw, 330px);
+  display: grid;
+  gap: 18px;
+  pointer-events: none;
+}
+
+.hero-side-left {
+  left: clamp(28px, 4.2vw, 94px);
+  top: 31%;
+}
+
+.hero-side-right {
+  right: clamp(28px, 4.2vw, 94px);
+  top: 28%;
+}
+
+.hero-side .hero-hud {
+  position: relative;
+  top: auto;
+  right: auto;
+  left: auto;
+  width: 100%;
+  min-height: 168px;
+}
+
+.hero-terminal-card,
+.hero-callout-card {
+  position: relative;
+  overflow: hidden;
+  padding: 18px;
+  border: 1px solid rgba(0, 255, 136, 0.14);
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(0, 255, 136, 0.08), rgba(0, 0, 0, 0.18)),
+    rgba(2, 12, 7, 0.58);
+  box-shadow:
+    inset 0 0 26px rgba(0, 255, 136, 0.035),
+    0 0 34px rgba(0, 255, 136, 0.075);
+  backdrop-filter: blur(10px);
+  text-align: left;
+}
+
+.hero-terminal-card::after,
+.hero-callout-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent, rgba(0, 255, 136, 0.08), transparent);
+  opacity: 0.28;
+  transform: translateY(-120%);
+  animation: sideScan 4.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.side-terminal-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.terminal-user,
+.hero-terminal-card code {
+  color: var(--green);
+}
+
+.hero-terminal-card code {
+  display: block;
+  min-height: 22px;
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.hero-terminal-card p,
+.hero-callout-card p {
+  margin: 10px 0 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.42;
+}
+
+.hero-terminal-card.is-switching code,
+.hero-terminal-card.is-switching p {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.hero-callout-card h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.25rem, 1.7vw, 1.75rem);
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+.hero-callout-card-alt {
+  margin-left: auto;
+  width: min(100%, 286px);
+}
+
+.callout-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.callout-chip-row span {
+  padding: 5px 8px;
+  border: 1px solid rgba(0, 255, 136, 0.18);
+  border-radius: 999px;
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 @keyframes floatMantis {
@@ -658,6 +784,11 @@ select {
 @keyframes hudBar {
   0%, 100% { opacity: 0.45; transform: scaleX(0.78); transform-origin: left; }
   50% { opacity: 1; transform: scaleX(1); transform-origin: left; }
+}
+
+@keyframes sideScan {
+  0%, 70%, 100% { transform: translateY(-120%); }
+  82% { transform: translateY(120%); }
 }
 
 /* ---------------- SECCIONES ---------------- */
@@ -3185,6 +3316,7 @@ select {
     text-align: center;
   }
 
+  .hero-side,
   .hero-hud {
     display: none;
   }

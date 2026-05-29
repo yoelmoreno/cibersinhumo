@@ -6,7 +6,7 @@
   <title>Ciber Sin Humo — Ciberseguridad</title>
   <link rel="icon" type="image/png" href="logo-cibersinhumo-transparent.png?v=1">
   <link rel="apple-touch-icon" href="logo-cibersinhumo-transparent.png?v=1">
-  <link rel="stylesheet" href="style.css?v=40">
+  <link rel="stylesheet" href="style.css?v=41">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -39,18 +39,41 @@
   </div>
   <div class="hero-vignette"></div>
 
-  <div class="hero-hud hero-hud-left" aria-hidden="true">
-    <span class="hud-kicker">rutas activas</span>
-    <strong>01</strong>
-    <p>desde cero</p>
-    <div class="hud-bars"><span></span><span></span><span></span></div>
+  <div class="hero-side hero-side-left" aria-hidden="true">
+    <div class="hero-hud hero-hud-left">
+      <span class="hud-kicker">rutas activas</span>
+      <strong>01</strong>
+      <p>desde cero</p>
+      <div class="hud-bars"><span></span><span></span><span></span></div>
+    </div>
+
+    <div class="hero-terminal-card">
+      <span class="hud-kicker">terminal de inicio</span>
+      <div class="side-terminal-line"><span class="terminal-user">yoel@ciber</span><span>:</span><span class="terminal-path">~</span><span>$</span></div>
+      <code id="hero-command">nmap --help</code>
+      <p id="hero-command-output">Escanea ideas, no personas.</p>
+    </div>
   </div>
 
-  <div class="hero-hud hero-hud-right" aria-hidden="true">
-    <span class="hud-kicker">señal limpia</span>
-    <strong>100%</strong>
-    <p>sin humo</p>
-    <div class="hud-pulse"><span></span></div>
+  <div class="hero-side hero-side-right" aria-hidden="true">
+    <div class="hero-hud hero-hud-right">
+      <span class="hud-kicker">señal limpia</span>
+      <strong>100%</strong>
+      <p>sin humo</p>
+      <div class="hud-pulse"><span></span></div>
+    </div>
+
+    <div class="hero-callout-card">
+      <span class="hud-kicker">¿sin mapa?</span>
+      <h2>¿No tienes ni idea de ciber?</h2>
+      <p>Este es tu sitio. Empieza sin presión, con ejemplos claros y vídeos pensados para aprender desde cero.</p>
+      <div class="callout-chip-row"><span>phishing</span><span>redes</span><span>privacidad</span></div>
+    </div>
+
+    <div class="hero-callout-card hero-callout-card-alt">
+      <span class="hud-kicker">modo curiosidad</span>
+      <p>¿Te molan las ciencias y la tecnología pero no sabes por dónde tirar? Mira las rutas y ve construyendo camino paso a paso.</p>
+    </div>
   </div>
 
   <div class="hero-content">
@@ -580,6 +603,6 @@
   </div>
 </div>
 
-<script src="script.js?v=43"></script>
+<script src="script.js?v=44"></script>
 </body>
 </html>
