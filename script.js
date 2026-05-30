@@ -454,7 +454,12 @@ const learningRoutes = {
       {
         title: "Qué pasa cuando entras en una web",
         category: "Web",
-        type: "placeholder"
+        type: "youtube",
+        url: "https://youtu.be/pjC6xG8Ncpg",
+        thumbnailUrl: "https://i.ytimg.com/vi/pjC6xG8Ncpg/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/pjC6xG8Ncpg/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Qué ocurre desde que escribes una dirección web hasta que la página carga en tu navegador."
       },
       {
         title: "Sistemas operativos: procesos, permisos y archivos",
