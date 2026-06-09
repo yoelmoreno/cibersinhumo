@@ -462,6 +462,16 @@ const learningRoutes = {
         description: "Qué ocurre desde que escribes una dirección web hasta que la página carga en tu navegador."
       },
       {
+        title: "Cómo funciona una web por dentro",
+        category: "Web",
+        type: "youtube",
+        url: "https://youtu.be/loFOXBIBABk",
+        thumbnailUrl: "https://i.ytimg.com/vi/loFOXBIBABk/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/loFOXBIBABk/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Explicación sencilla de los conceptos web que ayudan a entender mejor la ciberseguridad."
+      },
+      {
         title: "Sistemas operativos: procesos, permisos y archivos",
         category: "Sistemas",
         type: "placeholder"
