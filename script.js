@@ -462,7 +462,7 @@ const learningRoutes = {
         description: "Qué ocurre desde que escribes una dirección web hasta que la página carga en tu navegador."
       },
       {
-        title: "Cómo funciona una web por dentro",
+        title: "Qué es la deep web: desmitificándola",
         category: "Web",
         type: "youtube",
         url: "https://youtu.be/loFOXBIBABk",
