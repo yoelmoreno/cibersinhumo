@@ -472,6 +472,16 @@ const learningRoutes = {
         description: "Explicación sencilla de los conceptos web que ayudan a entender mejor la ciberseguridad."
       },
       {
+        title: "Conceptos web para entender ciberseguridad",
+        category: "Web",
+        type: "youtube",
+        url: "https://youtu.be/0-Qw8mUtL84",
+        thumbnailUrl: "https://i.ytimg.com/vi/0-Qw8mUtL84/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/0-Qw8mUtL84/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Explicación sencilla de conceptos web importantes para entender mejor la ciberseguridad."
+      },
+      {
         title: "Sistemas operativos: procesos, permisos y archivos",
         category: "Sistemas",
         type: "placeholder"
