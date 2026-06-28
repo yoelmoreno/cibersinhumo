@@ -369,6 +369,16 @@ const learningRoutes = {
         ]
       },
       {
+        title: "Ataques t?picos: ejemplos y c?mo reconocerlos",
+        category: "Ataques",
+        type: "youtube",
+        url: "https://youtu.be/ESWsMfTj7oM",
+        thumbnailUrl: "https://i.ytimg.com/vi/ESWsMfTj7oM/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/ESWsMfTj7oM/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Repaso sencillo de ataques habituales para aprender a identificarlos y entender c?mo funcionan."
+      },
+      {
         title: "Contraseñas seguras sin complicarte",
         category: "Privacidad",
         type: "placeholder"
