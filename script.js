@@ -74,7 +74,7 @@ if (catCards.length) {
   });
 }
 
-const fadeEls = document.querySelectorAll(".video-card, .path-card, .recurso-group, .blog-card, .section-header, .sugerencias-form, .ip-tool, .security-checklist");
+const fadeEls = document.querySelectorAll(".video-card, .path-card, .recurso-group, .blog-card, .section-header, .sugerencias-form, .ip-tool, .security-checklist, .cyber-glossary");
 
 if (fadeEls.length) {
   const fadeObserver = new IntersectionObserver((entries) => {
@@ -1327,4 +1327,120 @@ window.addEventListener("load", () => {
       splash.style.display = "none";
     }, 450);
   }, 2100);
+});
+
+
+const glossaryTerms = [
+  { name: "IP", category: "Redes", icon: "IP", definition: "Direccion que identifica un dispositivo o conexion dentro de una red.", simple: "Es como la direccion postal de un equipo en Internet o en tu red local.", example: "Una web ve tu IP publica cuando te conectas a ella.", related: ["DNS", "Router", "Subred"] },
+  { name: "VPN", category: "Privacidad", icon: "VPN", definition: "Conexion cifrada que envia tu trafico a traves de un servidor intermedio.", simple: "Es un tunel privado entre tu dispositivo e Internet.", example: "En una Wi-Fi publica, una VPN puede anadir una capa extra de privacidad.", related: ["Proxy", "Cifrado", "IP"] },
+  { name: "DNS", category: "Redes", icon: "DNS", definition: "Sistema que traduce nombres de dominio a direcciones IP.", simple: "Convierte cibersinhumo.es en la direccion que entiende la red.", example: "Cuando escribes una web, tu equipo pregunta al DNS donde esta.", related: ["Dominio", "IP", "URL"] },
+  { name: "Dominio", category: "Web", icon: "DOM", definition: "Nombre legible que apunta a un recurso de Internet.", simple: "Es el nombre facil de recordar de una web.", example: "cibersinhumo.es es un dominio.", related: ["DNS", "URL", "Servidor"] },
+  { name: "URL", category: "Web", icon: "URL", definition: "Direccion completa de un recurso en Internet.", simple: "Es la ruta exacta para llegar a una pagina o archivo.", example: "https://cibersinhumo.es/recursos", related: ["HTTPS", "Dominio", "Navegador"] },
+  { name: "HTTP", category: "Web", icon: "HTTP", definition: "Protocolo usado para transferir paginas web.", simple: "La forma en la que navegador y servidor hablan.", example: "Una pagina antigua puede cargar por HTTP sin cifrado.", related: ["HTTPS", "Servidor", "Cliente"] },
+  { name: "HTTPS", category: "Web", icon: "TLS", definition: "Version cifrada de HTTP que protege la comunicacion.", simple: "HTTP con candado.", example: "Evita que alguien lea facilmente lo que envias a una web.", related: ["HTTP", "Cifrado", "Certificado"] },
+  { name: "Puerto", category: "Redes", icon: "443", definition: "Numero que identifica un servicio dentro de un dispositivo.", simple: "Como una puerta concreta por la que entra un tipo de trafico.", example: "443 suele usarse para HTTPS y 22 para SSH.", related: ["Firewall", "Nmap", "Servidor"] },
+  { name: "Firewall", category: "Seguridad", icon: "FW", definition: "Sistema que filtra conexiones segun reglas.", simple: "Decide que trafico entra y que trafico se bloquea.", example: "Puede bloquear conexiones entrantes a puertos peligrosos.", related: ["Puerto", "Router", "Red local"] },
+  { name: "Router", category: "Redes", icon: "RTR", definition: "Dispositivo que conecta redes y dirige el trafico.", simple: "El aparato que reparte Internet en casa.", example: "Tu router conecta tu red local con Internet.", related: ["IP", "Wi-Fi", "Red local"] },
+  { name: "Servidor", category: "Web", icon: "SRV", definition: "Equipo o servicio que entrega recursos a clientes.", simple: "El ordenador que responde cuando visitas una web.", example: "Un servidor web envia HTML, CSS y JS al navegador.", related: ["Cliente", "HTTP", "Dominio"] },
+  { name: "Cliente", category: "Web", icon: "CLI", definition: "Dispositivo o programa que solicita recursos a un servidor.", simple: "Tu navegador cuando pide una pagina.", example: "Chrome actua como cliente al cargar una web.", related: ["Servidor", "Navegador", "HTTP"] },
+  { name: "Wi-Fi", category: "Redes", icon: "WIFI", definition: "Tecnologia para conectar dispositivos sin cables a una red.", simple: "Internet sin cable dentro de casa, clase o cafeteria.", example: "Una Wi-Fi publica puede ser menos segura que tu red de casa.", related: ["Router", "VPN", "Red local"] },
+  { name: "Red local", category: "Redes", icon: "LAN", definition: "Conjunto de dispositivos conectados dentro de un entorno cercano.", simple: "La red de tu casa o instituto.", example: "Tu movil y tu portatil pueden estar en la misma LAN.", related: ["Router", "IP", "MAC Address"] },
+  { name: "Phishing", category: "Ataques", icon: "PH", definition: "Engano que intenta robar datos haciendose pasar por alguien fiable.", simple: "Un mensaje falso para que piques.", example: "Un correo que imita a tu banco y pide iniciar sesion.", related: ["Ingenieria social", "Credential stuffing", "2FA"] },
+  { name: "Malware", category: "Malware", icon: "MW", definition: "Software creado para causar dano, espiar o tomar control.", simple: "Programa malicioso.", example: "Un archivo descargado que roba informacion del equipo.", related: ["Virus", "Troyano", "Spyware"] },
+  { name: "Troyano", category: "Malware", icon: "TR", definition: "Malware que se disfraza de programa legitimo.", simple: "Parece normal, pero trae sorpresa.", example: "Un falso juego que instala una puerta trasera.", related: ["Backdoor", "Malware", "Payload"] },
+  { name: "Ransomware", category: "Malware", icon: "R$", definition: "Malware que cifra archivos y pide un rescate.", simple: "Secuestra tus archivos.", example: "WannaCry cifraba sistemas vulnerables y pedia dinero.", related: ["Cifrado", "Malware", "Backup"] },
+  { name: "Spyware", category: "Malware", icon: "SPY", definition: "Software que espia actividad o recopila datos sin permiso.", simple: "Te observa sin que lo sepas.", example: "Puede intentar acceder a camara, microfono o historial.", related: ["Keylogger", "Malware", "Privacidad"] },
+  { name: "Keylogger", category: "Malware", icon: "KEY", definition: "Herramienta que registra pulsaciones del teclado.", simple: "Apunta lo que escribes.", example: "Puede capturar contrasenas si no hay protecciones.", related: ["Spyware", "2FA", "Malware"] },
+  { name: "DDoS", category: "Ataques", icon: "DOS", definition: "Ataque que satura un servicio con muchas peticiones.", simple: "Demasiado trafico hasta tumbar una web.", example: "Una botnet enviando solicitudes a la vez.", related: ["Botnet", "Servidor", "Firewall"] },
+  { name: "Vulnerabilidad", category: "Seguridad", icon: "VUL", definition: "Debilidad que puede ser aprovechada para atacar un sistema.", simple: "Un fallo de seguridad.", example: "Una version antigua con un bug explotable.", related: ["CVE", "Exploit", "Zero-day"] },
+  { name: "CVE", category: "Seguridad", icon: "CVE", definition: "Identificador publico de una vulnerabilidad conocida.", simple: "El DNI de un fallo de seguridad.", example: "CVE-2021-44228 identifica Log4Shell.", related: ["Vulnerabilidad", "Exploit", "Patch"] },
+  { name: "Exploit", category: "Ataques", icon: "EXP", definition: "Codigo o tecnica que aprovecha una vulnerabilidad.", simple: "La forma de usar un fallo para conseguir algo.", example: "Un exploit puede ejecutar codigo en un servidor vulnerable.", related: ["Vulnerabilidad", "Payload", "CVE"] },
+  { name: "Payload", category: "Ataques", icon: "PAY", definition: "Parte de un ataque que realiza la accion final.", simple: "Lo que el ataque quiere ejecutar.", example: "Abrir una shell o descargar malware.", related: ["Exploit", "Backdoor", "Malware"] },
+  { name: "Ingenieria social", category: "Ataques", icon: "SOC", definition: "Manipulacion de personas para conseguir informacion o acceso.", simple: "Atacar a la persona, no al ordenador.", example: "Hacerse pasar por soporte tecnico para pedir credenciales.", related: ["Phishing", "2FA", "OSINT"] },
+  { name: "Fuerza bruta", category: "Ataques", icon: "BR", definition: "Probar muchas combinaciones hasta acertar.", simple: "Intentar contrasenas una tras otra.", example: "Probar miles de claves contra un login mal protegido.", related: ["Contrasena segura", "2FA", "Hash"] },
+  { name: "Zero-day", category: "Seguridad", icon: "0D", definition: "Vulnerabilidad desconocida o sin parche disponible.", simple: "Un fallo que aun no esta arreglado.", example: "Un atacante lo usa antes de que el fabricante publique solucion.", related: ["CVE", "Exploit", "Vulnerabilidad"] },
+  { name: "Contrasena segura", category: "Privacidad", icon: "PWD", definition: "Clave larga, unica y dificil de adivinar.", simple: "Una clave que no reutilizas y que no es obvia.", example: "Usar un gestor para crear contrasenas diferentes.", related: ["2FA", "Hash", "Fuerza bruta"] },
+  { name: "2FA", category: "Privacidad", icon: "2FA", definition: "Segundo factor para verificar tu identidad.", simple: "Algo mas aparte de la contrasena.", example: "Codigo temporal en una app autenticadora.", related: ["MFA", "Phishing", "Contrasena segura"] },
+  { name: "Hash", category: "Conceptos", icon: "#", definition: "Huella digital calculada a partir de datos.", simple: "Un resumen unico de un archivo o texto.", example: "Si cambia un archivo, cambia su hash.", related: ["Contrasena segura", "Cifrado", "Integridad"] },
+  { name: "Cifrado", category: "Privacidad", icon: "ENC", definition: "Proceso para transformar datos y que no se lean sin clave.", simple: "Convertir informacion en algo ilegible para terceros.", example: "HTTPS cifra lo que envias a una web.", related: ["HTTPS", "VPN", "Token"] },
+  { name: "Cookie", category: "Web", icon: "CK", definition: "Dato pequeno que una web guarda en tu navegador.", simple: "Una nota que la web deja para recordarte.", example: "Puede mantener tu sesion iniciada.", related: ["Sesion", "Privacidad", "Token"] },
+  { name: "Sesion", category: "Web", icon: "SES", definition: "Estado que mantiene a un usuario identificado en una web.", simple: "La web recuerda que eres tu durante un rato.", example: "Cerrar sesion invalida ese estado.", related: ["Cookie", "Token", "HTTPS"] },
+  { name: "Proxy", category: "Privacidad", icon: "PX", definition: "Intermediario entre tu dispositivo y el destino.", simple: "Una parada intermedia antes de llegar a la web.", example: "Un proxy puede cambiar la IP que ve un servicio.", related: ["VPN", "Tor", "IP"] },
+  { name: "Tor", category: "Privacidad", icon: "TOR", definition: "Red que enruta trafico por varios nodos para mejorar anonimato.", simple: "Varias capas antes de llegar al destino.", example: "Se usa para acceder a servicios onion.", related: ["Deep Web", "Dark Web", "Anonimato"] },
+  { name: "Deep Web", category: "Web", icon: "DW", definition: "Contenido no indexado por buscadores normales.", simple: "Internet que Google no lista.", example: "Tu correo o una zona privada de una plataforma.", related: ["Dark Web", "Tor", "Navegador"] },
+  { name: "Dark Web", category: "Web", icon: "ON", definition: "Parte de la web que requiere redes o herramientas especificas.", simple: "Sitios que no se abren con navegacion normal.", example: "Servicios .onion accesibles desde Tor.", related: ["Tor", "Deep Web", "Anonimato"] },
+  { name: "API", category: "Web", icon: "API", definition: "Interfaz para que aplicaciones se comuniquen entre ellas.", simple: "Una forma ordenada de pedir datos a un servicio.", example: "Una app del tiempo consulta una API meteorologica.", related: ["Servidor", "Token", "HTTP"] },
+  { name: "SQL Injection", category: "Ataques", icon: "SQL", definition: "Ataque que inserta consultas SQL maliciosas.", simple: "Enganar a una base de datos desde un formulario.", example: "Un login vulnerable que acepta codigo SQL en el usuario.", related: ["Web", "Payload", "Vulnerabilidad"] },
+  { name: "XSS", category: "Ataques", icon: "XSS", definition: "Inyeccion de scripts en paginas web vistas por usuarios.", simple: "Meter JavaScript donde no deberia ejecutarse.", example: "Un comentario que ejecuta codigo en el navegador de otros.", related: ["Cookie", "Payload", "Web"] },
+  { name: "OSINT", category: "Investigacion", icon: "OS", definition: "Obtencion de informacion desde fuentes abiertas.", simple: "Investigar con datos publicos.", example: "Buscar metadatos, perfiles o dominios expuestos.", related: ["Metadatos", "Ingenieria social", "Dominio"] },
+  { name: "Nmap", category: "Herramientas", icon: "NMAP", definition: "Herramienta para descubrir equipos, puertos y servicios.", simple: "Sirve para ver que hay abierto en una red.", example: "nmap -sV puede identificar servicios activos.", related: ["Puerto", "Red local", "Firewall"] },
+  { name: "Wireshark", category: "Herramientas", icon: "WS", definition: "Analizador de paquetes de red.", simple: "Permite ver el trafico que pasa por una conexion.", example: "Puedes observar consultas DNS o conexiones HTTP.", related: ["Paquete", "Protocolo", "Red local"] }
+];
+
+const glossaryGrid = document.getElementById("glossary-grid");
+const glossarySearch = document.getElementById("glossary-search");
+const glossaryDetail = document.getElementById("glossary-detail");
+const glossaryPickButtons = document.querySelectorAll("[data-glossary-pick]");
+
+const normalizeGlossary = (value) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+const findGlossaryTerm = (name) => glossaryTerms.find((term) => normalizeGlossary(term.name) === normalizeGlossary(name));
+
+const renderGlossaryDetail = (term) => {
+  if (!term || !glossaryDetail) return;
+  document.getElementById("glossary-detail-icon").textContent = term.icon;
+  document.getElementById("glossary-detail-category").textContent = term.category;
+  document.getElementById("glossary-detail-title").textContent = term.name;
+  document.getElementById("glossary-detail-definition").textContent = term.definition;
+  document.getElementById("glossary-detail-simple").textContent = term.simple;
+  document.getElementById("glossary-detail-example").textContent = term.example;
+  const related = document.getElementById("glossary-related");
+  related.innerHTML = term.related.map((item) => `<button type="button" data-related-term="${item}">${item}</button>`).join("");
+  document.querySelectorAll(".glossary-term-card").forEach((card) => {
+    card.classList.toggle("is-active", card.dataset.term === term.name);
+  });
+};
+
+const renderGlossaryCards = () => {
+  if (!glossaryGrid) return;
+  const query = normalizeGlossary(glossarySearch?.value.trim() || "");
+  const terms = glossaryTerms.filter((term) => {
+    const haystack = normalizeGlossary([term.name, term.category, term.definition, term.simple, term.related.join(" ")].join(" "));
+    return !query || haystack.includes(query);
+  });
+  glossaryGrid.innerHTML = terms.length ? terms.map((term) => `
+    <button type="button" class="glossary-term-card" data-term="${term.name}">
+      <span class="glossary-card-category">${term.category}</span>
+      <span class="glossary-card-icon">${term.icon}</span>
+      <h4>${term.name}</h4>
+      <p>${term.simple}</p>
+    </button>
+  `).join("") : `<div class="video-empty">No hay conceptos con esa busqueda.</div>`;
+  if (terms.length) renderGlossaryDetail(terms[0]);
+};
+
+if (glossaryGrid) {
+  renderGlossaryCards();
+  glossaryGrid.addEventListener("click", (event) => {
+    const card = event.target.closest("[data-term]");
+    if (!card) return;
+    renderGlossaryDetail(findGlossaryTerm(card.dataset.term));
+  });
+}
+
+if (glossarySearch) glossarySearch.addEventListener("input", renderGlossaryCards);
+
+glossaryPickButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    glossarySearch.value = button.dataset.glossaryPick;
+    renderGlossaryCards();
+    glossarySearch.focus();
+  });
+});
+
+document.addEventListener("click", (event) => {
+  const related = event.target.closest("[data-related-term]");
+  if (!related || !glossarySearch) return;
+  glossarySearch.value = related.dataset.relatedTerm;
+  renderGlossaryCards();
 });
