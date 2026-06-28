@@ -4319,3 +4319,40 @@ select {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Ajuste movil del glosario: visible al entrar en Recursos */
+@media (max-width: 640px) {
+  .cyber-glossary {
+    display: block;
+    margin: 22px 0 30px;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .glossary-shell {
+    border-radius: 14px;
+    overflow: visible;
+  }
+
+  .glossary-topbar h3 {
+    font-size: 2rem;
+  }
+
+  .glossary-topbar p,
+  .glossary-detail p,
+  .glossary-term-card p {
+    font-size: 0.95rem;
+  }
+
+  .glossary-search-box {
+    min-height: 52px;
+  }
+
+  .glossary-display,
+  .glossary-grid,
+  .glossary-detail {
+    width: 100%;
+    min-width: 0;
+  }
+}

@@ -74,7 +74,7 @@ if (catCards.length) {
   });
 }
 
-const fadeEls = document.querySelectorAll(".video-card, .path-card, .recurso-group, .blog-card, .section-header, .sugerencias-form, .ip-tool, .security-checklist, .cyber-glossary");
+const fadeEls = document.querySelectorAll(".video-card, .path-card, .recurso-group, .blog-card, .section-header, .sugerencias-form, .ip-tool, .security-checklist");
 
 if (fadeEls.length) {
   const fadeObserver = new IntersectionObserver((entries) => {

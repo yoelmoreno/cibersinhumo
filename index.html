@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
   <meta property="og:image" content="https://www.cibersinhumo.es/favicon-cibersinhumo.png?v=3">
   <meta name="twitter:image" content="https://www.cibersinhumo.es/favicon-cibersinhumo.png?v=3">
-  <link rel="stylesheet" href="style.css?v=62">
+  <link rel="stylesheet" href="style.css?v=63">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -380,6 +380,63 @@
       <p class="section-desc">Herramientas, plataformas y materiales para aprender y protegerte mejor.</p>
     </div>
 
+    <div class="cyber-glossary" id="glosario-ciber">
+      <div class="glossary-shell">
+        <div class="glossary-topbar">
+          <div>
+            <span class="section-tag">base de datos cyber</span>
+            <h3>Glosario interactivo</h3>
+            <p>Busca conceptos de ciberseguridad y exploralos sin tecnicismos innecesarios.</p>
+          </div>
+          <div class="glossary-status" aria-hidden="true">
+            <span></span>
+            <strong>SISTEMA ACTIVO</strong>
+          </div>
+        </div>
+
+        <div class="glossary-console">
+          <div class="glossary-search-area">
+            <label for="glossary-search">Buscar concepto</label>
+            <div class="glossary-search-box">
+              <span>&gt;</span>
+              <input id="glossary-search" type="search" autocomplete="off" placeholder="VPN, phishing, CVE, DNS, Wireshark...">
+            </div>
+            <div class="glossary-quick-chips" aria-label="Conceptos rapidos">
+              <button type="button" data-glossary-pick="VPN">VPN</button>
+              <button type="button" data-glossary-pick="Phishing">Phishing</button>
+              <button type="button" data-glossary-pick="DNS">DNS</button>
+              <button type="button" data-glossary-pick="CVE">CVE</button>
+              <button type="button" data-glossary-pick="Wireshark">Wireshark</button>
+            </div>
+          </div>
+
+          <div class="glossary-display">
+            <div class="glossary-grid" id="glossary-grid"></div>
+            <aside class="glossary-detail" id="glossary-detail" aria-live="polite">
+              <div class="detail-bootline"><span></span><span>esperando concepto...</span></div>
+              <div class="detail-icon" id="glossary-detail-icon">IP</div>
+              <span class="detail-category" id="glossary-detail-category">Conceptos basicos</span>
+              <h4 id="glossary-detail-title">Selecciona un termino</h4>
+              <p id="glossary-detail-definition">Pulsa una tarjeta o busca arriba para abrir una explicacion clara.</p>
+              <div class="detail-simple">
+                <strong>Sin humo</strong>
+                <p id="glossary-detail-simple">Aqui aparecera la version facil del concepto.</p>
+              </div>
+              <div class="detail-example">
+                <strong>Ejemplo</strong>
+                <p id="glossary-detail-example">Tambien veras un ejemplo practico.</p>
+              </div>
+              <div class="detail-related">
+                <strong>Relacionados</strong>
+                <div id="glossary-related"></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="ip-tool" id="ip-tool">
       <div class="ip-orb-card" aria-hidden="true">
         <div class="ip-orb">
@@ -480,62 +537,6 @@
       </div>
     </div>
 
-
-    <div class="cyber-glossary" id="glosario-ciber">
-      <div class="glossary-shell">
-        <div class="glossary-topbar">
-          <div>
-            <span class="section-tag">base de datos cyber</span>
-            <h3>Glosario interactivo</h3>
-            <p>Busca conceptos de ciberseguridad y exploralos sin tecnicismos innecesarios.</p>
-          </div>
-          <div class="glossary-status" aria-hidden="true">
-            <span></span>
-            <strong>SISTEMA ACTIVO</strong>
-          </div>
-        </div>
-
-        <div class="glossary-console">
-          <div class="glossary-search-area">
-            <label for="glossary-search">Buscar concepto</label>
-            <div class="glossary-search-box">
-              <span>&gt;</span>
-              <input id="glossary-search" type="search" autocomplete="off" placeholder="VPN, phishing, CVE, DNS, Wireshark...">
-            </div>
-            <div class="glossary-quick-chips" aria-label="Conceptos rapidos">
-              <button type="button" data-glossary-pick="VPN">VPN</button>
-              <button type="button" data-glossary-pick="Phishing">Phishing</button>
-              <button type="button" data-glossary-pick="DNS">DNS</button>
-              <button type="button" data-glossary-pick="CVE">CVE</button>
-              <button type="button" data-glossary-pick="Wireshark">Wireshark</button>
-            </div>
-          </div>
-
-          <div class="glossary-display">
-            <div class="glossary-grid" id="glossary-grid"></div>
-            <aside class="glossary-detail" id="glossary-detail" aria-live="polite">
-              <div class="detail-bootline"><span></span><span>esperando concepto...</span></div>
-              <div class="detail-icon" id="glossary-detail-icon">IP</div>
-              <span class="detail-category" id="glossary-detail-category">Conceptos basicos</span>
-              <h4 id="glossary-detail-title">Selecciona un termino</h4>
-              <p id="glossary-detail-definition">Pulsa una tarjeta o busca arriba para abrir una explicacion clara.</p>
-              <div class="detail-simple">
-                <strong>Sin humo</strong>
-                <p id="glossary-detail-simple">Aqui aparecera la version facil del concepto.</p>
-              </div>
-              <div class="detail-example">
-                <strong>Ejemplo</strong>
-                <p id="glossary-detail-example">Tambien veras un ejemplo practico.</p>
-              </div>
-              <div class="detail-related">
-                <strong>Relacionados</strong>
-                <div id="glossary-related"></div>
-              </div>
-            </aside>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="recursos-grid">
       <div class="recurso-group">
@@ -675,6 +676,6 @@
   </div>
 </div>
 
-<script src="script.js?v=70"></script>
+<script src="script.js?v=71"></script>
 </body>
 </html>
