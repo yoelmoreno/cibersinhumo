@@ -492,6 +492,16 @@ const learningRoutes = {
         description: "Explicación sencilla de conceptos web importantes para entender mejor la ciberseguridad."
       },
       {
+        title: "C?mo funciona una web por dentro",
+        category: "Web",
+        type: "youtube",
+        url: "https://youtu.be/IsmWOCmjz44",
+        thumbnailUrl: "https://i.ytimg.com/vi/IsmWOCmjz44/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/IsmWOCmjz44/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Explicaci?n sencilla para entender mejor c?mo funcionan las p?ginas web y qu? partes intervienen."
+      },
+      {
         title: "Sistemas operativos: procesos, permisos y archivos",
         category: "Sistemas",
         type: "placeholder"
