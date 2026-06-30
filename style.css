@@ -4704,7 +4704,7 @@ select {
 
 .channel-brand-image img {
   object-fit: cover;
-  object-position: 50% 52%;
+  object-position: 50% 34%;
   padding: 0;
   background: #000;
 }
