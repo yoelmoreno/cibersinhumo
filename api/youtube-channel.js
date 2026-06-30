@@ -36,10 +36,30 @@ module.exports = async function handler(req, res) {
     const videosResponse = await fetch(videosUrl);
     const videosJson = await videosResponse.json();
     const latestVideos = (videosJson.items || []).map((item) => ({
-      title: item.snippet?.title || "V?deo de Ciber Sin Humo",
+      id: item.id?.videoId,
+      title: item.snippet?.title || "Vídeo de Ciber Sin Humo",
       url: `https://www.youtube.com/watch?v=${item.id?.videoId}`,
       thumbnail: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || null
-    })).filter((video) => video.url && !video.url.endsWith("undefined"));
+    })).filter((video) => video.id && video.url && !video.url.endsWith("undefined"));
+
+    const featuredComments = [];
+    for (const video of latestVideos.slice(0, 3)) {
+      if (featuredComments.length >= 3) break;
+      const commentsUrl = `${YOUTUBE_API}/commentThreads?part=snippet&videoId=${encodeURIComponent(video.id)}&maxResults=2&order=relevance&textFormat=plainText&key=${encodeURIComponent(key)}`;
+      const commentsResponse = await fetch(commentsUrl);
+      if (!commentsResponse.ok) continue;
+      const commentsJson = await commentsResponse.json();
+      for (const item of commentsJson.items || []) {
+        const top = item.snippet?.topLevelComment?.snippet;
+        if (!top?.textOriginal || !top?.authorDisplayName) continue;
+        featuredComments.push({
+          author: top.authorDisplayName,
+          text: top.textOriginal.slice(0, 180),
+          videoUrl: video.url
+        });
+        if (featuredComments.length >= 3) break;
+      }
+    }
 
     return res.status(200).json({
       configured: true,
@@ -47,7 +67,8 @@ module.exports = async function handler(req, res) {
       subscribers: channelData.statistics?.subscriberCount || null,
       videos: channelData.statistics?.videoCount || null,
       views: channelData.statistics?.viewCount || null,
-      latestVideos
+      latestVideos,
+      featuredComments
     });
   } catch (error) {
     return res.status(200).json({ configured: false, reason: "request_failed" });

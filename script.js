@@ -369,14 +369,14 @@ const learningRoutes = {
         ]
       },
       {
-        title: "Ataques t?picos: ejemplos y c?mo reconocerlos",
+        title: "Ataques típicos: ejemplos y cómo reconocerlos",
         category: "Ataques",
         type: "youtube",
         url: "https://youtu.be/ESWsMfTj7oM",
         thumbnailUrl: "https://i.ytimg.com/vi/ESWsMfTj7oM/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/ESWsMfTj7oM/mqdefault.jpg",
         badge: "Nuevo",
-        description: "Repaso sencillo de ataques habituales para aprender a identificarlos y entender c?mo funcionan."
+        description: "Repaso sencillo de ataques habituales para aprender a identificarlos y entender cómo funcionan."
       },
       {
         title: "Contraseñas seguras sin complicarte",
@@ -492,14 +492,14 @@ const learningRoutes = {
         description: "Explicación sencilla de conceptos web importantes para entender mejor la ciberseguridad."
       },
       {
-        title: "C?mo funciona una web por dentro",
+        title: "Cómo funciona una web por dentro",
         category: "Web",
         type: "youtube",
         url: "https://youtu.be/IsmWOCmjz44",
         thumbnailUrl: "https://i.ytimg.com/vi/IsmWOCmjz44/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/IsmWOCmjz44/mqdefault.jpg",
         badge: "Nuevo",
-        description: "Explicaci?n sencilla para entender mejor c?mo funcionan las p?ginas web y qu? partes intervienen."
+        description: "Explicación sencilla para entender mejor cómo funcionan las páginas web y qué partes intervienen."
       },
       {
         title: "Sistemas operativos: procesos, permisos y archivos",
@@ -973,7 +973,7 @@ async function fetchIpInfo() {
       const data = await fetchWithTimeout(provider.url);
       const normalized = normalizeIpData(data, provider.name);
       if (normalized?.ip) return normalized;
-      lastError = new Error(data?.message || `Respuesta no v?lida de ${provider.name}`);
+      lastError = new Error(data?.message || `Respuesta no válida de ${provider.name}`);
     } catch (error) {
       lastError = error;
     }
@@ -1462,11 +1462,20 @@ const formatCompactNumber = (value) => {
   return new Intl.NumberFormat("es-ES", { notation: "compact", maximumFractionDigits: 1 }).format(number);
 };
 
+const escapeHtml = (value) => String(value || "")
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
+
 async function initYoutubeChannelPanel() {
   const subsEl = document.getElementById("youtube-subs-count");
   const statusEl = document.getElementById("youtube-subs-status");
   const latestEl = document.getElementById("youtube-latest-videos");
   const latestStatus = document.getElementById("youtube-latest-status");
+  const commentsEl = document.getElementById("comment-cloud");
+  const commentsStatus = document.getElementById("youtube-comments-status");
   if (!subsEl || !statusEl) return;
 
   try {
@@ -1477,19 +1486,34 @@ async function initYoutubeChannelPanel() {
 
     if (data.subscribers) {
       subsEl.textContent = formatCompactNumber(data.subscribers);
-      statusEl.textContent = "Actualizado autom?ticamente desde YouTube.";
+      statusEl.textContent = "Actualizado automáticamente desde YouTube.";
     }
 
     if (latestEl && Array.isArray(data.latestVideos) && data.latestVideos.length) {
       latestEl.innerHTML = data.latestVideos.slice(0, 3).map((video) => `
-        <a href="${video.url}" target="_blank" rel="noopener">${video.title}</a>
+        <a href="${escapeHtml(video.url)}" target="_blank" rel="noopener">${escapeHtml(video.title)}</a>
       `).join("");
       if (latestStatus) latestStatus.textContent = "YouTube sync";
+    }
+
+    if (commentsEl && Array.isArray(data.featuredComments) && data.featuredComments.length) {
+      commentsEl.innerHTML = data.featuredComments.slice(0, 3).map((comment) => `
+        <article class="comment-bubble">
+          <p>&ldquo;${escapeHtml(comment.text)}&rdquo;</p>
+          <span>${escapeHtml(comment.author)}</span>
+        </article>
+      `).join("");
+      if (commentsStatus) commentsStatus.textContent = "YouTube real";
+    } else if (commentsEl) {
+      commentsEl.innerHTML = "";
+      if (commentsStatus) commentsStatus.textContent = "sin comentarios reales";
     }
   } catch (error) {
     subsEl.textContent = "--";
     statusEl.textContent = "Preparado para sincronizar con YouTube cuando pongas la API.";
     if (latestStatus) latestStatus.textContent = "modo local";
+    if (commentsEl) commentsEl.innerHTML = "";
+    if (commentsStatus) commentsStatus.textContent = "sin comentarios reales";
   }
 }
 
