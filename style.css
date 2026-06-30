@@ -1346,7 +1346,7 @@ select {
   width: 96%;
   height: 96%;
   object-fit: contain;
-  object-position: center;
+  object-position: center 38%;
   mix-blend-mode: screen;
   filter: brightness(1.18) contrast(1.22) saturate(1.08);
   transform: translateY(-18px);
@@ -3787,7 +3787,7 @@ select {
     width: 78%;
     height: 78%;
     object-fit: contain;
-    object-position: center;
+    object-position: center 38%;
     transform: translateY(-26px);
   }
 
@@ -4515,7 +4515,7 @@ select {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center 38%;
 }
 
 .subscriber-count {
@@ -4839,7 +4839,7 @@ select {
   width: 92%;
   height: 92%;
   object-fit: contain;
-  object-position: center;
+  object-position: center 38%;
   padding: 0;
   background: transparent;
 }
