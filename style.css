@@ -4677,3 +4677,39 @@ select {
     grid-template-columns: 52px 1fr;
   }
 }
+
+
+/* Ajustes finales de actividad del canal */
+.channel-latest-card {
+  align-self: start;
+}
+
+.latest-video-list {
+  align-items: stretch;
+}
+
+.latest-video-card {
+  min-height: 0;
+}
+
+.latest-video-card img {
+  aspect-ratio: 16 / 9.8;
+}
+
+.channel-brand-image {
+  aspect-ratio: 16 / 7.2;
+}
+
+.channel-brand-image img {
+  object-fit: contain;
+  padding: 10px;
+  background: #000;
+}
+
+#youtube-subs-status {
+  display: none;
+}
+
+.subscriber-count {
+  font-size: clamp(4.8rem, 10vw, 8rem);
+}

@@ -1484,21 +1484,21 @@ async function initYoutubeChannelPanel() {
 
     if (data.subscribers) {
       subsEl.textContent = formatCompactNumber(data.subscribers);
-      statusEl.textContent = "Actualizado automáticamente desde YouTube.";
+      statusEl.textContent = "Comunidad de Ciber Sin Humo.";
     }
 
     if (latestEl && Array.isArray(data.latestVideos) && data.latestVideos.length) {
       latestEl.innerHTML = data.latestVideos.slice(0, 3).map((video) => `
         <a class="latest-video-card" href="${escapeHtml(video.url)}" target="_blank" rel="noopener">
           <img src="${escapeHtml(video.thumbnail || "logo-cibersinhumo-transparent.png?v=1")}" alt="Portada del v?deo" loading="lazy">
-          <span><small>YouTube</small><strong>${escapeHtml(video.title)}</strong></span>
+          <span><small>${escapeHtml(video.category || "YouTube")}</small><strong>${escapeHtml(video.title)}</strong></span>
         </a>
       `).join("");
       if (latestStatus) latestStatus.textContent = "YouTube sync";
     }
   } catch (error) {
     subsEl.textContent = "--";
-    statusEl.textContent = "Preparado para sincronizar con YouTube cuando pongas la API.";
+      statusEl.textContent = "Comunidad de Ciber Sin Humo.";
     if (latestStatus) latestStatus.textContent = "modo local";
   }
 }

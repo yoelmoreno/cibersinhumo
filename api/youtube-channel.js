@@ -32,15 +32,45 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ configured: false, reason: "channel_not_found" });
     }
 
-    const videosUrl = `${YOUTUBE_API}/search?part=snippet&channelId=${encodeURIComponent(resolvedChannelId)}&order=date&maxResults=3&type=video&key=${encodeURIComponent(key)}`;
+    const videosUrl = `${YOUTUBE_API}/search?part=snippet&channelId=${encodeURIComponent(resolvedChannelId)}&order=date&maxResults=12&type=video&key=${encodeURIComponent(key)}`;
     const videosResponse = await fetch(videosUrl);
     const videosJson = await videosResponse.json();
-    const latestVideos = (videosJson.items || []).map((item) => ({
+    const allVideos = (videosJson.items || []).map((item) => ({
       id: item.id?.videoId,
-      title: item.snippet?.title || "Vídeo de Ciber Sin Humo",
+      title: item.snippet?.title || "V?deo de Ciber Sin Humo",
       url: `https://www.youtube.com/watch?v=${item.id?.videoId}`,
-      thumbnail: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || null
+      thumbnail: item.snippet?.thumbnails?.high?.url || item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || null
     })).filter((video) => video.id && video.url && !video.url.endsWith("undefined"));
+
+    const normalizeTitle = (value) => String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+    const addCategory = (video) => {
+      const title = normalizeTitle(video.title);
+      if (title.includes("cookie")) return { ...video, category: "Cookies" };
+      if (title.includes("qr") || title.includes("qrishing")) return { ...video, category: "QR Phishing" };
+      if (title.includes("puerto")) return { ...video, category: "Puertos" };
+      return { ...video, category: "YouTube" };
+    };
+
+    const pickVideo = (predicate, exclude = new Set()) => allVideos.find((video) => !exclude.has(video.id) && predicate(normalizeTitle(video.title)));
+    const selectedIds = new Set();
+    const latestVideos = [];
+    const cookieVideo = pickVideo((title) => title.includes("cookie") && (title.includes("que son") || title.includes("internet parece")));
+    if (cookieVideo) { latestVideos.push(addCategory(cookieVideo)); selectedIds.add(cookieVideo.id); }
+    const qrVideo = pickVideo((title) => title.includes("qr") || title.includes("qrishing"), selectedIds);
+    if (qrVideo) { latestVideos.push(addCategory(qrVideo)); selectedIds.add(qrVideo.id); }
+    const portsVideo = pickVideo((title) => title.includes("puerto"), selectedIds);
+    if (portsVideo) { latestVideos.push(addCategory(portsVideo)); selectedIds.add(portsVideo.id); }
+    for (const video of allVideos) {
+      if (latestVideos.length >= 3) break;
+      if (selectedIds.has(video.id)) continue;
+      if (latestVideos.some((selected) => normalizeTitle(selected.title).includes("cookie") && normalizeTitle(video.title).includes("cookie"))) continue;
+      latestVideos.push(addCategory(video));
+      selectedIds.add(video.id);
+    }
 
     const featuredComments = [];
     for (const video of latestVideos.slice(0, 3)) {
