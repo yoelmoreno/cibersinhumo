@@ -1454,3 +1454,43 @@ document.addEventListener("click", (event) => {
   glossarySearch.value = related.dataset.relatedTerm;
   renderGlossaryCards();
 });
+
+
+const formatCompactNumber = (value) => {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "--";
+  return new Intl.NumberFormat("es-ES", { notation: "compact", maximumFractionDigits: 1 }).format(number);
+};
+
+async function initYoutubeChannelPanel() {
+  const subsEl = document.getElementById("youtube-subs-count");
+  const statusEl = document.getElementById("youtube-subs-status");
+  const latestEl = document.getElementById("youtube-latest-videos");
+  const latestStatus = document.getElementById("youtube-latest-status");
+  if (!subsEl || !statusEl) return;
+
+  try {
+    const response = await fetch("/api/youtube-channel", { cache: "no-store" });
+    if (!response.ok) throw new Error("api no disponible");
+    const data = await response.json();
+    if (!data.configured) throw new Error("api sin configurar");
+
+    if (data.subscribers) {
+      subsEl.textContent = formatCompactNumber(data.subscribers);
+      statusEl.textContent = "Actualizado autom?ticamente desde YouTube.";
+    }
+
+    if (latestEl && Array.isArray(data.latestVideos) && data.latestVideos.length) {
+      latestEl.innerHTML = data.latestVideos.slice(0, 3).map((video) => `
+        <a href="${video.url}" target="_blank" rel="noopener">${video.title}</a>
+      `).join("");
+      if (latestStatus) latestStatus.textContent = "YouTube sync";
+    }
+  } catch (error) {
+    subsEl.textContent = "--";
+    statusEl.textContent = "Preparado para sincronizar con YouTube cuando pongas la API.";
+    if (latestStatus) latestStatus.textContent = "modo local";
+  }
+}
+
+initYoutubeChannelPanel();
