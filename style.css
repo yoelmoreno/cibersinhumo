@@ -4826,3 +4826,20 @@ select {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Ajuste imagen comunidad: mostrar marca completa */
+.channel-brand-image {
+  aspect-ratio: 16 / 9;
+  min-height: 170px;
+  padding: 0;
+}
+
+.channel-brand-image img {
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
+  object-position: center;
+  padding: 0;
+  background: transparent;
+}
