@@ -37,7 +37,7 @@ module.exports = async function handler(req, res) {
     const videosJson = await videosResponse.json();
     const allVideos = (videosJson.items || []).map((item) => ({
       id: item.id?.videoId,
-      title: item.snippet?.title || "V?deo de Ciber Sin Humo",
+      title: item.snippet?.title || "Vídeo de Ciber Sin Humo",
       url: `https://www.youtube.com/watch?v=${item.id?.videoId}`,
       thumbnail: item.snippet?.thumbnails?.high?.url || item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || null
     })).filter((video) => video.id && video.url && !video.url.endsWith("undefined"));

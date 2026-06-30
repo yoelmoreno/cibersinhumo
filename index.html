@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
   <meta property="og:image" content="https://www.cibersinhumo.es/favicon-cibersinhumo.png?v=3">
   <meta name="twitter:image" content="https://www.cibersinhumo.es/favicon-cibersinhumo.png?v=3">
-  <link rel="stylesheet" href="style.css?v=68">
+  <link rel="stylesheet" href="style.css?v=69">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -158,19 +158,19 @@
     <div class="section-header channel-header">
       <span class="section-tag">canal en directo</span>
       <h2 class="section-title">Actividad del canal</h2>
-      <p class="section-desc">?ltimos v?deos, pr?ximos temas y crecimiento de Ciber Sin Humo.</p>
+      <p class="section-desc">Últimos vídeos, próximos temas y crecimiento de Ciber Sin Humo.</p>
     </div>
 
     <div class="channel-dashboard">
       <div class="channel-panel channel-latest-card">
         <div class="channel-card-top">
-          <span class="section-tag">?ltimos v?deos</span>
+          <span class="section-tag">Últimos vídeos</span>
           <span id="youtube-latest-status">modo local</span>
         </div>
         <div class="latest-video-list" id="youtube-latest-videos">
           <a class="latest-video-card" href="https://www.youtube.com/@cibersinhumo" target="_blank" rel="noopener">
             <img src="channel-brand-banner.png?v=1" alt="Portada del canal" loading="lazy">
-            <span><small>YouTube</small><strong>?ltimo v?deo del canal</strong></span>
+            <span><small>YouTube</small><strong>Último vídeo del canal</strong></span>
           </a>
           <a class="latest-video-card" href="https://www.youtube.com/@cibersinhumo" target="_blank" rel="noopener">
             <img src="channel-brand-banner.png?v=1" alt="Portada del canal" loading="lazy">
@@ -178,9 +178,35 @@
           </a>
           <a class="latest-video-card" href="https://www.youtube.com/@cibersinhumo" target="_blank" rel="noopener">
             <img src="channel-brand-banner.png?v=1" alt="Portada del canal" loading="lazy">
-            <span><small>YouTube</small><strong>M?s v?deos en Ciber Sin Humo</strong></span>
+            <span><small>YouTube</small><strong>Más vídeos en Ciber Sin Humo</strong></span>
           </a>
         </div>
+      </div>
+
+      <div class="channel-panel channel-suggestion-card">
+        <div class="channel-card-top">
+          <span class="section-tag">tu idea cuenta</span>
+          <span class="channel-live-dot"><i></i>radar abierto</span>
+        </div>
+        <div class="channel-suggestion-copy">
+          <h3>¿De qué quieres que hable en el siguiente vídeo?</h3>
+          <p>Mándame una idea rápida y la recibo preparada en el correo de Ciber Sin Humo.</p>
+        </div>
+        <form class="channel-suggestion-form" data-email="mantislabs.es@gmail.com">
+          <div class="channel-form-row">
+            <input type="email" name="correo" placeholder="Tu correo, opcional">
+            <button type="button" class="channel-alias-btn">Alias</button>
+          </div>
+          <textarea name="mensaje" rows="4" placeholder="Ej: explica puertos, Wireshark, malware, privacidad..."></textarea>
+          <label class="channel-form-check">
+            <input type="checkbox" required>
+            <span>Acepto enviar esta sugerencia por correo.</span>
+          </label>
+          <div class="channel-form-actions">
+            <button type="submit" class="btn btn-primary">Enviar idea</button>
+            <span class="channel-suggestion-status" aria-live="polite"></span>
+          </div>
+        </form>
       </div>
 
       <aside class="channel-panel channel-stats-card">
@@ -197,29 +223,29 @@
       <div class="channel-panel channel-main-card">
         <div class="channel-scanline" aria-hidden="true"></div>
         <div class="channel-card-top">
-          <span class="section-tag">pr?ximos v?deos</span>
+          <span class="section-tag">próximos vídeos</span>
           <span class="channel-live-dot"><i></i>planificando</span>
         </div>
         <div class="upcoming-grid">
           <article class="upcoming-video is-hot">
             <div class="upcoming-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="3"></rect><path d="m17 9 4-2.5v11L17 15"></path><path d="M8 9.5h4"></path><path d="M8 14h3"></path></svg></div>
             <div>
-              <span>Base t?cnica</span>
-              <h3>C?mo funciona Internet por dentro</h3>
+              <span>Base técnica</span>
+              <h3>Cómo funciona Internet por dentro</h3>
             </div>
           </article>
           <article class="upcoming-video">
             <div class="upcoming-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="3"></rect><path d="m17 9 4-2.5v11L17 15"></path><path d="M8 9.5h4"></path><path d="M8 14h3"></path></svg></div>
             <div>
-              <span>Pr?ctica guiada</span>
+              <span>Práctica guiada</span>
               <h3>Primer laboratorio con herramientas reales</h3>
             </div>
           </article>
           <article class="upcoming-video">
             <div class="upcoming-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="3"></rect><path d="m17 9 4-2.5v11L17 15"></path><path d="M8 9.5h4"></path><path d="M8 14h3"></path></svg></div>
             <div>
-              <span>Investigaci?n</span>
-              <h3>Buscar informaci?n como un analista</h3>
+              <span>Investigación</span>
+              <h3>Buscar información como un analista</h3>
             </div>
           </article>
         </div>
@@ -753,6 +779,6 @@
   </div>
 </div>
 
-<script src="script.js?v=77"></script>
+<script src="script.js?v=78"></script>
 </body>
 </html>

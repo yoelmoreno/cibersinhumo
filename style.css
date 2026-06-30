@@ -4387,7 +4387,7 @@ select {
   grid-template-columns: minmax(0, 1.38fr) minmax(300px, 0.62fr);
   grid-template-areas:
     "latest stats"
-    "latest upcoming";
+    "suggest upcoming";
   gap: 18px;
   align-items: stretch;
 }
@@ -4407,6 +4407,7 @@ select {
 .channel-latest-card { grid-area: latest; padding: 24px; }
 .channel-stats-card { grid-area: stats; padding: 22px; display: flex; flex-direction: column; align-items: flex-start; }
 .channel-main-card { grid-area: upcoming; padding: 22px; }
+.channel-suggestion-card { grid-area: suggest; padding: 24px; }
 
 .channel-scanline {
   position: absolute;
@@ -4644,7 +4645,8 @@ select {
     grid-template-areas:
       "stats"
       "latest"
-      "upcoming";
+      "upcoming"
+      "suggest";
   }
 
   .latest-video-list {
@@ -4701,8 +4703,9 @@ select {
 }
 
 .channel-brand-image img {
-  object-fit: contain;
-  padding: 10px;
+  object-fit: cover;
+  object-position: 50% 52%;
+  padding: 0;
   background: #000;
 }
 
@@ -4712,4 +4715,114 @@ select {
 
 .subscriber-count {
   font-size: clamp(4.8rem, 10vw, 8rem);
+}
+
+
+.channel-suggestion-card {
+  min-height: 300px;
+}
+
+.channel-suggestion-copy h3 {
+  max-width: 760px;
+  margin: 0 0 8px;
+  color: var(--text);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 0.92;
+}
+
+.channel-suggestion-copy p {
+  max-width: 620px;
+  margin: 0 0 18px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.channel-suggestion-form {
+  display: grid;
+  gap: 12px;
+}
+
+.channel-form-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.channel-suggestion-form input,
+.channel-suggestion-form textarea {
+  width: 100%;
+  border: 1px solid rgba(0, 255, 136, 0.16);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  outline: none;
+}
+
+.channel-suggestion-form input {
+  min-height: 46px;
+  padding: 0 14px;
+}
+
+.channel-suggestion-form textarea {
+  min-height: 116px;
+  padding: 13px 14px;
+  resize: vertical;
+}
+
+.channel-suggestion-form input:focus,
+.channel-suggestion-form textarea:focus {
+  border-color: rgba(0, 255, 136, 0.38);
+  box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.08);
+}
+
+.channel-alias-btn {
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid rgba(0, 255, 136, 0.22);
+  border-radius: 12px;
+  background: rgba(0, 255, 136, 0.06);
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.channel-form-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.channel-form-check input {
+  width: 16px;
+  min-height: 16px;
+  accent-color: var(--green);
+}
+
+.channel-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.channel-suggestion-status {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 640px) {
+  .channel-suggestion-card {
+    padding: 18px;
+  }
+
+  .channel-form-row {
+    grid-template-columns: 1fr;
+  }
 }

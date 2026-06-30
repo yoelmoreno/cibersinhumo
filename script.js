@@ -819,6 +819,80 @@ if (sugerenciasForm) {
   });
 }
 
+
+
+const channelSuggestionForms = document.querySelectorAll(".channel-suggestion-form");
+
+channelSuggestionForms.forEach((form) => {
+  const emailInput = form.querySelector('input[name="correo"]');
+  const messageInput = form.querySelector('textarea[name="mensaje"]');
+  const aliasButton = form.querySelector(".channel-alias-btn");
+  const status = form.querySelector(".channel-suggestion-status");
+
+  aliasButton?.addEventListener("click", () => {
+    const randomId = Math.random().toString(36).slice(2, 8);
+    if (emailInput) emailInput.value = `anon-${randomId}@alias.cibersinhumo.es`;
+    if (status) status.textContent = "Alias generado.";
+  });
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const destino = form.dataset.email || "mantislabs.es@gmail.com";
+    const correo = (emailInput?.value || "No indicado").trim();
+    const mensaje = (messageInput?.value || "").trim();
+
+    if (!mensaje) {
+      if (status) status.textContent = "Escribe una idea antes de enviarla.";
+      return;
+    }
+
+    const subject = "Idea para el siguiente vídeo";
+    const body = [
+      "Nueva idea para el siguiente vídeo desde Ciber Sin Humo",
+      "",
+      `Correo: ${correo || "No indicado"}`,
+      "",
+      "Idea:",
+      mensaje
+    ].join("\n");
+
+    const endpoint = form.dataset.endpoint;
+    if (endpoint) {
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ correo, mensaje, subject })
+        });
+        if (!response.ok) throw new Error("No enviado");
+        if (status) status.textContent = "Idea enviada. Gracias.";
+        form.reset();
+        return;
+      } catch (error) {
+        if (status) status.textContent = "No se pudo enviar directo. Abro correo.";
+      }
+    }
+
+    const mailtoUrl = `mailto:${destino}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const gmailUrl = [
+      "https://mail.google.com/mail/?view=cm&fs=1",
+      `to=${encodeURIComponent(destino)}`,
+      `su=${encodeURIComponent(subject)}`,
+      `body=${encodeURIComponent(body)}`
+    ].join("&");
+
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = mailtoUrl;
+    } else {
+      const gmailWindow = window.open(gmailUrl, "_blank", "noopener,noreferrer");
+      if (!gmailWindow) window.location.href = mailtoUrl;
+    }
+
+    if (status) status.textContent = "Se abrirá tu correo con la idea preparada.";
+  });
+});
+
 const checkIpButton = document.getElementById("check-ip-btn");
 const ipStatus = document.getElementById("ip-status");
 const ipCountryVisual = document.getElementById("ip-country-visual");
@@ -1490,7 +1564,7 @@ async function initYoutubeChannelPanel() {
     if (latestEl && Array.isArray(data.latestVideos) && data.latestVideos.length) {
       latestEl.innerHTML = data.latestVideos.slice(0, 3).map((video) => `
         <a class="latest-video-card" href="${escapeHtml(video.url)}" target="_blank" rel="noopener">
-          <img src="${escapeHtml(video.thumbnail || "logo-cibersinhumo-transparent.png?v=1")}" alt="Portada del v?deo" loading="lazy">
+          <img src="${escapeHtml(video.thumbnail || "logo-cibersinhumo-transparent.png?v=1")}" alt="Portada del vídeo" loading="lazy">
           <span><small>${escapeHtml(video.category || "YouTube")}</small><strong>${escapeHtml(video.title)}</strong></span>
         </a>
       `).join("");
