@@ -1474,8 +1474,6 @@ async function initYoutubeChannelPanel() {
   const statusEl = document.getElementById("youtube-subs-status");
   const latestEl = document.getElementById("youtube-latest-videos");
   const latestStatus = document.getElementById("youtube-latest-status");
-  const commentsEl = document.getElementById("comment-cloud");
-  const commentsStatus = document.getElementById("youtube-comments-status");
   if (!subsEl || !statusEl) return;
 
   try {
@@ -1491,29 +1489,17 @@ async function initYoutubeChannelPanel() {
 
     if (latestEl && Array.isArray(data.latestVideos) && data.latestVideos.length) {
       latestEl.innerHTML = data.latestVideos.slice(0, 3).map((video) => `
-        <a href="${escapeHtml(video.url)}" target="_blank" rel="noopener">${escapeHtml(video.title)}</a>
+        <a class="latest-video-card" href="${escapeHtml(video.url)}" target="_blank" rel="noopener">
+          <img src="${escapeHtml(video.thumbnail || "logo-cibersinhumo-transparent.png?v=1")}" alt="Portada del v?deo" loading="lazy">
+          <span><small>YouTube</small><strong>${escapeHtml(video.title)}</strong></span>
+        </a>
       `).join("");
       if (latestStatus) latestStatus.textContent = "YouTube sync";
-    }
-
-    if (commentsEl && Array.isArray(data.featuredComments) && data.featuredComments.length) {
-      commentsEl.innerHTML = data.featuredComments.slice(0, 3).map((comment) => `
-        <article class="comment-bubble">
-          <p>&ldquo;${escapeHtml(comment.text)}&rdquo;</p>
-          <span>${escapeHtml(comment.author)}</span>
-        </article>
-      `).join("");
-      if (commentsStatus) commentsStatus.textContent = "YouTube real";
-    } else if (commentsEl) {
-      commentsEl.innerHTML = "";
-      if (commentsStatus) commentsStatus.textContent = "sin comentarios reales";
     }
   } catch (error) {
     subsEl.textContent = "--";
     statusEl.textContent = "Preparado para sincronizar con YouTube cuando pongas la API.";
     if (latestStatus) latestStatus.textContent = "modo local";
-    if (commentsEl) commentsEl.innerHTML = "";
-    if (commentsStatus) commentsStatus.textContent = "sin comentarios reales";
   }
 }
 
