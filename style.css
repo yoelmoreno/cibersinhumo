@@ -4863,7 +4863,7 @@ select {
 .channel-brand-image {
   min-height: 190px;
   aspect-ratio: 16 / 7.2;
-  background: #000 url("channel-brand-banner.png?v=1") center -58px / 112% auto no-repeat;
+  background: #000 url("channel-brand-banner.png?v=1") center -98px / 112% auto no-repeat;
 }
 
 .channel-brand-image img {
