@@ -4858,3 +4858,15 @@ select {
   object-position: center 42%;
   padding: 0;
 }
+
+
+/* Ajuste fuerte imagen comunidad */
+.channel-brand-image {
+  min-height: 190px;
+  aspect-ratio: 16 / 7.2;
+  background: #000 url("channel-brand-banner.png?v=1") center 12% / cover no-repeat;
+}
+
+.channel-brand-image img {
+  display: none;
+}
