@@ -5116,3 +5116,31 @@ select {
   line-height: 1.35;
   text-transform: uppercase;
 }
+
+
+/* Grafico real de suscriptores */
+.subscriber-chart:not(.is-pending) .chart-area {
+  fill: url(#subsGlow);
+  opacity: 0.82;
+}
+
+.subscriber-chart:not(.is-pending) .chart-line {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.75));
+}
+
+.subscriber-chart.is-pending .chart-area {
+  display: none;
+}
+
+.subscriber-chart.is-pending .chart-line {
+  fill: none;
+  stroke: rgba(0, 255, 136, 0.45);
+  stroke-width: 3;
+  stroke-dasharray: 8 10;
+  stroke-linecap: round;
+}

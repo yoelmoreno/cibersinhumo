@@ -1543,12 +1543,108 @@ const escapeHtml = (value) => String(value || "")
   .replaceAll('"', "&quot;")
   .replaceAll("'", "&#039;");
 
+const MONTH_LABELS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+
+function normalizeSubscriberPoints(points, liveSubscribers) {
+  const normalized = Array.isArray(points)
+    ? points
+        .map((point) => ({
+          date: String(point.date || ""),
+          subscribers: Number(point.subscribers)
+        }))
+        .filter((point) => /^\d{4}-\d{2}-\d{2}$/.test(point.date) && Number.isFinite(point.subscribers))
+    : [];
+
+  if (Number.isFinite(Number(liveSubscribers))) {
+    const today = new Date().toISOString().slice(0, 10);
+    const existing = normalized.find((point) => point.date === today);
+    if (existing) existing.subscribers = Number(liveSubscribers);
+    else normalized.push({ date: today, subscribers: Number(liveSubscribers) });
+  }
+
+  return normalized.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function buildMonthlySubscriberPoints(points) {
+  const byMonth = new Map();
+  points.forEach((point) => {
+    const monthKey = point.date.slice(0, 7);
+    byMonth.set(monthKey, point);
+  });
+  return [...byMonth.values()].slice(-6);
+}
+
+function renderSubscriberChart(points, liveSubscribers) {
+  const chart = document.getElementById("youtube-subs-chart");
+  const line = document.getElementById("subs-chart-line");
+  const area = document.getElementById("subs-chart-area");
+  const dot = document.getElementById("subs-chart-dot");
+  const axis = document.getElementById("subs-chart-axis");
+  const note = document.getElementById("subs-chart-note");
+  const status = document.getElementById("youtube-chart-status");
+  if (!chart || !line || !area || !dot || !axis) return;
+
+  const monthlyPoints = buildMonthlySubscriberPoints(normalizeSubscriberPoints(points, liveSubscribers));
+  if (!monthlyPoints.length) {
+    chart.classList.add("is-pending");
+    line.setAttribute("d", "M18 92 H202");
+    area.setAttribute("d", "");
+    dot.setAttribute("cx", "202");
+    dot.setAttribute("cy", "92");
+    axis.innerHTML = "<span>sin datos</span><span>actual</span>";
+    if (status) status.textContent = "pendiente";
+    if (note) note.textContent = "La grafica se creara cuando GitHub guarde el primer dato real.";
+    return;
+  }
+
+  chart.classList.remove("is-pending");
+  const min = Math.min(...monthlyPoints.map((point) => point.subscribers));
+  const max = Math.max(...monthlyPoints.map((point) => point.subscribers));
+  const spread = Math.max(max - min, 1);
+  const left = 18;
+  const right = 202;
+  const top = 24;
+  const bottom = 94;
+  const width = right - left;
+  const coords = monthlyPoints.map((point, index) => {
+    const x = monthlyPoints.length === 1 ? right : left + (width * index) / (monthlyPoints.length - 1);
+    const y = bottom - ((point.subscribers - min) / spread) * (bottom - top);
+    return { ...point, x, y };
+  });
+
+  const path = coords.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
+  const areaPath = `${path} L${coords[coords.length - 1].x.toFixed(1)} 108 L${coords[0].x.toFixed(1)} 108 Z`;
+  line.setAttribute("d", path);
+  area.setAttribute("d", areaPath);
+  dot.setAttribute("cx", coords[coords.length - 1].x.toFixed(1));
+  dot.setAttribute("cy", coords[coords.length - 1].y.toFixed(1));
+  axis.innerHTML = coords.map((point) => {
+    const date = new Date(`${point.date}T00:00:00`);
+    return `<span>${MONTH_LABELS[date.getMonth()]}</span>`;
+  }).join("");
+  if (status) status.textContent = `${coords[coords.length - 1].subscribers} subs`;
+  if (note) note.textContent = "Grafica generada con datos reales guardados del contador de YouTube.";
+}
+
+async function loadSubscriberHistory(liveSubscribers) {
+  try {
+    const response = await fetch(`/data/youtube-subs-history.json?v=${Date.now()}`, { cache: "no-store" });
+    if (!response.ok) throw new Error("historial no disponible");
+    const history = await response.json();
+    renderSubscriberChart(history.points, liveSubscribers);
+  } catch (error) {
+    renderSubscriberChart([], liveSubscribers);
+  }
+}
+
 async function initYoutubeChannelPanel() {
   const subsEl = document.getElementById("youtube-subs-count");
   const statusEl = document.getElementById("youtube-subs-status");
   const latestEl = document.getElementById("youtube-latest-videos");
   const latestStatus = document.getElementById("youtube-latest-status");
   if (!subsEl || !statusEl) return;
+
+  let liveSubscribers = null;
 
   try {
     const response = await fetch("/api/youtube-channel", { cache: "no-store" });
@@ -1557,6 +1653,7 @@ async function initYoutubeChannelPanel() {
     if (!data.configured) throw new Error("api sin configurar");
 
     if (data.subscribers) {
+      liveSubscribers = Number(data.subscribers);
       subsEl.textContent = formatCompactNumber(data.subscribers);
       statusEl.textContent = "Comunidad de Ciber Sin Humo.";
     }
@@ -1564,7 +1661,7 @@ async function initYoutubeChannelPanel() {
     if (latestEl && Array.isArray(data.latestVideos) && data.latestVideos.length) {
       latestEl.innerHTML = data.latestVideos.slice(0, 3).map((video) => `
         <a class="latest-video-card" href="${escapeHtml(video.url)}" target="_blank" rel="noopener">
-          <img src="${escapeHtml(video.thumbnail || "logo-cibersinhumo-transparent.png?v=1")}" alt="Portada del vídeo" loading="lazy">
+          <img src="${escapeHtml(video.thumbnail || "logo-cibersinhumo-transparent.png?v=1")}" alt="Portada del video" loading="lazy">
           <span><small>${escapeHtml(video.category || "YouTube")}</small><strong>${escapeHtml(video.title)}</strong></span>
         </a>
       `).join("");
@@ -1572,9 +1669,11 @@ async function initYoutubeChannelPanel() {
     }
   } catch (error) {
     subsEl.textContent = "--";
-      statusEl.textContent = "Comunidad de Ciber Sin Humo.";
+    statusEl.textContent = "Comunidad de Ciber Sin Humo.";
     if (latestStatus) latestStatus.textContent = "modo local";
   }
+
+  loadSubscriberHistory(liveSubscribers);
 }
 
 initYoutubeChannelPanel();
