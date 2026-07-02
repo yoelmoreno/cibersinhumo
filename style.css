@@ -4977,3 +4977,61 @@ select {
     min-height: 150px;
   }
 }
+
+
+/* Ajuste final panel comunidad */
+@media (min-width: 1101px) {
+  .channel-dashboard {
+    grid-template-columns: minmax(0, 1.14fr) minmax(500px, 0.86fr);
+  }
+}
+
+.channel-stats-card {
+  padding: 26px;
+}
+
+.subscriber-dashboard {
+  grid-template-columns: minmax(150px, 0.9fr) minmax(230px, 1.1fr);
+  gap: 34px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.subscriber-main {
+  align-self: center;
+}
+
+.subscriber-chart {
+  min-height: 230px;
+  padding: 18px 18px 14px;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.subscriber-chart svg {
+  height: 160px;
+  margin: 8px 0 4px;
+}
+
+.channel-brand-image {
+  min-height: 194px;
+  aspect-ratio: 16 / 7.1;
+  background-position: center -128px;
+  background-size: 112% auto;
+}
+
+@media (max-width: 640px) {
+  .subscriber-dashboard {
+    gap: 18px;
+  }
+
+  .subscriber-chart {
+    min-height: 176px;
+  }
+
+  .subscriber-chart svg {
+    height: 118px;
+  }
+}
