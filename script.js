@@ -1591,15 +1591,16 @@ function renderSubscriberChart(points, liveSubscribers) {
     area.setAttribute("d", "");
     dot.setAttribute("cx", "202");
     dot.setAttribute("cy", "92");
-    axis.innerHTML = "<span>sin datos</span><span>actual</span>";
+    const currentMonth = MONTH_LABELS[new Date().getMonth()];
+    axis.innerHTML = `<span>${currentMonth}</span>`;
     if (status) status.textContent = "pendiente";
     if (note) note.textContent = "La grafica se creara cuando GitHub guarde el primer dato real.";
     return;
   }
 
   chart.classList.remove("is-pending");
-  const min = Math.min(...monthlyPoints.map((point) => point.subscribers));
-  const max = Math.max(...monthlyPoints.map((point) => point.subscribers));
+  const min = 0;
+  const max = Math.max(...monthlyPoints.map((point) => point.subscribers), 1);
   const spread = Math.max(max - min, 1);
   const left = 18;
   const right = 202;
@@ -1623,7 +1624,7 @@ function renderSubscriberChart(points, liveSubscribers) {
     return `<span>${MONTH_LABELS[date.getMonth()]}</span>`;
   }).join("");
   if (status) status.textContent = `${coords[coords.length - 1].subscribers} subs`;
-  if (note) note.textContent = "Grafica generada con datos reales guardados del contador de YouTube.";
+  if (note) note.textContent = "Grafica generada con datos reales del contador de YouTube.";
 }
 
 async function loadSubscriberHistory(liveSubscribers) {
