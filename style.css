@@ -5035,3 +5035,59 @@ select {
     height: 118px;
   }
 }
+
+
+/* Ajuste grafico comunidad amplio */
+@media (min-width: 1101px) {
+  .channel-dashboard {
+    grid-template-columns: minmax(0, 1.02fr) minmax(620px, 0.98fr);
+  }
+}
+
+.subscriber-dashboard {
+  grid-template-columns: minmax(150px, 0.62fr) minmax(360px, 1.38fr);
+  gap: 42px;
+  align-items: center;
+}
+
+.subscriber-chart {
+  min-height: 265px;
+  padding: 20px 22px 16px;
+  border-radius: 18px;
+}
+
+.subscriber-chart svg {
+  height: 190px;
+  margin: 10px 0 6px;
+}
+
+.chart-line {
+  stroke-width: 6;
+}
+
+.chart-dot {
+  r: 6px;
+}
+
+.chart-axis {
+  padding: 0 4px;
+}
+
+.channel-brand-image {
+  background-position: center -138px;
+}
+
+@media (max-width: 640px) {
+  .subscriber-dashboard {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .subscriber-chart {
+    min-height: 178px;
+  }
+
+  .subscriber-chart svg {
+    height: 118px;
+  }
+}
