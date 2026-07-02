@@ -5091,3 +5091,28 @@ select {
     height: 118px;
   }
 }
+
+
+/* Grafico comunidad sin datos inventados */
+.subscriber-chart.is-pending {
+  justify-content: space-between;
+}
+
+.chart-empty-line {
+  fill: none;
+  stroke: rgba(0, 255, 136, 0.45);
+  stroke-width: 3;
+  stroke-dasharray: 8 10;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.35));
+}
+
+.chart-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
