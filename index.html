@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
   <meta property="og:image" content="https://www.cibersinhumo.es/favicon-cibersinhumo.png?v=3">
   <meta name="twitter:image" content="https://www.cibersinhumo.es/favicon-cibersinhumo.png?v=3">
-  <link rel="stylesheet" href="style.css?v=79">
+  <link rel="stylesheet" href="style.css?v=80">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -213,11 +213,34 @@
         <div class="channel-brand-image" aria-hidden="true">
           <img src="channel-brand-banner.png?v=1" alt="">
         </div>
-        <span class="section-tag">comunidad</span>
-        <strong class="subscriber-count" id="youtube-subs-count">--</strong>
-        <span class="subscriber-label">suscriptores</span>
-        <p id="youtube-subs-status">Comunidad de Ciber Sin Humo.</p>
-        <a class="channel-link" href="https://www.youtube.com/@cibersinhumo" target="_blank" rel="noopener">Ir al canal</a>
+        <div class="subscriber-dashboard">
+          <div class="subscriber-main">
+            <span class="section-tag">comunidad</span>
+            <strong class="subscriber-count" id="youtube-subs-count">--</strong>
+            <span class="subscriber-label">suscriptores</span>
+            <p id="youtube-subs-status">Comunidad de Ciber Sin Humo.</p>
+            <a class="channel-link" href="https://www.youtube.com/@cibersinhumo" target="_blank" rel="noopener">Ir al canal</a>
+          </div>
+          <div class="subscriber-chart" aria-label="Evolución visual de suscriptores">
+            <div class="chart-head">
+              <span>crecimiento</span>
+              <strong>+ activo</strong>
+            </div>
+            <svg viewBox="0 0 220 120" role="img" aria-hidden="true">
+              <defs>
+                <linearGradient id="subsGlow" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0" stop-color="#00cc66" stop-opacity="0.25" />
+                  <stop offset="1" stop-color="#00ff88" stop-opacity="0.95" />
+                </linearGradient>
+              </defs>
+              <path class="chart-grid-line" d="M12 28 H208 M12 58 H208 M12 88 H208" />
+              <path class="chart-area" d="M16 96 L50 88 L84 72 L116 76 L150 48 L188 30 L208 24 L208 108 L16 108 Z" />
+              <path class="chart-line" d="M16 96 L50 88 L84 72 L116 76 L150 48 L188 30 L208 24" />
+              <circle cx="208" cy="24" r="5" class="chart-dot" />
+            </svg>
+            <div class="chart-axis"><span>mes 1</span><span>ahora</span></div>
+          </div>
+        </div>
       </aside>
 
       <div class="channel-panel channel-main-card">
@@ -230,22 +253,22 @@
           <article class="upcoming-video is-hot">
             <div class="upcoming-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="3"></rect><path d="m17 9 4-2.5v11L17 15"></path><path d="M8 9.5h4"></path><path d="M8 14h3"></path></svg></div>
             <div>
-              <span>Base técnica</span>
-              <h3>Cómo funciona Internet por dentro</h3>
+              <span>Redes desde cero</span>
+              <h3>Direcciones MAC: el DNI invisible de tus dispositivos</h3>
             </div>
           </article>
           <article class="upcoming-video">
             <div class="upcoming-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="3"></rect><path d="m17 9 4-2.5v11L17 15"></path><path d="M8 9.5h4"></path><path d="M8 14h3"></path></svg></div>
             <div>
-              <span>Práctica guiada</span>
-              <h3>Primer laboratorio con herramientas reales</h3>
+              <span>Roles en ciber</span>
+              <h3>Sombreros del hacking: quién ataca, quién defiende y quién aprende</h3>
             </div>
           </article>
           <article class="upcoming-video">
             <div class="upcoming-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="3"></rect><path d="m17 9 4-2.5v11L17 15"></path><path d="M8 9.5h4"></path><path d="M8 14h3"></path></svg></div>
             <div>
-              <span>Investigación</span>
-              <h3>Buscar información como un analista</h3>
+              <span>Linux básico</span>
+              <h3>Comandos básicos de Linux para moverte como en una terminal real</h3>
             </div>
           </article>
         </div>
