@@ -5277,3 +5277,38 @@ select {
     bottom: 42px;
   }
 }
+
+
+/* Destaque etiqueta suscriptores */
+.subscriber-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 255, 136, 0.24);
+  border-radius: 999px;
+  background: rgba(0, 255, 136, 0.08);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 18px rgba(0, 255, 136, 0.06), 0 0 18px rgba(0, 255, 136, 0.1);
+  text-shadow: 0 0 14px rgba(0, 255, 136, 0.42);
+}
+
+.subscriber-label::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--green);
+  box-shadow: 0 0 14px rgba(0, 255, 136, 0.8);
+}
+
+.chart-note {
+  display: none;
+}

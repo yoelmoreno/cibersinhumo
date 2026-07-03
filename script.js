@@ -1596,7 +1596,7 @@ function renderSubscriberChart(points, liveSubscribers) {
     axis.innerHTML = `<span>${currentMonth}</span>`;
     if (status) status.textContent = "pendiente";
     if (yAxis) yAxis.innerHTML = "<span>50</span><span>40</span><span>30</span><span>20</span><span>0</span>";
-    if (note) note.textContent = "La grafica se creara cuando GitHub guarde el primer dato real.";
+    if (note) note.textContent = "";
     return;
   }
 
@@ -1632,7 +1632,7 @@ function renderSubscriberChart(points, liveSubscribers) {
     return `<span>${MONTH_LABELS[date.getMonth()]}</span>`;
   }).join("");
   if (status) status.textContent = `${coords[coords.length - 1].subscribers} subs`;
-  if (note) note.textContent = "Grafica generada con datos reales del contador de YouTube.";
+  if (note) note.textContent = "";
 }
 
 async function loadSubscriberHistory(liveSubscribers) {
