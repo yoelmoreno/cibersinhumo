@@ -1,6 +1,11 @@
 {
-  "updatedAt": "2026-06-30T00:00:00.000Z",
+  "updatedAt": "2026-07-03T00:00:00.000Z",
   "points": [
+    {
+      "date": "2026-05-01",
+      "subscribers": 0,
+      "source": "manual"
+    },
     {
       "date": "2026-06-30",
       "subscribers": 53,

@@ -1582,6 +1582,7 @@ function renderSubscriberChart(points, liveSubscribers) {
   const axis = document.getElementById("subs-chart-axis");
   const note = document.getElementById("subs-chart-note");
   const status = document.getElementById("youtube-chart-status");
+  const yAxis = document.querySelector(".chart-y-axis");
   if (!chart || !line || !area || !dot || !axis) return;
 
   const monthlyPoints = buildMonthlySubscriberPoints(normalizeSubscriberPoints(points, liveSubscribers));
@@ -1594,19 +1595,26 @@ function renderSubscriberChart(points, liveSubscribers) {
     const currentMonth = MONTH_LABELS[new Date().getMonth()];
     axis.innerHTML = `<span>${currentMonth}</span>`;
     if (status) status.textContent = "pendiente";
+    if (yAxis) yAxis.innerHTML = "<span>50</span><span>40</span><span>30</span><span>20</span><span>0</span>";
     if (note) note.textContent = "La grafica se creara cuando GitHub guarde el primer dato real.";
     return;
   }
 
   chart.classList.remove("is-pending");
   const min = 0;
-  const max = Math.max(...monthlyPoints.map((point) => point.subscribers), 1);
+  const rawMax = Math.max(...monthlyPoints.map((point) => point.subscribers), 1);
+  const max = Math.max(10, Math.ceil(rawMax / 10) * 10);
   const spread = Math.max(max - min, 1);
   const left = 18;
   const right = 202;
   const top = 24;
   const bottom = 94;
   const width = right - left;
+  if (yAxis) {
+    const steps = [max, Math.round(max * 0.75), Math.round(max * 0.5), Math.round(max * 0.25), 0];
+    yAxis.innerHTML = steps.map((value) => `<span>${value}</span>`).join("");
+  }
+
   const coords = monthlyPoints.map((point, index) => {
     const x = monthlyPoints.length === 1 ? right : left + (width * index) / (monthlyPoints.length - 1);
     const y = bottom - ((point.subscribers - min) / spread) * (bottom - top);

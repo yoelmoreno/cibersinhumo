@@ -5240,3 +5240,40 @@ select {
     transform: none;
   }
 }
+
+
+/* Ajuste eje Y grafica suscriptores */
+.subscriber-chart {
+  position: relative;
+  padding-left: 42px;
+}
+
+.chart-y-axis {
+  position: absolute;
+  left: 14px;
+  top: 54px;
+  bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: rgba(220, 255, 236, 0.62);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+}
+
+.channel-brand-image {
+  background-position: center -172px;
+}
+
+@media (max-width: 640px) {
+  .subscriber-chart {
+    padding-left: 36px;
+  }
+
+  .chart-y-axis {
+    left: 12px;
+    top: 48px;
+    bottom: 42px;
+  }
+}
