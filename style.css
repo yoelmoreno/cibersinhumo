@@ -5748,3 +5748,48 @@ select {
 .subscriber-count {
   display: none;
 }
+
+
+/* Restaurar ultimos videos y contador simple */
+@media (min-width: 1101px) {
+  .channel-dashboard {
+    grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.55fr);
+  }
+}
+
+.latest-video-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.latest-video-card strong {
+  font-size: clamp(1.25rem, 1.8vw, 1.8rem);
+  line-height: 0.98;
+}
+
+.channel-stats-card {
+  padding: 24px;
+}
+
+.subscriber-dashboard.subscriber-simple {
+  margin-top: 14px;
+}
+
+.subscriber-hero {
+  min-height: 172px;
+  gap: 8px;
+}
+
+.subscriber-hero strong {
+  font-size: clamp(6rem, 10vw, 8.6rem);
+}
+
+.subscriber-hero > span {
+  font-size: clamp(1.28rem, 1.8vw, 1.75rem);
+}
+
+@media (max-width: 640px) {
+  .latest-video-list {
+    grid-template-columns: 1fr;
+  }
+}
