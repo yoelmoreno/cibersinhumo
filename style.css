@@ -5635,3 +5635,67 @@ select {
     transform: none;
   }
 }
+
+
+/* Spotlight limpio suscriptores */
+.channel-brand-image {
+  background-position: center -132px;
+}
+
+.subscriber-dashboard {
+  grid-template-columns: minmax(130px, 0.34fr) minmax(280px, 0.66fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.subscriber-main.compact {
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.subscriber-main.compact p {
+  display: none;
+}
+
+.subscriber-spotlight {
+  min-height: 210px;
+  align-content: center;
+  justify-items: start;
+  padding: 26px 28px;
+}
+
+.subscriber-spotlight .spotlight-kicker {
+  margin-bottom: 8px;
+  color: rgba(220, 255, 236, 0.78);
+}
+
+.subscriber-spotlight strong {
+  margin: 0;
+  font-size: clamp(5.6rem, 9vw, 8.4rem);
+  letter-spacing: 0.02em;
+}
+
+.subscriber-spotlight span:last-of-type {
+  margin-top: 6px;
+  color: var(--green);
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  letter-spacing: 0.22em;
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.88), 0 0 34px rgba(0, 255, 136, 0.5);
+}
+
+.subscriber-spotlight i {
+  right: 22px;
+  bottom: 22px;
+  width: 86px;
+  height: 86px;
+  opacity: 0.8;
+}
+
+@media (max-width: 640px) {
+  .subscriber-dashboard {
+    grid-template-columns: 1fr;
+  }
+}

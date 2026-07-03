@@ -1652,7 +1652,7 @@ async function initYoutubeChannelPanel() {
   const statusEl = document.getElementById("youtube-subs-status");
   const latestEl = document.getElementById("youtube-latest-videos");
   const latestStatus = document.getElementById("youtube-latest-status");
-  if (!subsEl || !statusEl) return;
+  if (!statusEl) return;
 
   let liveSubscribers = null;
 
@@ -1664,7 +1664,7 @@ async function initYoutubeChannelPanel() {
 
     if (data.subscribers) {
       liveSubscribers = Number(data.subscribers);
-      subsEl.textContent = formatCompactNumber(data.subscribers);
+      if (subsEl) subsEl.textContent = formatCompactNumber(data.subscribers);
       if (spotlightSubsEl) spotlightSubsEl.textContent = formatCompactNumber(data.subscribers);
       statusEl.textContent = "Comunidad de Ciber Sin Humo.";
     }
@@ -1679,7 +1679,7 @@ async function initYoutubeChannelPanel() {
       if (latestStatus) latestStatus.textContent = "YouTube sync";
     }
   } catch (error) {
-    subsEl.textContent = "--";
+    if (subsEl) subsEl.textContent = "--";
     if (spotlightSubsEl) spotlightSubsEl.textContent = "--";
     statusEl.textContent = "Comunidad de Ciber Sin Humo.";
     if (latestStatus) latestStatus.textContent = "modo local";
