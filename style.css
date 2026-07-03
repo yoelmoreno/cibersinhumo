@@ -5405,3 +5405,100 @@ select {
     padding-left: 40px;
   }
 }
+
+
+/* Ajuste esquema panel suscriptores */
+@media (min-width: 1101px) {
+  .channel-dashboard {
+    grid-template-columns: minmax(0, 0.86fr) minmax(720px, 1.14fr);
+  }
+}
+
+.channel-stats-card {
+  padding: 28px 34px 30px;
+}
+
+.channel-brand-image {
+  min-height: 178px;
+  aspect-ratio: 16 / 6.35;
+  background-position: center -190px;
+  background-size: 112% auto;
+}
+
+.subscriber-dashboard {
+  grid-template-columns: minmax(190px, 0.48fr) minmax(470px, 1.52fr);
+  gap: 42px;
+  align-items: start;
+  margin-top: 8px;
+}
+
+.subscriber-main {
+  transform: translateY(28px);
+}
+
+.subscriber-count {
+  margin-top: 16px;
+  font-size: clamp(5.7rem, 10vw, 8.9rem);
+}
+
+.subscriber-label {
+  margin-top: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: clamp(1.22rem, 1.55vw, 1.58rem);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  text-transform: uppercase;
+  box-shadow: none;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.86), 0 0 28px rgba(0, 255, 136, 0.52);
+}
+
+.subscriber-label::before {
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+}
+
+.subscriber-chart {
+  width: 100%;
+  justify-self: end;
+  min-height: 224px;
+  padding: 18px 24px 14px 48px;
+  transform: translate(18px, -8px);
+  border-radius: 16px;
+}
+
+.subscriber-chart svg {
+  height: 146px;
+  margin: 4px 0 2px;
+}
+
+.chart-y-axis {
+  top: 52px;
+  bottom: 48px;
+}
+
+@media (max-width: 1100px) {
+  .subscriber-chart {
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .subscriber-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .subscriber-main {
+    transform: none;
+  }
+
+  .subscriber-label {
+    font-size: 1rem;
+  }
+}
