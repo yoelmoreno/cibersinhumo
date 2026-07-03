@@ -5699,3 +5699,52 @@ select {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Suscriptores simple definitivo */
+.subscriber-dashboard.subscriber-simple {
+  display: block;
+  margin-top: 18px;
+}
+
+.subscriber-hero {
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.subscriber-hero strong {
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: clamp(5.8rem, 11vw, 9rem);
+  line-height: 0.82;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 18px rgba(0, 255, 136, 0.9), 0 0 52px rgba(0, 255, 136, 0.45);
+  animation: subscriberPulse 2.6s ease-in-out infinite;
+}
+
+.subscriber-hero > span {
+  color: #eafff3;
+  font-family: var(--font-mono);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 0 14px rgba(0, 255, 136, 0.8), 0 0 34px rgba(0, 255, 136, 0.42);
+}
+
+.subscriber-hero .channel-link {
+  margin-top: 14px;
+}
+
+.subscriber-main,
+.subscriber-spotlight,
+.subscriber-label,
+.subscriber-count {
+  display: none;
+}
