@@ -5793,3 +5793,30 @@ select {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Correccion ultimos videos y banner */
+@media (min-width: 1101px) {
+  .channel-dashboard {
+    grid-template-columns: minmax(0, 1.32fr) minmax(430px, 0.68fr);
+  }
+}
+
+.channel-brand-image {
+  background-position: center -94px;
+}
+
+.latest-video-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.latest-video-card img {
+  object-fit: cover;
+}
+
+
+/* Ajuste final banner actividad */
+.channel-brand-image {
+  background-position: center -24px;
+}

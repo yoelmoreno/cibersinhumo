@@ -1021,6 +1021,37 @@ async function fetchWithTimeout(url, timeout = 6500) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);
 
+  const localLatestVideos = [
+    {
+      url: "https://www.youtube.com/watch?v=IsmWOCmjz44",
+      thumbnail: "https://i.ytimg.com/vi/IsmWOCmjz44/hqdefault.jpg",
+      category: "Cookies",
+      title: "Que son las cookies y por que Internet parece leerte la mente",
+    },
+    {
+      url: "https://www.youtube.com/watch?v=ESWsMfTj7oM",
+      thumbnail: "https://i.ytimg.com/vi/ESWsMfTj7oM/hqdefault.jpg",
+      category: "QR Phishing",
+      title: "Escanear un QR puede robarte la cuenta: asi funciona el QR Phishing",
+    },
+    {
+      url: "https://www.youtube.com/watch?v=0-Qw8mUtL84",
+      thumbnail: "https://i.ytimg.com/vi/0-Qw8mUtL84/hqdefault.jpg",
+      category: "Puertos",
+      title: "Sabes lo que son los puertos de Internet y como funcionan",
+    },
+  ];
+
+  const renderLatestVideos = (videos) => {
+    if (!latestEl || !Array.isArray(videos) || !videos.length) return;
+    latestEl.innerHTML = videos.slice(0, 3).map((video) => `
+      <a class="latest-video-card" href="${escapeHtml(video.url)}" target="_blank" rel="noopener">
+        <img src="${escapeHtml(video.thumbnail || "logo-cibersinhumo-transparent.png?v=1")}" alt="Portada del video" loading="lazy">
+        <span><small>${escapeHtml(video.category || "YouTube")}</small><strong>${escapeHtml(video.title)}</strong></span>
+      </a>
+    `).join("");
+  };
+
   try {
     const response = await fetch(url, {
       cache: "no-store",
@@ -1669,19 +1700,15 @@ async function initYoutubeChannelPanel() {
       statusEl.textContent = "Comunidad de Ciber Sin Humo.";
     }
 
-    if (latestEl && Array.isArray(data.latestVideos) && data.latestVideos.length) {
-      latestEl.innerHTML = data.latestVideos.slice(0, 3).map((video) => `
-        <a class="latest-video-card" href="${escapeHtml(video.url)}" target="_blank" rel="noopener">
-          <img src="${escapeHtml(video.thumbnail || "logo-cibersinhumo-transparent.png?v=1")}" alt="Portada del video" loading="lazy">
-          <span><small>${escapeHtml(video.category || "YouTube")}</small><strong>${escapeHtml(video.title)}</strong></span>
-        </a>
-      `).join("");
+    if (Array.isArray(data.latestVideos) && data.latestVideos.length) {
+      renderLatestVideos(data.latestVideos);
       if (latestStatus) latestStatus.textContent = "YouTube sync";
     }
   } catch (error) {
     if (subsEl) subsEl.textContent = "--";
     if (spotlightSubsEl) spotlightSubsEl.textContent = "54";
     statusEl.textContent = "Comunidad de Ciber Sin Humo.";
+    renderLatestVideos(localLatestVideos);
     if (latestStatus) latestStatus.textContent = "modo local";
   }
 
