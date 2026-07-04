@@ -1026,19 +1026,19 @@ async function fetchWithTimeout(url, timeout = 6500) {
       url: "https://www.youtube.com/watch?v=IsmWOCmjz44",
       thumbnail: "https://i.ytimg.com/vi/IsmWOCmjz44/hqdefault.jpg",
       category: "Cookies",
-      title: "Que son las cookies y por que Internet parece leerte la mente",
+      title: "Qué son las cookies y por qué Internet parece leerte la mente",
     },
     {
       url: "https://www.youtube.com/watch?v=ESWsMfTj7oM",
       thumbnail: "https://i.ytimg.com/vi/ESWsMfTj7oM/hqdefault.jpg",
       category: "QR Phishing",
-      title: "Escanear un QR puede robarte la cuenta: asi funciona el QR Phishing",
+      title: "Escanear un QR puede robarte la cuenta: así funciona el QR Phishing",
     },
     {
       url: "https://www.youtube.com/watch?v=0-Qw8mUtL84",
       thumbnail: "https://i.ytimg.com/vi/0-Qw8mUtL84/hqdefault.jpg",
       category: "Puertos",
-      title: "Sabes lo que son los puertos de Internet y como funcionan",
+      title: "¿Sabes lo que son los puertos de Internet y cómo funcionan?",
     },
   ];
 
