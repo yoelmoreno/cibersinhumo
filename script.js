@@ -446,6 +446,16 @@ const learningRoutes = {
         ]
       },
       {
+        title: "Tu móvil tiene matrícula: así funcionan las direcciones MAC",
+        category: "Redes",
+        type: "youtube",
+        url: "https://youtu.be/BLKqTM585WM",
+        thumbnailUrl: "https://i.ytimg.com/vi/BLKqTM585WM/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/BLKqTM585WM/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Explicación sencilla de qué es una dirección MAC, para qué sirve y por qué identifica a tus dispositivos en una red."
+      },
+      {
         title: "VPN: qué son y cuándo sirven",
         category: "Redes",
         type: "youtube",
