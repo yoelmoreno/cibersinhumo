@@ -402,6 +402,16 @@ const learningRoutes = {
         description: "Qué es una máquina virtual, para qué sirve en ciberseguridad y cómo empezar con VirtualBox."
       },
       {
+        title: "Abrí la terminal de Linux y parecía una casa abandonada",
+        category: "Intro",
+        type: "youtube",
+        url: "https://youtu.be/3t8Esks_Idg",
+        thumbnailUrl: "https://i.ytimg.com/vi/3t8Esks_Idg/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/3t8Esks_Idg/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Primer contacto con la terminal de Linux: comandos básicos, estructura y cómo empezar sin perderte."
+      },
+      {
         title: "Escaneo de puertos: qué hay abierto y por qué importa",
         category: "Pruebas prácticas",
         type: "placeholder"
@@ -1033,16 +1043,16 @@ async function fetchWithTimeout(url, timeout = 6500) {
 
   const localLatestVideos = [
     {
-      url: "https://www.youtube.com/watch?v=IsmWOCmjz44",
-      thumbnail: "https://i.ytimg.com/vi/IsmWOCmjz44/hqdefault.jpg",
-      category: "Cookies",
-      title: "Qué son las cookies y por qué Internet parece leerte la mente",
+      url: "https://www.youtube.com/watch?v=3t8Esks_Idg",
+      thumbnail: "https://i.ytimg.com/vi/3t8Esks_Idg/hqdefault.jpg",
+      category: "Linux",
+      title: "Abrí la terminal de Linux y parecía una casa abandonada",
     },
     {
-      url: "https://www.youtube.com/watch?v=ESWsMfTj7oM",
-      thumbnail: "https://i.ytimg.com/vi/ESWsMfTj7oM/hqdefault.jpg",
-      category: "QR Phishing",
-      title: "Escanear un QR puede robarte la cuenta: así funciona el QR Phishing",
+      url: "https://www.youtube.com/watch?v=BLKqTM585WM",
+      thumbnail: "https://i.ytimg.com/vi/BLKqTM585WM/hqdefault.jpg",
+      category: "Redes",
+      title: "Tu móvil tiene matrícula: así funcionan las direcciones MAC",
     },
     {
       url: "https://www.youtube.com/watch?v=0-Qw8mUtL84",
