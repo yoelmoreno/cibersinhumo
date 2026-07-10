@@ -1451,18 +1451,28 @@ if (cookieBannerEnabled) {
   });
 }
 /* Splash screen */
-window.addEventListener("load", () => {
+(() => {
   const splash = document.getElementById("splash");
   if (!splash) return;
 
-  setTimeout(() => {
+  const releaseSplash = window.releaseCiberSplash || (() => {
     splash.classList.add("hidden");
-
     setTimeout(() => {
       splash.style.display = "none";
-    }, 450);
-  }, 2100);
-});
+      splash.setAttribute("aria-hidden", "true");
+    }, 520);
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(releaseSplash, 2300);
+  }, { once: true });
+
+  window.addEventListener("load", () => {
+    setTimeout(releaseSplash, 900);
+  }, { once: true });
+
+  setTimeout(releaseSplash, 3600);
+})();
 
 
 const glossaryTerms = [

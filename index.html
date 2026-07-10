@@ -738,6 +738,34 @@
   </div>
 </div>
 
-<script src="script.js?v=88"></script>
+<script>
+  (function () {
+    var splash = document.getElementById("splash");
+    if (!splash) return;
+
+    var released = false;
+    function releaseSplash() {
+      if (released) return;
+      released = true;
+      splash.classList.add("hidden");
+      document.body.classList.add("splash-released");
+
+      window.setTimeout(function () {
+        splash.style.display = "none";
+        splash.setAttribute("aria-hidden", "true");
+      }, 520);
+    }
+
+    window.releaseCiberSplash = releaseSplash;
+    window.setTimeout(releaseSplash, 3200);
+    document.addEventListener("DOMContentLoaded", function () {
+      window.setTimeout(releaseSplash, 2300);
+    }, { once: true });
+    window.addEventListener("load", function () {
+      window.setTimeout(releaseSplash, 900);
+    }, { once: true });
+  }());
+</script>
+<script src="script.js?v=89"></script>
 </body>
 </html>
