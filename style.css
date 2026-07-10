@@ -4029,6 +4029,10 @@ select {
   padding: 22px 28px 28px;
 }
 
+.glossary-mobile-toggle {
+  display: none;
+}
+
 .glossary-search-area {
   display: grid;
   gap: 12px;
@@ -4333,6 +4337,46 @@ select {
   .glossary-shell {
     border-radius: 14px;
     overflow: visible;
+  }
+
+  .glossary-mobile-toggle {
+    position: relative;
+    z-index: 2;
+    width: calc(100% - 32px);
+    min-height: 52px;
+    margin: 0 16px 16px;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    border: 1px solid rgba(0, 255, 136, 0.28);
+    border-radius: 14px;
+    background:
+      linear-gradient(90deg, rgba(0, 255, 136, 0.12), rgba(0, 0, 0, 0.34)),
+      rgba(0, 0, 0, 0.45);
+    color: var(--text);
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 0 0 22px rgba(0, 255, 136, 0.08);
+  }
+
+  .glossary-mobile-toggle strong {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(0, 255, 136, 0.28);
+    border-radius: 50%;
+    color: var(--green);
+    font-size: 1.1rem;
+    line-height: 1;
+    box-shadow: 0 0 14px rgba(0, 255, 136, 0.16);
+  }
+
+  .cyber-glossary.is-mobile-compact:not(.is-open) .glossary-console {
+    display: none;
   }
 
   .glossary-topbar h3 {

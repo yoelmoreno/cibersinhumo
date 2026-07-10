@@ -1526,6 +1526,8 @@ const glossaryGrid = document.getElementById("glossary-grid");
 const glossarySearch = document.getElementById("glossary-search");
 const glossaryDetail = document.getElementById("glossary-detail");
 const glossaryPickButtons = document.querySelectorAll("[data-glossary-pick]");
+const glossaryBlock = document.getElementById("glosario-ciber");
+const glossaryToggle = document.querySelector("[data-glossary-toggle]");
 
 const normalizeGlossary = (value) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -1582,6 +1584,37 @@ glossaryPickButtons.forEach((button) => {
     glossarySearch.focus();
   });
 });
+
+if (glossaryBlock && glossaryToggle) {
+  const mobileGlossaryQuery = window.matchMedia("(max-width: 640px)");
+
+  const setGlossaryMobileState = () => {
+    if (mobileGlossaryQuery.matches) {
+      glossaryBlock.classList.add("is-mobile-compact");
+      glossaryBlock.classList.remove("is-open");
+      glossaryToggle.setAttribute("aria-expanded", "false");
+      glossaryToggle.querySelector("span").textContent = "Ver glosario de terminos";
+      glossaryToggle.querySelector("strong").textContent = "+";
+    } else {
+      glossaryBlock.classList.remove("is-mobile-compact", "is-open");
+      glossaryToggle.setAttribute("aria-expanded", "true");
+    }
+  };
+
+  glossaryToggle.addEventListener("click", () => {
+    const isOpen = glossaryBlock.classList.toggle("is-open");
+    glossaryToggle.setAttribute("aria-expanded", String(isOpen));
+    glossaryToggle.querySelector("span").textContent = isOpen ? "Ocultar glosario" : "Ver glosario de terminos";
+    glossaryToggle.querySelector("strong").textContent = isOpen ? "-" : "+";
+  });
+
+  setGlossaryMobileState();
+  if (mobileGlossaryQuery.addEventListener) {
+    mobileGlossaryQuery.addEventListener("change", setGlossaryMobileState);
+  } else if (mobileGlossaryQuery.addListener) {
+    mobileGlossaryQuery.addListener(setGlossaryMobileState);
+  }
+}
 
 document.addEventListener("click", (event) => {
   const related = event.target.closest("[data-related-term]");
