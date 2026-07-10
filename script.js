@@ -1623,6 +1623,24 @@ document.addEventListener("click", (event) => {
   renderGlossaryCards();
 });
 
+document.querySelectorAll(".blog-article").forEach((article) => {
+  const title = article.querySelector(".blog-title");
+  if (!title || article.querySelector(".blog-read-toggle")) return;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "blog-read-toggle";
+  button.setAttribute("aria-expanded", "false");
+  button.textContent = "Leer articulo";
+  article.appendChild(button);
+
+  button.addEventListener("click", () => {
+    const isOpen = article.classList.toggle("is-open");
+    button.setAttribute("aria-expanded", String(isOpen));
+    button.textContent = isOpen ? "Cerrar articulo" : "Leer articulo";
+  });
+});
+
 
 const formatCompactNumber = (value) => {
   const number = Number(value);
