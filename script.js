@@ -1787,7 +1787,7 @@ async function initYoutubeChannelPanel() {
     }
   } catch (error) {
     if (subsEl) subsEl.textContent = "--";
-    if (spotlightSubsEl) spotlightSubsEl.textContent = "58";
+    if (spotlightSubsEl) spotlightSubsEl.textContent = "60";
     statusEl.textContent = "Comunidad de Ciber Sin Humo.";
     renderLatestVideos(localLatestVideos);
     if (latestStatus) latestStatus.textContent = "modo local";
