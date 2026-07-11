@@ -1769,7 +1769,7 @@ async function initYoutubeChannelPanel() {
   let liveSubscribers = null;
 
   try {
-    const response = await fetch("/api/youtube-channel", { cache: "no-store" });
+    const response = await fetch(`/api/youtube-channel?ts=${Date.now()}`, { cache: "no-store" });
     if (!response.ok) throw new Error("api no disponible");
     const data = await response.json();
     if (!data.configured) throw new Error("api sin configurar");
@@ -1787,7 +1787,7 @@ async function initYoutubeChannelPanel() {
     }
   } catch (error) {
     if (subsEl) subsEl.textContent = "--";
-    if (spotlightSubsEl) spotlightSubsEl.textContent = "56";
+    if (spotlightSubsEl) spotlightSubsEl.textContent = "58";
     statusEl.textContent = "Comunidad de Ciber Sin Humo.";
     renderLatestVideos(localLatestVideos);
     if (latestStatus) latestStatus.textContent = "modo local";

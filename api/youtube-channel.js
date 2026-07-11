@@ -1,7 +1,7 @@
 const YOUTUBE_API = "https://www.googleapis.com/youtube/v3";
 
 module.exports = async function handler(req, res) {
-  res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
+  res.setHeader("Cache-Control", "s-maxage=15, stale-while-revalidate=30");
 
   const key = process.env.YOUTUBE_API_KEY;
   const channelId = process.env.YOUTUBE_CHANNEL_ID;
