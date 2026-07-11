@@ -5930,3 +5930,9 @@ select {
 .channel-brand-image {
   background-position: center -124px;
 }
+
+@media (max-width: 640px) {
+  .channel-brand-image {
+    background-position: center -76px;
+  }
+}

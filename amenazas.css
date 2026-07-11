@@ -12,6 +12,10 @@
   margin-bottom: 22px;
 }
 
+.threat-hud {
+  display: none !important;
+}
+
 .amenazas-title {
   font-family: var(--font-main);
   font-size: clamp(2rem, 4vw, 3rem);
