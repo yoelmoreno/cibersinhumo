@@ -197,7 +197,7 @@ const learningRoutes = {
         category: "IntroducciÃ³n",
         type: "youtube",
         url: "https://youtu.be/BbOSYx6WNMs",
-        thumbnailUrl: "https://i.ytimg.com/vi/BbOSYx6WNMs/maxresdefault.jpg",
+        thumbnailUrl: "https://i.ytimg.com/vi/BbOSYx6WNMs/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/BbOSYx6WNMs/hqdefault.jpg",
         badge: "Intro",
         description: "VÃ­deo de introducciÃ³n para empezar por la primera carpeta de la ruta principiante.",
@@ -1053,6 +1053,12 @@ async function fetchWithTimeout(url, timeout = 6500) {
   const timer = setTimeout(() => controller.abort(), timeout);
 
   const localLatestVideos = [
+    {
+      url: "https://www.youtube.com/watch?v=BbOSYx6WNMs",
+      thumbnail: "https://i.ytimg.com/vi/BbOSYx6WNMs/hqdefault.jpg",
+      category: "Intro",
+      title: "Intro Ciber Sin Humo",
+    },
     {
       url: "https://www.youtube.com/watch?v=3t8Esks_Idg",
       thumbnail: "https://i.ytimg.com/vi/3t8Esks_Idg/hqdefault.jpg",

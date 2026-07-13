@@ -1,4 +1,4 @@
-const YOUTUBE_API = "https://www.googleapis.com/youtube/v3";
+﻿const YOUTUBE_API = "https://www.googleapis.com/youtube/v3";
 
 module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store, max-age=0");
@@ -37,7 +37,7 @@ module.exports = async function handler(req, res) {
     const videosJson = await videosResponse.json();
     const allVideos = (videosJson.items || []).map((item) => ({
       id: item.id?.videoId,
-      title: item.snippet?.title || "Vídeo de Ciber Sin Humo",
+      title: item.snippet?.title || "VÃ­deo de Ciber Sin Humo",
       url: `https://www.youtube.com/watch?v=${item.id?.videoId}`,
       thumbnail: item.snippet?.thumbnails?.high?.url || item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || null
     })).filter((video) => video.id && video.url && !video.url.endsWith("undefined"));
@@ -58,6 +58,15 @@ module.exports = async function handler(req, res) {
     const pickVideo = (predicate, exclude = new Set()) => allVideos.find((video) => !exclude.has(video.id) && predicate(normalizeTitle(video.title)));
     const selectedIds = new Set();
     const latestVideos = [];
+    const introVideo = {
+      id: "BbOSYx6WNMs",
+      title: "Intro Ciber Sin Humo",
+      url: "https://www.youtube.com/watch?v=BbOSYx6WNMs",
+      thumbnail: "https://i.ytimg.com/vi/BbOSYx6WNMs/hqdefault.jpg",
+      category: "Intro"
+    };
+    latestVideos.push(introVideo);
+    selectedIds.add(introVideo.id);
     const cookieVideo = pickVideo((title) => title.includes("cookie") && (title.includes("que son") || title.includes("internet parece")));
     if (cookieVideo) { latestVideos.push(addCategory(cookieVideo)); selectedIds.add(cookieVideo.id); }
     const qrVideo = pickVideo((title) => title.includes("qr") || title.includes("qrishing"), selectedIds);
