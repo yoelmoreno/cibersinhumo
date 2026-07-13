@@ -1,4 +1,4 @@
-﻿const YOUTUBE_API = "https://www.googleapis.com/youtube/v3";
+const YOUTUBE_API = "https://www.googleapis.com/youtube/v3";
 
 module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store, max-age=0");
@@ -37,7 +37,7 @@ module.exports = async function handler(req, res) {
     const videosJson = await videosResponse.json();
     const allVideos = (videosJson.items || []).map((item) => ({
       id: item.id?.videoId,
-      title: item.snippet?.title || "VÃ­deo de Ciber Sin Humo",
+      title: item.snippet?.title || "Vídeo de Ciber Sin Humo",
       url: `https://www.youtube.com/watch?v=${item.id?.videoId}`,
       thumbnail: item.snippet?.thumbnails?.high?.url || item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || null
     })).filter((video) => video.id && video.url && !video.url.endsWith("undefined"));
@@ -57,29 +57,29 @@ module.exports = async function handler(req, res) {
 
     const pickVideo = (predicate, exclude = new Set()) => allVideos.find((video) => !exclude.has(video.id) && predicate(normalizeTitle(video.title)));
     const selectedIds = new Set();
-    const latestVideos = [];
-    const introVideo = {
-      id: "BbOSYx6WNMs",
-      title: "Intro Ciber Sin Humo",
-      url: "https://www.youtube.com/watch?v=BbOSYx6WNMs",
-      thumbnail: "https://i.ytimg.com/vi/BbOSYx6WNMs/hqdefault.jpg",
-      category: "Intro"
-    };
-    latestVideos.push(introVideo);
-    selectedIds.add(introVideo.id);
-    const cookieVideo = pickVideo((title) => title.includes("cookie") && (title.includes("que son") || title.includes("internet parece")));
-    if (cookieVideo) { latestVideos.push(addCategory(cookieVideo)); selectedIds.add(cookieVideo.id); }
-    const qrVideo = pickVideo((title) => title.includes("qr") || title.includes("qrishing"), selectedIds);
-    if (qrVideo) { latestVideos.push(addCategory(qrVideo)); selectedIds.add(qrVideo.id); }
-    const portsVideo = pickVideo((title) => title.includes("puerto"), selectedIds);
-    if (portsVideo) { latestVideos.push(addCategory(portsVideo)); selectedIds.add(portsVideo.id); }
-    for (const video of allVideos) {
-      if (latestVideos.length >= 3) break;
-      if (selectedIds.has(video.id)) continue;
-      if (latestVideos.some((selected) => normalizeTitle(selected.title).includes("cookie") && normalizeTitle(video.title).includes("cookie"))) continue;
-      latestVideos.push(addCategory(video));
-      selectedIds.add(video.id);
-    }
+    const latestVideos = [
+      {
+        id: "BbOSYx6WNMs",
+        title: "Intro Ciber Sin Humo",
+        url: "https://www.youtube.com/watch?v=BbOSYx6WNMs",
+        thumbnail: "https://i.ytimg.com/vi/BbOSYx6WNMs/hqdefault.jpg",
+        category: "Intro"
+      },
+      {
+        id: "3t8Esks_Idg",
+        title: "Abrí la terminal de Linux y parecía una casa abandonada",
+        url: "https://www.youtube.com/watch?v=3t8Esks_Idg",
+        thumbnail: "https://i.ytimg.com/vi/3t8Esks_Idg/hqdefault.jpg",
+        category: "Linux"
+      },
+      {
+        id: "BLKqTM585WM",
+        title: "Tu móvil tiene matrícula: así funcionan las direcciones MAC",
+        url: "https://www.youtube.com/watch?v=BLKqTM585WM",
+        thumbnail: "https://i.ytimg.com/vi/BLKqTM585WM/hqdefault.jpg",
+        category: "Redes"
+      }
+    ];
 
     const featuredComments = [];
     for (const video of latestVideos.slice(0, 3)) {

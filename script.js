@@ -1,4 +1,4 @@
-﻿const canvas = document.getElementById("matrix");
+const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
 function resize() {
@@ -8,7 +8,7 @@ function resize() {
 resize();
 window.addEventListener("resize", resize);
 
-const chars = "01ã‚¢ã‚¤ã‚¦ã‚¨ã‚ªã‚«ã‚­ã‚¯ã‚±ã‚³ã‚µã‚·ã‚¹ã‚»ã‚½ã‚¿ãƒãƒ„ãƒ†ãƒˆãƒŠãƒ‹ãƒŒãƒãƒŽ@#$%&ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const chars = "01#$%&ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const fontSize = 14;
 let columns = Math.floor(canvas.width / fontSize);
 let drops = Array(columns).fill(0).map(() => Math.random() * -100);
@@ -147,17 +147,17 @@ const heroCmdOutput = document.getElementById("hero-cmd-output");
 if (heroCmdForm && heroCmdInput && heroCmdOutput) {
   const responses = {
     help: "Comandos: help, ip, dns, puertos, phishing, malware, vpn, redes, wireshark, hash, firewall, videos, whoami, clear.",
-    ip: "IP pÃºblica: direcciÃ³n con la que sales a Internet. Sirve para identificar tu conexiÃ³n de forma aproximada.",
+    ip: "IP pública: dirección con la que sales a Internet. Sirve para identificar tu conexión de forma aproximada.",
     dns: "DNS traduce nombres como cibersinhumo.es a direcciones IP que los equipos pueden entender.",
-    puertos: "Los puertos son puertas lÃ³gicas de comunicaciÃ³n. Por ejemplo: 80 HTTP, 443 HTTPS, 22 SSH.",
-    phishing: "Phishing: engaÃ±o para robar datos. Revisa enlace, remitente, urgencia y faltas raras.",
-    malware: "Malware es software malicioso: troyanos, spyware, ransomware, keyloggers y mÃ¡s.",
-    vpn: "Una VPN cifra tu conexiÃ³n y oculta tu IP a la web final, pero no te vuelve invulnerable.",
+    puertos: "Los puertos son puertas lógicas de comunicación. Por ejemplo: 80 HTTP, 443 HTTPS, 22 SSH.",
+    phishing: "Phishing: engaño para robar datos. Revisa enlace, remitente, urgencia y faltas raras.",
+    malware: "Malware es software malicioso: troyanos, spyware, ransomware, keyloggers y más.",
+    vpn: "Una VPN cifra tu conexión y oculta tu IP a la web final, pero no te vuelve invulnerable.",
     redes: "Empieza por IP, DNS, puertos y paquetes. Luego Wireshark empieza a tener sentido.",
-    wireshark: "Wireshark permite ver paquetes de red. Es como mirar el trÃ¡fico que viaja por tu conexiÃ³n.",
-    hash: "Un hash es una huella digital de datos. Si el archivo cambia, su hash tambiÃ©n cambia.",
-    firewall: "Un firewall filtra conexiones permitidas o bloqueadas segÃºn reglas de seguridad.",
-    videos: "Abre la secciÃ³n VÃ­deos y empieza por la ruta 'No sÃ© nada de ciber'.",
+    wireshark: "Wireshark permite ver paquetes de red. Es como mirar el tráfico que viaja por tu conexión.",
+    hash: "Un hash es una huella digital de datos. Si el archivo cambia, su hash también cambia.",
+    firewall: "Un firewall filtra conexiones permitidas o bloqueadas según reglas de seguridad.",
+    videos: "Abre la sección Vídeos y empieza por la ruta 'No sé nada de ciber'.",
     whoami: "Usuario: principiante curioso con permisos para aprender.",
   };
 
@@ -188,66 +188,66 @@ if (heroCmdForm && heroCmdInput && heroCmdOutput) {
 const learningRoutes = {
   principiante: {
     tag: "ruta 01",
-    title: "No sÃ© nada de ciber",
-    desc: "Empieza por lo esencial: amenazas comunes, hÃ¡bitos seguros y conceptos base.",
-    filterOrder: ["IntroducciÃ³n", "Ataques", "Historia", "Privacidad", "Todos"],
+    title: "No sé nada de ciber",
+    desc: "Empieza por lo esencial: amenazas comunes, hábitos seguros y conceptos base.",
+    filterOrder: ["Introducción", "Ataques", "Historia", "Privacidad", "Todos"],
     videos: [
       {
         title: "Intro Ciber Sin Humo",
-        category: "IntroducciÃ³n",
+        category: "Introducción",
         type: "youtube",
         url: "https://youtu.be/BbOSYx6WNMs",
         thumbnailUrl: "https://i.ytimg.com/vi/BbOSYx6WNMs/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/BbOSYx6WNMs/hqdefault.jpg",
         badge: "Intro",
-        description: "VÃ­deo de introducciÃ³n para empezar por la primera carpeta de la ruta principiante.",
+        description: "Vídeo de introducción para empezar por la primera carpeta de la ruta principiante.",
         resources: []
       },
       {
-        title: "IntroducciÃ³n al canal",
-        category: "IntroducciÃ³n",
+        title: "Introducción al canal",
+        category: "Introducción",
         type: "youtube",
         url: "https://www.youtube.com/watch?v=lEinvhz9fLc&list=PLje9tFGVK-hBtHHm_V-BXeegZdTTVCCP5&index=2",
         thumbnailUrl: "https://i.ytimg.com/vi/lEinvhz9fLc/maxresdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/lEinvhz9fLc/hqdefault.jpg",
         badge: "Nuevo",
-        description: "PresentaciÃ³n del canal, enfoque de la web y primeros conceptos de ciberseguridad sin humo.",
+        description: "Presentación del canal, enfoque de la web y primeros conceptos de ciberseguridad sin humo.",
         resources: [
           {
-            label: "PresentaciÃ³n PDF",
+            label: "Presentación PDF",
             url: "recursos/presentacion-ciberseguridad-intro.pdf"
           }
         ]
       },
       {
-        title: "WannaCry: quÃ© fue y por quÃ© marcÃ³ la historia",
+        title: "WannaCry: qué fue y por qué marcó la historia",
         category: "Historia",
         type: "youtube",
         url: "https://youtu.be/a4BePy8pXfA",
         thumbnailUrl: "https://i.ytimg.com/vi/a4BePy8pXfA/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/a4BePy8pXfA/mqdefault.jpg",
         badge: "Nuevo",
-        description: "QuÃ© fue WannaCry, por quÃ© se volviÃ³ tan famoso y quÃ© enseÃ±Ã³ sobre la ciberseguridad moderna."
+        description: "Qué fue WannaCry, por qué se volvió tan famoso y qué enseñó sobre la ciberseguridad moderna."
       },
       {
-        title: "Pakenham y los USB: quÃ© pasÃ³",
+        title: "Pakenham y los USB: qué pasó",
         category: "Historia",
         type: "youtube",
         url: "https://youtu.be/CIIkmf8C9NI",
         thumbnailUrl: "https://i.ytimg.com/vi/CIIkmf8C9NI/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/CIIkmf8C9NI/mqdefault.jpg",
         badge: "Nuevo",
-        description: "Caso real explicado de forma sencilla: quÃ© pasÃ³ en Pakenham con los USB y quÃ© lecciones deja."
+        description: "Caso real explicado de forma sencilla: qué pasó en Pakenham con los USB y qué lecciones deja."
       },
       {
-        title: "Phishing: quÃ© es y cÃ³mo evitarlo",
+        title: "Phishing: qué es y cómo evitarlo",
         category: "Ataques",
         type: "youtube",
         url: "https://youtu.be/6_L84s6Jn4s",
         thumbnailUrl: "phishing-cover.jpg?v=2",
         thumbnailFallback: "https://i.ytimg.com/vi/6_L84s6Jn4s/hqdefault.jpg",
         badge: "Nuevo",
-        description: "QuÃ© es el phishing, cÃ³mo reconocer correos falsos y quÃ© seÃ±ales revisar antes de hacer clic.",
+        description: "Qué es el phishing, cómo reconocer correos falsos y qué señales revisar antes de hacer clic.",
         resources: [
           {
             label: "MADPhisher",
@@ -260,14 +260,14 @@ const learningRoutes = {
         ]
       },
       {
-        title: "Troyanos: quÃ© son y cÃ³mo evitarlos",
+        title: "Troyanos: qué son y cómo evitarlos",
         category: "Ataques",
         type: "youtube",
         url: "https://youtu.be/KnIAbzji1EM",
         thumbnailUrl: "troyano-cover.jpg?v=1",
         thumbnailFallback: "https://i.ytimg.com/vi/KnIAbzji1EM/hqdefault.jpg",
         badge: "Nuevo",
-        description: "ExplicaciÃ³n de quÃ© es un troyano y una demo visual para entender cÃ³mo puede ocultarse una amenaza.",
+        description: "Explicación de qué es un troyano y una demo visual para entender cómo puede ocultarse una amenaza.",
         resources: [
           {
             label: "Diapositivas PDF",
@@ -280,14 +280,14 @@ const learningRoutes = {
         ]
       },
       {
-        title: "Spyware: acceso a cÃ¡maras y cÃ³mo evitarlo",
+        title: "Spyware: acceso a cámaras y cómo evitarlo",
         category: "Ataques",
         type: "youtube",
         url: "https://youtu.be/0Tlr-gDakCs",
         thumbnailUrl: "spyware-cover.jpg?v=1",
         thumbnailFallback: "https://i.ytimg.com/vi/0Tlr-gDakCs/hqdefault.jpg",
         badge: "Nuevo",
-        description: "CÃ³mo el spyware puede abusar del acceso a cÃ¡maras y quÃ© medidas tomar para reducir riesgos.",
+        description: "Cómo el spyware puede abusar del acceso a cámaras y qué medidas tomar para reducir riesgos.",
         resources: [
           {
             label: "HackCCTV",
@@ -307,90 +307,90 @@ const learningRoutes = {
         thumbnailUrl: "keylogger-cover.jpg?v=1",
         thumbnailFallback: "https://i.ytimg.com/vi/dY1H9PCTYyM/hqdefault.jpg",
         badge: "Nuevo",
-        description: "CÃ³mo funcionan los keyloggers, quÃ© pueden registrar y quÃ© seÃ±ales ayudan a protegerte.",
+        description: "Cómo funcionan los keyloggers, qué pueden registrar y qué señales ayudan a protegerte.",
         resources: [
           {
             label: "Diapositivas PDF",
             url: "recursos/diapositivas-keylogger.pdf"
           },
           {
-            label: "AnimaciÃ³n Keylogger",
+            label: "Animación Keylogger",
             url: "recursos/animacion-keylogger.html"
           }
         ]
       },
       {
-        title: "DDoS: quÃ© es y cÃ³mo funciona",
+        title: "DDoS: qué es y cómo funciona",
         category: "Ataques",
         type: "youtube",
         url: "https://youtu.be/4p54sndQGYU",
         thumbnailUrl: "https://i.ytimg.com/vi/4p54sndQGYU/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/4p54sndQGYU/mqdefault.jpg",
         badge: "Nuevo",
-        description: "QuÃ© es un ataque DDoS, cÃ³mo puede saturar una web o servicio y ejemplos para entenderlo fÃ¡cil.",
+        description: "Qué es un ataque DDoS, cómo puede saturar una web o servicio y ejemplos para entenderlo fácil.",
         resources: [
           {
             label: "Diapositivas PDF",
             url: "recursos/diapositivas-ddos-ciber-sin-humo.pdf"
           },
           {
-            label: "AnimaciÃ³n DDoS",
+            label: "Animación DDoS",
             url: "recursos/animacion-ddos.html"
           }
         ]
       },
       {
-        title: "Ransomware: quÃ© es y cÃ³mo funciona",
+        title: "Ransomware: qué es y cómo funciona",
         category: "Ataques",
         type: "youtube",
         url: "https://youtu.be/aD9RRjgCsW4",
         thumbnailUrl: "https://i.ytimg.com/vi/aD9RRjgCsW4/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/aD9RRjgCsW4/mqdefault.jpg",
         badge: "Nuevo",
-        description: "QuÃ© es un ransomware, cÃ³mo puede cifrar archivos y por quÃ© puede bloquear tus datos.",
+        description: "Qué es un ransomware, cómo puede cifrar archivos y por qué puede bloquear tus datos.",
         resources: [
           {
             label: "Diapositivas PDF",
             url: "recursos/diapositivas-ransomware.pdf"
           },
           {
-            label: "AnimaciÃ³n Ransomware",
+            label: "Animación Ransomware",
             url: "recursos/animacion-ransomware.html"
           }
         ]
       },
       {
-        title: "MITM: quÃ© es un ataque del intermediario",
+        title: "MITM: qué es un ataque del intermediario",
         category: "Ataques",
         type: "youtube",
         url: "https://youtu.be/qZityrltI0k",
         thumbnailUrl: "https://i.ytimg.com/vi/qZityrltI0k/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/qZityrltI0k/mqdefault.jpg",
         badge: "Nuevo",
-        description: "QuÃ© es un ataque Man-in-the-Middle y cÃ³mo un intermediario puede espiar o modificar una comunicaciÃ³n.",
+        description: "Qué es un ataque Man-in-the-Middle y cómo un intermediario puede espiar o modificar una comunicación.",
         resources: [
           {
             label: "Diapositivas PDF",
             url: "recursos/diapositivas-mitm.pdf"
           },
           {
-            label: "AnimaciÃ³n MITM",
+            label: "Animación MITM",
             url: "recursos/animacion-mitm.html"
           }
         ]
       },
       {
-        title: "Ataques tÃ­picos: ejemplos y cÃ³mo reconocerlos",
+        title: "Ataques típicos: ejemplos y cómo reconocerlos",
         category: "Ataques",
         type: "youtube",
         url: "https://youtu.be/ESWsMfTj7oM",
         thumbnailUrl: "https://i.ytimg.com/vi/ESWsMfTj7oM/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/ESWsMfTj7oM/mqdefault.jpg",
         badge: "Nuevo",
-        description: "Repaso sencillo de ataques habituales para aprender a identificarlos y entender cÃ³mo funcionan."
+        description: "Repaso sencillo de ataques habituales para aprender a identificarlos y entender cómo funcionan."
       },
       {
-        title: "ContraseÃ±as seguras sin complicarte",
+        title: "Contraseñas seguras sin complicarte",
         category: "Privacidad",
         type: "placeholder"
       }
@@ -398,93 +398,93 @@ const learningRoutes = {
   },
   privacidad: {
     tag: "ruta 02",
-    title: "Aplicar la teorÃ­a a la prÃ¡ctica",
-    desc: "Herramientas, pruebas guiadas y pequeÃ±os laboratorios para aprender haciendo.",
-    filterOrder: ["Intro", "Pruebas prÃ¡cticas", "Redes", "ContraseÃ±as", "AnÃ¡lisis", "Todos"],
+    title: "Aplicar la teoría a la práctica",
+    desc: "Herramientas, pruebas guiadas y pequeños laboratorios para aprender haciendo.",
+    filterOrder: ["Intro", "Pruebas prácticas", "Redes", "Contraseñas", "Análisis", "Todos"],
     videos: [
       {
-        title: "MÃ¡quinas virtuales y VirtualBox: intro al laboratorio",
+        title: "Máquinas virtuales y VirtualBox: intro al laboratorio",
         category: "Intro",
         type: "youtube",
         url: "https://youtu.be/bL8H_mR0BFw",
         thumbnailUrl: "https://i.ytimg.com/vi/bL8H_mR0BFw/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/bL8H_mR0BFw/mqdefault.jpg",
         badge: "Nuevo",
-        description: "QuÃ© es una mÃ¡quina virtual, para quÃ© sirve en ciberseguridad y cÃ³mo empezar con VirtualBox."
+        description: "Qué es una máquina virtual, para qué sirve en ciberseguridad y cómo empezar con VirtualBox."
       },
       {
-        title: "AbrÃ­ la terminal de Linux y parecÃ­a una casa abandonada",
+        title: "Abrí la terminal de Linux y parecía una casa abandonada",
         category: "Intro",
         type: "youtube",
         url: "https://youtu.be/3t8Esks_Idg",
         thumbnailUrl: "https://i.ytimg.com/vi/3t8Esks_Idg/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/3t8Esks_Idg/mqdefault.jpg",
         badge: "Nuevo",
-        description: "Primer contacto con la terminal de Linux: comandos bÃ¡sicos, estructura y cÃ³mo empezar sin perderte."
+        description: "Primer contacto con la terminal de Linux: comandos básicos, estructura y cómo empezar sin perderte."
       },
       {
-        title: "Escaneo de puertos: quÃ© hay abierto y por quÃ© importa",
-        category: "Pruebas prÃ¡cticas",
+        title: "Escaneo de puertos: qué hay abierto y por qué importa",
+        category: "Pruebas prácticas",
         type: "placeholder"
       },
       {
-        title: "Wireshark: mirar el trÃ¡fico de red sin perderte",
+        title: "Wireshark: mirar el tráfico de red sin perderte",
         category: "Redes",
         type: "placeholder"
       },
       {
-        title: "John the Ripper: cÃ³mo se prueban contraseÃ±as",
-        category: "ContraseÃ±as",
+        title: "John the Ripper: cómo se prueban contraseñas",
+        category: "Contraseñas",
         type: "placeholder"
       },
       {
         title: "Mini laboratorio: practicar sin liarla en tu ordenador",
-        category: "Pruebas prÃ¡cticas",
+        category: "Pruebas prácticas",
         type: "placeholder"
       }
     ]
   },
   sistema: {
     tag: "ruta 03",
-    title: "Entender informÃ¡tica para entender ciber",
-    desc: "Conceptos de informÃ¡tica que luego se aplican a redes, anÃ¡lisis, sistemas y seguridad.",
+    title: "Entender informática para entender ciber",
+    desc: "Conceptos de informática que luego se aplican a redes, análisis, sistemas y seguridad.",
     filterOrder: ["Redes", "Web", "Sistemas", "Conceptos", "Todos"],
     videos: [
       {
-        title: "IPs: IPv4, IPv6, pÃºblicas y privadas",
+        title: "IPs: IPv4, IPv6, públicas y privadas",
         category: "Redes",
         type: "youtube",
         url: "https://youtu.be/eGTbt5cqBXA",
         thumbnailUrl: "https://i.ytimg.com/vi/eGTbt5cqBXA/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/eGTbt5cqBXA/mqdefault.jpg",
         badge: "Nuevo",
-        description: "IntroducciÃ³n clara a las direcciones IP: IPv4, IPv6, pÃºblicas, privadas, fijas y dinÃ¡micas.",
+        description: "Introducción clara a las direcciones IP: IPv4, IPv6, públicas, privadas, fijas y dinámicas.",
         resources: [
           {
-            label: "PresentaciÃ³n PDF",
+            label: "Presentación PDF",
             url: "recursos/presentacion-ip.pdf"
           }
         ]
       },
       {
-        title: "Tu mÃ³vil tiene matrÃ­cula: asÃ­ funcionan las direcciones MAC",
+        title: "Tu móvil tiene matrícula: así funcionan las direcciones MAC",
         category: "Redes",
         type: "youtube",
         url: "https://youtu.be/BLKqTM585WM",
         thumbnailUrl: "https://i.ytimg.com/vi/BLKqTM585WM/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/BLKqTM585WM/mqdefault.jpg",
         badge: "Nuevo",
-        description: "ExplicaciÃ³n sencilla de quÃ© es una direcciÃ³n MAC, para quÃ© sirve y por quÃ© identifica a tus dispositivos en una red."
+        description: "Explicación sencilla de qué es una dirección MAC, para qué sirve y por qué identifica a tus dispositivos en una red."
       },
       {
-        title: "VPN: quÃ© son y cuÃ¡ndo sirven",
+        title: "VPN: qué son y cuándo sirven",
         category: "Redes",
         type: "youtube",
         url: "https://youtu.be/I6KqB5QsIGo",
         thumbnailUrl: "https://i.ytimg.com/vi/I6KqB5QsIGo/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/I6KqB5QsIGo/mqdefault.jpg",
         badge: "Nuevo",
-        description: "QuÃ© es una VPN, cuÃ¡ndo aporta privacidad y quÃ© cosas no soluciona por sÃ­ sola.",
+        description: "Qué es una VPN, cuándo aporta privacidad y qué cosas no soluciona por sí sola.",
         resources: [
           {
             label: "Diapositivas PDF",
@@ -493,24 +493,24 @@ const learningRoutes = {
         ]
       },
       {
-        title: "QuÃ© pasa cuando entras en una web",
+        title: "Qué pasa cuando entras en una web",
         category: "Web",
         type: "youtube",
         url: "https://youtu.be/pjC6xG8Ncpg",
         thumbnailUrl: "https://i.ytimg.com/vi/pjC6xG8Ncpg/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/pjC6xG8Ncpg/mqdefault.jpg",
         badge: "Nuevo",
-        description: "QuÃ© ocurre desde que escribes una direcciÃ³n web hasta que la pÃ¡gina carga en tu navegador."
+        description: "Qué ocurre desde que escribes una dirección web hasta que la página carga en tu navegador."
       },
       {
-        title: "QuÃ© es la deep web: desmitificÃ¡ndola",
+        title: "Qué es la deep web: desmitificándola",
         category: "Web",
         type: "youtube",
         url: "https://youtu.be/loFOXBIBABk",
         thumbnailUrl: "https://i.ytimg.com/vi/loFOXBIBABk/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/loFOXBIBABk/mqdefault.jpg",
         badge: "Nuevo",
-        description: "ExplicaciÃ³n sencilla de los conceptos web que ayudan a entender mejor la ciberseguridad."
+        description: "Explicación sencilla de los conceptos web que ayudan a entender mejor la ciberseguridad."
       },
       {
         title: "Conceptos web para entender ciberseguridad",
@@ -520,17 +520,17 @@ const learningRoutes = {
         thumbnailUrl: "https://i.ytimg.com/vi/0-Qw8mUtL84/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/0-Qw8mUtL84/mqdefault.jpg",
         badge: "Nuevo",
-        description: "ExplicaciÃ³n sencilla de conceptos web importantes para entender mejor la ciberseguridad."
+        description: "Explicación sencilla de conceptos web importantes para entender mejor la ciberseguridad."
       },
       {
-        title: "CÃ³mo funciona una web por dentro",
+        title: "Cómo funciona una web por dentro",
         category: "Web",
         type: "youtube",
         url: "https://youtu.be/IsmWOCmjz44",
         thumbnailUrl: "https://i.ytimg.com/vi/IsmWOCmjz44/hqdefault.jpg",
         thumbnailFallback: "https://i.ytimg.com/vi/IsmWOCmjz44/mqdefault.jpg",
         badge: "Nuevo",
-        description: "ExplicaciÃ³n sencilla para entender mejor cÃ³mo funcionan las pÃ¡ginas web y quÃ© partes intervienen."
+        description: "Explicación sencilla para entender mejor cómo funcionan las páginas web y qué partes intervienen."
       },
       {
         title: "Sistemas operativos: procesos, permisos y archivos",
@@ -576,14 +576,14 @@ function videoMedia(video) {
     return `<iframe class="video-embed" src="${video.embedUrl}" title="${video.title}" allowfullscreen loading="lazy"></iframe>`;
   }
 
-  return `<div class="video-placeholder"><span>PrÃ³ximamente</span></div>`;
+  return `<div class="video-placeholder"><span>Próximamente</span></div>`;
 }
 
 function videoResources(video) {
   if (!video.resources || !video.resources.length) return "";
 
   return `
-    <div class="video-resources" aria-label="Recursos del vÃ­deo">
+    <div class="video-resources" aria-label="Recursos del vídeo">
       <span class="video-resources-label">Recursos</span>
       <div class="video-resource-links">
         ${video.resources.map((resource) => `
@@ -609,7 +609,7 @@ function renderVideoCards(videos) {
         ${videoResources(video)}
       </div>
     </article>
-  `).join("") : `<div class="video-empty">TodavÃ­a no hay vÃ­deos en esta categorÃ­a.</div>`;
+  `).join("") : `<div class="video-empty">Todavía no hay vídeos en esta categoría.</div>`;
 }
 
 function renderRouteVideos() {
@@ -623,7 +623,7 @@ function renderRouteFilters() {
   if (!activeRoute || !routeFilters) return;
 
   const routeCategories = [...new Set(activeRoute.videos.map((video) => video.category))];
-  const preferredOrder = activeRoute.filterOrder || ["Todos", "Ataques", "IntroducciÃ³n", "Conceptos", "Privacidad", "MÃ³vil", "Redes", "OSINT"];
+  const preferredOrder = activeRoute.filterOrder || ["Todos", "Ataques", "Introducción", "Conceptos", "Privacidad", "Móvil", "Redes", "OSINT"];
   const orderedCategories = preferredOrder.includes("Todos")
     ? preferredOrder
     : ["Todos", ...preferredOrder];
@@ -703,7 +703,7 @@ function getVideoSearchText(video) {
     video.title,
     video.category,
     video.description,
-    video.type === "placeholder" ? "proximamente prÃ³ximo pendiente" : "video publicado youtube",
+    video.type === "placeholder" ? "proximamente próximo pendiente" : "video publicado youtube",
     video.routeTitle,
     ...(video.resources || []).flatMap((resource) => [resource.label, resource.url])
   ].filter(Boolean).join(" "));
@@ -780,7 +780,7 @@ if (sugerenciasForm) {
       if (suggestionCount) suggestionCount.textContent = length.toString();
       if (suggestionLiveText) {
         suggestionLiveText.textContent = length
-          ? "Idea detectada. Preparando seÃ±al para enviar..."
+          ? "Idea detectada. Preparando señal para enviar..."
           : "Esperando tu idea...";
       }
     });
@@ -803,7 +803,7 @@ if (sugerenciasForm) {
     const formData = new FormData(sugerenciasForm);
     const destino = sugerenciasForm.dataset.email || "contenido@cibersinhumo.com";
     const status = document.getElementById("sugerencias-status");
-    const nombre = (formData.get("nombre") || "AnÃ³nimo").toString().trim();
+    const nombre = (formData.get("nombre") || "Anónimo").toString().trim();
     const correo = (formData.get("correo") || "No indicado").toString().trim();
     const tipo = (formData.get("tipo") || "Sugerencia").toString().trim();
     const mensaje = (formData.get("mensaje") || "").toString().trim();
@@ -817,7 +817,7 @@ if (sugerenciasForm) {
     const body = [
       "Nueva sugerencia desde Ciber Sin Humo",
       "",
-      `Nombre: ${nombre || "AnÃ³nimo"}`,
+      `Nombre: ${nombre || "Anónimo"}`,
       `Correo: ${correo || "No indicado"}`,
       `Tipo: ${tipo}`,
       "",
@@ -845,7 +845,7 @@ if (sugerenciasForm) {
     }
 
     if (status) {
-      status.textContent = "Se abrirÃ¡ tu app de correo con la sugerencia preparada para enviar.";
+      status.textContent = "Se abrirá tu app de correo con la sugerencia preparada para enviar.";
     }
   });
 }
@@ -877,9 +877,9 @@ channelSuggestionForms.forEach((form) => {
       return;
     }
 
-    const subject = "Idea para el siguiente vÃ­deo";
+    const subject = "Idea para el siguiente vídeo";
     const body = [
-      "Nueva idea para el siguiente vÃ­deo desde Ciber Sin Humo",
+      "Nueva idea para el siguiente vídeo desde Ciber Sin Humo",
       "",
       `Correo: ${correo || "No indicado"}`,
       "",
@@ -920,7 +920,7 @@ channelSuggestionForms.forEach((form) => {
       if (!gmailWindow) window.location.href = mailtoUrl;
     }
 
-    if (status) status.textContent = "Se abrirÃ¡ tu correo con la idea preparada.";
+    if (status) status.textContent = "Se abrirá tu correo con la idea preparada.";
   });
 });
 
@@ -957,11 +957,11 @@ function updateSecurityChecklist() {
   let status = "Empieza marcando lo que ya haces.";
 
   if (checked >= total) {
-    label = "Blindaje muy sÃ³lido";
+    label = "Blindaje muy sólido";
     status = "Muy bien. Tienes la base bastante cubierta.";
   } else if (checked >= 6) {
     label = "Muy buen nivel";
-    status = "Vas fuerte. Te quedan pocos ajustes para cerrar lo bÃ¡sico.";
+    status = "Vas fuerte. Te quedan pocos ajustes para cerrar lo básico.";
   } else if (checked >= 3) {
     label = "Base en progreso";
     status = "Buen comienzo. Sigue completando puntos clave.";
@@ -999,18 +999,18 @@ function ipNumber(value) {
 
 function normalizeCountryName(value) {
   const countryMap = {
-    ES: "EspaÃ±a",
+    ES: "España",
     US: "Estados Unidos",
     GB: "Reino Unido",
     FR: "Francia",
     DE: "Alemania",
     IT: "Italia",
     PT: "Portugal",
-    MX: "MÃ©xico",
+    MX: "México",
     AR: "Argentina",
     CO: "Colombia",
     CL: "Chile",
-    PE: "PerÃº",
+    PE: "Perú",
     BR: "Brasil"
   };
 
@@ -1022,7 +1022,7 @@ function normalizeCountryName(value) {
 function normalizeProviderName(value) {
   if (!value) return value;
   const cleanValue = String(value).trim();
-  return /telefonica|telefÃ³nica/i.test(cleanValue) ? "Movistar" : cleanValue;
+  return /telefonica|telefónica/i.test(cleanValue) ? "Movistar" : cleanValue;
 }
 
 function normalizeIpData(data, providerName) {
@@ -1063,19 +1063,13 @@ async function fetchWithTimeout(url, timeout = 6500) {
       url: "https://www.youtube.com/watch?v=3t8Esks_Idg",
       thumbnail: "https://i.ytimg.com/vi/3t8Esks_Idg/hqdefault.jpg",
       category: "Linux",
-      title: "AbrÃ­ la terminal de Linux y parecÃ­a una casa abandonada",
+      title: "Abrí la terminal de Linux y parecía una casa abandonada",
     },
     {
       url: "https://www.youtube.com/watch?v=BLKqTM585WM",
       thumbnail: "https://i.ytimg.com/vi/BLKqTM585WM/hqdefault.jpg",
       category: "Redes",
-      title: "Tu mÃ³vil tiene matrÃ­cula: asÃ­ funcionan las direcciones MAC",
-    },
-    {
-      url: "https://www.youtube.com/watch?v=0-Qw8mUtL84",
-      thumbnail: "https://i.ytimg.com/vi/0-Qw8mUtL84/hqdefault.jpg",
-      category: "Puertos",
-      title: "Â¿Sabes lo que son los puertos de Internet y cÃ³mo funcionan?",
+      title: "Tu móvil tiene matrícula: así funcionan las direcciones MAC",
     },
   ];
 
@@ -1115,7 +1109,7 @@ async function fetchIpInfo() {
       const data = await fetchWithTimeout(provider.url);
       const normalized = normalizeIpData(data, provider.name);
       if (normalized?.ip) return normalized;
-      lastError = new Error(data?.message || `Respuesta no vÃ¡lida de ${provider.name}`);
+      lastError = new Error(data?.message || `Respuesta no válida de ${provider.name}`);
     } catch (error) {
       lastError = error;
     }
@@ -1366,7 +1360,7 @@ if (ipGlobe) {
 if (checkIpButton && ipFields.length) {
   checkIpButton.addEventListener("click", async () => {
     checkIpButton.disabled = true;
-    if (ipStatus) ipStatus.textContent = "Consultando tu IP pÃºblica...";
+    if (ipStatus) ipStatus.textContent = "Consultando tu IP pública...";
 
     try {
       const data = await fetchIpInfo();
@@ -1378,9 +1372,9 @@ if (checkIpButton && ipFields.length) {
       setIpField("region", data.region);
       setIpField("timezone", data.timezone);
 
-      if (ipCountryVisual) ipCountryVisual.textContent = data.country || "UbicaciÃ³n detectada";
+      if (ipCountryVisual) ipCountryVisual.textContent = data.country || "Ubicación detectada";
       focusIpGlobe(data.latitude, data.longitude);
-      if (ipStatus) ipStatus.textContent = `Datos aproximados segÃºn la IP pÃºblica de tu conexiÃ³n. Fuente: ${data.source}.`;
+      if (ipStatus) ipStatus.textContent = `Datos aproximados según la IP pública de tu conexión. Fuente: ${data.source}.`;
     } catch (error) {
       console.error("Error consultando IP:", error);
       if (ipStatus) ipStatus.textContent = "No se pudo consultar la IP ahora mismo. Puede ser un bloqueo de red, navegador o proveedor externo.";
@@ -1418,7 +1412,7 @@ function ensureCookieBanner() {
   banner.innerHTML = `
     <div>
       <strong>Cookies</strong>
-      <p>Usamos cookies tÃ©cnicas y, si aceptas, Google Tag Manager/Analytics para medir visitas y mejorar el contenido. Puedes aceptar o rechazar las cookies no necesarias.</p>
+      <p>Usamos cookies técnicas y, si aceptas, Google Tag Manager/Analytics para medir visitas y mejorar el contenido. Puedes aceptar o rechazar las cookies no necesarias.</p>
     </div>
     <div class="cookie-actions">
       <button type="button" class="btn btn-secondary" data-cookie-action="reject">Rechazar</button>
