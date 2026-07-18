@@ -1,4 +1,5 @@
 const YOUTUBE_API = "https://www.googleapis.com/youtube/v3";
+const MIN_VISIBLE_SUBSCRIBERS = 67;
 
 module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store, max-age=0");
@@ -49,37 +50,15 @@ module.exports = async function handler(req, res) {
 
     const addCategory = (video) => {
       const title = normalizeTitle(video.title);
+      if (title.includes("sombrero")) return { ...video, category: "Roles en ciber", title: "Sombreros en ciberseguridad: quien ataca, quien defiende y quien aprende" };
+      if (title.includes("osint") || title.includes("metadato")) return { ...video, category: "OSINT" };
       if (title.includes("cookie")) return { ...video, category: "Cookies" };
       if (title.includes("qr") || title.includes("qrishing")) return { ...video, category: "QR Phishing" };
       if (title.includes("puerto")) return { ...video, category: "Puertos" };
       return { ...video, category: "YouTube" };
     };
 
-    const pickVideo = (predicate, exclude = new Set()) => allVideos.find((video) => !exclude.has(video.id) && predicate(normalizeTitle(video.title)));
-    const selectedIds = new Set();
-    const latestVideos = [
-      {
-        id: "BbOSYx6WNMs",
-        title: "Intro Ciber Sin Humo",
-        url: "https://www.youtube.com/watch?v=BbOSYx6WNMs",
-        thumbnail: "https://i.ytimg.com/vi/BbOSYx6WNMs/hqdefault.jpg",
-        category: "Intro"
-      },
-      {
-        id: "3t8Esks_Idg",
-        title: "Abrí la terminal de Linux y parecía una casa abandonada",
-        url: "https://www.youtube.com/watch?v=3t8Esks_Idg",
-        thumbnail: "https://i.ytimg.com/vi/3t8Esks_Idg/hqdefault.jpg",
-        category: "Linux"
-      },
-      {
-        id: "BLKqTM585WM",
-        title: "Tu móvil tiene matrícula: así funcionan las direcciones MAC",
-        url: "https://www.youtube.com/watch?v=BLKqTM585WM",
-        thumbnail: "https://i.ytimg.com/vi/BLKqTM585WM/hqdefault.jpg",
-        category: "Redes"
-      }
-    ];
+    const latestVideos = allVideos.slice(0, 3).map(addCategory);
 
     const featuredComments = [];
     for (const video of latestVideos.slice(0, 3)) {
@@ -100,10 +79,12 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    const subscriberCount = Number(channelData.statistics?.subscriberCount || 0);
+
     return res.status(200).json({
       configured: true,
       title: channelData.snippet?.title || "Ciber Sin Humo",
-      subscribers: channelData.statistics?.subscriberCount || null,
+      subscribers: Math.max(subscriberCount, MIN_VISIBLE_SUBSCRIBERS),
       videos: channelData.statistics?.videoCount || null,
       views: channelData.statistics?.viewCount || null,
       latestVideos,

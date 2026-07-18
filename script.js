@@ -389,11 +389,6 @@ const learningRoutes = {
         badge: "Nuevo",
         description: "Repaso sencillo de ataques habituales para aprender a identificarlos y entender cómo funcionan."
       },
-      {
-        title: "Contraseñas seguras sin complicarte",
-        category: "Privacidad",
-        type: "placeholder"
-      }
     ]
   },
   privacidad: {
@@ -422,26 +417,6 @@ const learningRoutes = {
         badge: "Nuevo",
         description: "Primer contacto con la terminal de Linux: comandos básicos, estructura y cómo empezar sin perderte."
       },
-      {
-        title: "Escaneo de puertos: qué hay abierto y por qué importa",
-        category: "Pruebas prácticas",
-        type: "placeholder"
-      },
-      {
-        title: "Wireshark: mirar el tráfico de red sin perderte",
-        category: "Redes",
-        type: "placeholder"
-      },
-      {
-        title: "John the Ripper: cómo se prueban contraseñas",
-        category: "Contraseñas",
-        type: "placeholder"
-      },
-      {
-        title: "Mini laboratorio: practicar sin liarla en tu ordenador",
-        category: "Pruebas prácticas",
-        type: "placeholder"
-      }
     ]
   },
   sistema: {
@@ -532,14 +507,32 @@ const learningRoutes = {
         badge: "Nuevo",
         description: "Explicación sencilla para entender mejor cómo funcionan las páginas web y qué partes intervienen."
       },
-      {
-        title: "Sistemas operativos: procesos, permisos y archivos",
-        category: "Sistemas",
-        type: "placeholder"
-      }
     ]
   }
 };
+
+learningRoutes.privacidad.videos = [
+  ...learningRoutes.privacidad.videos.filter((video) => video.type !== "placeholder"),
+  {
+    title: "Así te investigan sin hackearte: OSINT y metadatos",
+    category: "Pruebas prácticas",
+    type: "youtube",
+    url: "https://youtu.be/xM_I3vHrprA",
+    thumbnailUrl: "https://i.ytimg.com/vi/xM_I3vHrprA/hqdefault.jpg",
+    thumbnailFallback: "https://i.ytimg.com/vi/xM_I3vHrprA/mqdefault.jpg",
+    badge: "Nuevo",
+    description: "Prueba práctica para entender cómo se puede investigar información pública sin hackear nada."
+  }
+];
+
+Object.values(learningRoutes).forEach((route) => {
+  route.videos = route.videos.filter((video) => video.type !== "placeholder");
+  if (Array.isArray(route.filterOrder)) {
+    route.filterOrder = route.filterOrder.filter((category) =>
+      category === "Todos" || route.videos.some((video) => video.category === category)
+    );
+  }
+});
 
 const learningPaths = document.getElementById("learning-paths");
 const routeView = document.getElementById("route-view");
@@ -1072,6 +1065,14 @@ async function fetchWithTimeout(url, timeout = 6500) {
       title: "Tu móvil tiene matrícula: así funcionan las direcciones MAC",
     },
   ];
+
+  localLatestVideos.unshift({
+    url: "https://www.youtube.com/watch?v=xM_I3vHrprA",
+    thumbnail: "https://i.ytimg.com/vi/xM_I3vHrprA/hqdefault.jpg",
+    category: "OSINT",
+    title: "Así te investigan sin hackearte: OSINT y metadatos",
+  });
+  localLatestVideos.length = Math.min(localLatestVideos.length, 3);
 
   const renderLatestVideos = (videos) => {
     if (!latestEl || !Array.isArray(videos) || !videos.length) return;
@@ -1769,7 +1770,7 @@ async function loadSubscriberHistory(liveSubscribers) {
   }
 }
 
-const MIN_VISIBLE_SUBSCRIBERS = 64;
+const MIN_VISIBLE_SUBSCRIBERS = 67;
 
 async function initYoutubeChannelPanel() {
   const subsEl = document.getElementById("youtube-subs-count");
@@ -1778,6 +1779,37 @@ async function initYoutubeChannelPanel() {
   const latestEl = document.getElementById("youtube-latest-videos");
   const latestStatus = document.getElementById("youtube-latest-status");
   if (!statusEl) return;
+
+  const localLatestVideos = [
+    {
+      url: "https://www.youtube.com/watch?v=xM_I3vHrprA",
+      thumbnail: "https://i.ytimg.com/vi/xM_I3vHrprA/hqdefault.jpg",
+      category: "OSINT",
+      title: "Así te investigan sin hackearte: OSINT y metadatos"
+    },
+    {
+      url: "https://www.youtube.com/watch?v=3t8Esks_Idg",
+      thumbnail: "https://i.ytimg.com/vi/3t8Esks_Idg/hqdefault.jpg",
+      category: "Linux",
+      title: "Abrí la terminal de Linux y parecía una casa abandonada"
+    },
+    {
+      url: "https://www.youtube.com/watch?v=BLKqTM585WM",
+      thumbnail: "https://i.ytimg.com/vi/BLKqTM585WM/hqdefault.jpg",
+      category: "Redes",
+      title: "Tu móvil tiene matrícula: así funcionan las direcciones MAC"
+    }
+  ];
+
+  const renderLatestVideos = (videos) => {
+    if (!latestEl || !Array.isArray(videos) || !videos.length) return;
+    latestEl.innerHTML = videos.slice(0, 3).map((video) => `
+      <a class="latest-video-card" href="${escapeHtml(video.url)}" target="_blank" rel="noopener">
+        <img src="${escapeHtml(video.thumbnail || "logo-cibersinhumo-transparent.png?v=1")}" alt="Portada del video" loading="lazy">
+        <span><small>${escapeHtml(video.category || "YouTube")}</small><strong>${escapeHtml(video.title)}</strong></span>
+      </a>
+    `).join("");
+  };
 
   let liveSubscribers = null;
 
