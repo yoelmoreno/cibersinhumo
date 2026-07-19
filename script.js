@@ -1770,7 +1770,7 @@ async function loadSubscriberHistory(liveSubscribers) {
   }
 }
 
-const MIN_VISIBLE_SUBSCRIBERS = 69;
+const MIN_VISIBLE_SUBSCRIBERS = 71;
 
 async function initYoutubeChannelPanel() {
   const subsEl = document.getElementById("youtube-subs-count");
