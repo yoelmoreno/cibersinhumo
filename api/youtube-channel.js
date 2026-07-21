@@ -52,6 +52,7 @@ module.exports = async function handler(req, res) {
       const title = normalizeTitle(video.title);
       if (title.includes("sombrero")) return { ...video, category: "Roles en ciber", title: "Sombreros en ciberseguridad: quien ataca, quien defiende y quien aprende" };
       if (title.includes("osint") || title.includes("metadato")) return { ...video, category: "OSINT" };
+      if (title.includes("virus") || title.includes("contrasena") || title.includes("contrasenas")) return { ...video, category: "Otros" };
       if (title.includes("cookie")) return { ...video, category: "Cookies" };
       if (title.includes("qr") || title.includes("qrishing")) return { ...video, category: "QR Phishing" };
       if (title.includes("puerto")) return { ...video, category: "Puertos" };

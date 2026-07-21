@@ -395,7 +395,7 @@ const learningRoutes = {
     tag: "ruta 02",
     title: "Aplicar la teoría a la práctica",
     desc: "Herramientas, pruebas guiadas y pequeños laboratorios para aprender haciendo.",
-    filterOrder: ["Intro", "Pruebas prácticas", "Redes", "Contraseñas", "Análisis", "Todos"],
+    filterOrder: ["Intro", "Pruebas prácticas", "Redes", "Contraseñas", "Análisis", "Otros", "Todos"],
     videos: [
       {
         title: "Máquinas virtuales y VirtualBox: intro al laboratorio",
@@ -522,6 +522,16 @@ learningRoutes.privacidad.videos = [
     thumbnailFallback: "https://i.ytimg.com/vi/xM_I3vHrprA/mqdefault.jpg",
     badge: "Nuevo",
     description: "Prueba práctica para entender cómo se puede investigar información pública sin hackear nada."
+  },
+  {
+    title: "¿Qué hacer si un virus roba todas tus contraseñas?",
+    category: "Otros",
+    type: "youtube",
+    url: "https://youtu.be/FzjM9Imdb8Q",
+    thumbnailUrl: "https://i.ytimg.com/vi/FzjM9Imdb8Q/hqdefault.jpg",
+    thumbnailFallback: "https://i.ytimg.com/vi/FzjM9Imdb8Q/mqdefault.jpg",
+    badge: "Nuevo",
+    description: "Qué hacer si un malware roba contraseñas, qué pasos tomar y cómo reducir el daño después de una infección."
   }
 ];
 
@@ -1781,6 +1791,12 @@ async function initYoutubeChannelPanel() {
   if (!statusEl) return;
 
   const localLatestVideos = [
+    {
+      url: "https://www.youtube.com/watch?v=FzjM9Imdb8Q",
+      thumbnail: "https://i.ytimg.com/vi/FzjM9Imdb8Q/hqdefault.jpg",
+      category: "Otros",
+      title: "¿Qué hacer si un virus roba todas tus contraseñas?"
+    },
     {
       url: "https://www.youtube.com/watch?v=xM_I3vHrprA",
       thumbnail: "https://i.ytimg.com/vi/xM_I3vHrprA/hqdefault.jpg",
