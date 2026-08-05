@@ -220,7 +220,7 @@ const learningRoutes = {
         ]
       },
       {
-        title: "Noticia cyber explicada: qué ha pasado y por qué importa",
+        title: "Red 764, qué es y por qué preocupa",
         category: "Noticias",
         type: "youtube",
         url: "https://youtu.be/g3WsvKOQ_GE",
@@ -1089,8 +1089,10 @@ async function fetchWithTimeout(url, timeout = 6500) {
     url: "https://www.youtube.com/watch?v=g3WsvKOQ_GE",
     thumbnail: "https://i.ytimg.com/vi/g3WsvKOQ_GE/hqdefault.jpg",
     category: "Noticias",
-    title: "Noticia cyber explicada: qué ha pasado y por qué importa",
-  });  localLatestVideos.unshift({
+    title: "Red 764, qué es y por qué preocupa",
+  });
+
+  localLatestVideos.unshift({
     url: "https://www.youtube.com/watch?v=xM_I3vHrprA",
     thumbnail: "https://i.ytimg.com/vi/xM_I3vHrprA/hqdefault.jpg",
     category: "OSINT",
