@@ -6249,8 +6249,8 @@ select {
 .linkedin-profile-details details[open] .detail-toggle-label .close-label {
   display: inline;
 }
-/* Subida ligera de paneles laterales del hero */
+/* Subida de paneles laterales del hero */
 .hero-side-left,
 .hero-side-right {
-  top: 22%;
+  top: 16%;
 }
