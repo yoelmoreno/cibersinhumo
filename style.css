@@ -6156,3 +6156,96 @@ select {
 .linkedin-profile-widget .linkedin-avatar {
   display: none;
 }
+/* Ajuste para que los desplegables de LinkedIn no tapen el CTA */
+.hero-linkedin-panel.linkedin-profile-widget {
+  overflow: visible;
+  padding: 16px;
+}
+
+.linkedin-profile-main {
+  margin-top: 12px;
+}
+
+.linkedin-profile-grid {
+  margin-top: 12px;
+  gap: 8px;
+}
+
+.linkedin-profile-grid div {
+  min-height: 64px;
+  padding: 10px;
+}
+
+.linkedin-profile-details {
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.linkedin-profile-details details[open] ul {
+  max-height: 118px;
+  overflow-y: auto;
+  padding-bottom: 10px;
+}
+
+.linkedin-profile-details ul::-webkit-scrollbar {
+  width: 4px;
+}
+
+.linkedin-profile-details ul::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 136, 0.38);
+  border-radius: 999px;
+}
+
+.linkedin-profile-footer {
+  position: relative;
+  z-index: 4;
+  margin-top: 12px;
+}
+/* Botones abrir/cerrar en desplegables de LinkedIn */
+.linkedin-profile-details summary {
+  gap: 10px;
+}
+
+.linkedin-profile-details summary > span:first-child {
+  min-width: 0;
+}
+
+.linkedin-profile-details summary::after {
+  display: none;
+}
+
+.detail-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  min-height: 24px;
+  padding: 0 9px;
+  border: 1px solid rgba(0, 255, 136, 0.22);
+  border-radius: 999px;
+  color: var(--text);
+  background: rgba(0, 255, 136, 0.06);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.detail-toggle-label .close-label {
+  display: none;
+}
+
+.linkedin-profile-details details[open] .detail-toggle-label {
+  color: var(--green);
+  border-color: rgba(0, 255, 136, 0.4);
+  box-shadow: 0 0 14px rgba(0, 255, 136, 0.12);
+}
+
+.linkedin-profile-details details[open] .detail-toggle-label .open-label {
+  display: none;
+}
+
+.linkedin-profile-details details[open] .detail-toggle-label .close-label {
+  display: inline;
+}
