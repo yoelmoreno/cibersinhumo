@@ -190,7 +190,7 @@ const learningRoutes = {
     tag: "ruta 01",
     title: "No sé nada de ciber",
     desc: "Empieza por lo esencial: amenazas comunes, hábitos seguros y conceptos base.",
-    filterOrder: ["Introducción", "Ataques", "Historia", "Privacidad", "Todos"],
+    filterOrder: ["Introducción", "Ataques", "Noticias", "Historia", "Privacidad", "Todos"],
     videos: [
       {
         title: "Intro Ciber Sin Humo",
@@ -220,6 +220,15 @@ const learningRoutes = {
         ]
       },
       {
+        title: "Noticia cyber explicada: qué ha pasado y por qué importa",
+        category: "Noticias",
+        type: "youtube",
+        url: "https://youtu.be/g3WsvKOQ_GE",
+        thumbnailUrl: "https://i.ytimg.com/vi/g3WsvKOQ_GE/hqdefault.jpg",
+        thumbnailFallback: "https://i.ytimg.com/vi/g3WsvKOQ_GE/mqdefault.jpg",
+        badge: "Nuevo",
+        description: "Noticia de ciberseguridad explicada de forma clara para entender qué ha ocurrido y qué lecciones deja."
+      },      {
         title: "WannaCry: qué fue y por qué marcó la historia",
         category: "Historia",
         type: "youtube",
@@ -1077,6 +1086,11 @@ async function fetchWithTimeout(url, timeout = 6500) {
   ];
 
   localLatestVideos.unshift({
+    url: "https://www.youtube.com/watch?v=g3WsvKOQ_GE",
+    thumbnail: "https://i.ytimg.com/vi/g3WsvKOQ_GE/hqdefault.jpg",
+    category: "Noticias",
+    title: "Noticia cyber explicada: qué ha pasado y por qué importa",
+  });  localLatestVideos.unshift({
     url: "https://www.youtube.com/watch?v=xM_I3vHrprA",
     thumbnail: "https://i.ytimg.com/vi/xM_I3vHrprA/hqdefault.jpg",
     category: "OSINT",
