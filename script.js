@@ -1017,10 +1017,10 @@ const roadmapRoutes = [
         "id": "topic-54",
         "number": 54,
         "title": "IP p\u00fablica vs IP privada",
-        "status": "published",
-        "statusLabel": "Publicado",
-        "url": "https://youtu.be/eGTbt5cqBXA",
-        "thumbnail": "https://i.ytimg.com/vi/eGTbt5cqBXA/hqdefault.jpg",
+        "status": "pending",
+        "statusLabel": "Pendiente",
+        "url": "",
+        "thumbnail": "",
         "summary": "Diferencia entre IP p\u00fablica e IP privada dentro de una red.",
         "tags": [
           "Redes"
@@ -1032,10 +1032,10 @@ const roadmapRoutes = [
         "id": "topic-55",
         "number": 55,
         "title": "IPv4 vs IPv6",
-        "status": "published",
-        "statusLabel": "Publicado",
-        "url": "https://youtu.be/eGTbt5cqBXA",
-        "thumbnail": "https://i.ytimg.com/vi/eGTbt5cqBXA/hqdefault.jpg",
+        "status": "pending",
+        "statusLabel": "Pendiente",
+        "url": "",
+        "thumbnail": "",
         "summary": "Comparaci\u00f3n sencilla entre IPv4 e IPv6.",
         "tags": [
           "Redes"
@@ -1242,10 +1242,10 @@ const roadmapRoutes = [
         "id": "topic-69",
         "number": 69,
         "title": "Qu\u00e9 es un puerto?",
-        "status": "published",
-        "statusLabel": "Publicado",
+        "status": "pending",
+        "statusLabel": "Pendiente",
         "url": "",
-        "thumbnail": "https://i.ytimg.com/vi/pjC6xG8Ncpg/hqdefault.jpg",
+        "thumbnail": "",
         "summary": "Puertos como puertas l\u00f3gicas de comunicaci\u00f3n entre servicios.",
         "tags": [
           "Redes"
@@ -1490,12 +1490,12 @@ const roadmapRoutes = [
       {
         "id": "topic-85",
         "number": 85,
-        "title": "Qu\u00e9 es una p\u00e1gina web?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es una p\u00e1gina web?",
+        "title": "Qu\u00e9 pasa cuando entras en una web?",
+        "status": "published",
+        "statusLabel": "Publicado",
+        "url": "https://youtu.be/pjC6xG8Ncpg",
+        "thumbnail": "https://i.ytimg.com/vi/pjC6xG8Ncpg/hqdefault.jpg",
+        "summary": "El viaje completo desde que escribes una URL hasta que la web aparece en pantalla.",
         "tags": [
           "Web"
         ],
@@ -1765,7 +1765,7 @@ const roadmapRoutes = [
         "title": "Qu\u00e9 son las cookies?",
         "status": "published",
         "statusLabel": "Publicado",
-        "url": "",
+        "url": "https://youtu.be/IsmWOCmjz44",
         "thumbnail": "https://i.ytimg.com/vi/IsmWOCmjz44/hqdefault.jpg",
         "summary": "Cookies explicadas como parte de c\u00f3mo funciona una web.",
         "tags": [
@@ -2072,10 +2072,10 @@ const roadmapRoutes = [
         "id": "topic-123",
         "number": 123,
         "title": "Qu\u00e9 es ingenier\u00eda social?",
-        "status": "published",
-        "statusLabel": "Publicado",
-        "url": "https://youtu.be/6_L84s6Jn4s",
-        "thumbnail": "phishing-cover.jpg?v=2",
+        "status": "pending",
+        "statusLabel": "Pendiente",
+        "url": "",
+        "thumbnail": "",
         "summary": "La ingenier\u00eda social detr\u00e1s de muchos enga\u00f1os digitales.",
         "tags": [
           "Defensa"
@@ -2442,8 +2442,8 @@ const roadmapRoutes = [
         "id": "topic-147",
         "number": 147,
         "title": "White Hat, Grey Hat, Black Hat y Green Hat",
-        "status": "published",
-        "statusLabel": "Publicado",
+        "status": "pending",
+        "statusLabel": "Pendiente",
         "url": "",
         "thumbnail": "",
         "summary": "Roles y sombreros dentro de la seguridad ofensiva y defensiva.",
@@ -3191,10 +3191,10 @@ const roadmapRoutes = [
         "id": "topic-195",
         "number": 195,
         "title": "QR Phishing",
-        "status": "published",
-        "statusLabel": "Publicado",
-        "url": "https://youtu.be/pjC6xG8Ncpg",
-        "thumbnail": "https://i.ytimg.com/vi/pjC6xG8Ncpg/hqdefault.jpg",
+        "status": "pending",
+        "statusLabel": "Pendiente",
+        "url": "",
+        "thumbnail": "",
         "summary": "QR phishing y riesgos al escanear c\u00f3digos QR.",
         "tags": [
           "Ataques"
@@ -3221,10 +3221,10 @@ const roadmapRoutes = [
         "id": "topic-197",
         "number": 197,
         "title": "Analizando un ataque real de forma sencilla",
-        "status": "published",
-        "statusLabel": "Publicado",
-        "url": "https://youtu.be/xM_I3vHrprA",
-        "thumbnail": "https://i.ytimg.com/vi/xM_I3vHrprA/hqdefault.jpg",
+        "status": "pending",
+        "statusLabel": "Pendiente",
+        "url": "",
+        "thumbnail": "",
         "summary": "An\u00e1lisis pr\u00e1ctico de informaci\u00f3n p\u00fablica y metadatos.",
         "tags": [
           "Herramientas"
@@ -3236,8 +3236,8 @@ const roadmapRoutes = [
         "id": "topic-198",
         "number": 198,
         "title": "Red 764: caso real explicado de forma sencilla",
-        "status": "preparing",
-        "statusLabel": "En preparaci\u00f3n",
+        "status": "published",
+        "statusLabel": "Publicado",
         "url": "https://youtu.be/g3WsvKOQ_GE",
         "thumbnail": "https://i.ytimg.com/vi/g3WsvKOQ_GE/hqdefault.jpg",
         "summary": "Red 764 explicada como caso real de actualidad.",
@@ -3651,7 +3651,6 @@ const roadmapRoutes = [
   }
 ];
 
-const roadmapStorageKey = "ciber-sin-humo-roadmap-progress";
 const roadmapRoutesContainer = document.getElementById("roadmap-routes");
 const roadmapView = document.getElementById("roadmap-view");
 const roadmapPath = document.getElementById("roadmap-path");
@@ -5850,5 +5849,7 @@ function initVideoSectionReplay() {
 letterizeSectionTitle("canal");
 letterizeSectionTitle("videos");
 initVideoSectionReplay();
+
+
 
 
