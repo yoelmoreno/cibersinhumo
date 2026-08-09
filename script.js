@@ -3912,7 +3912,7 @@ if (roadmapRoutesContainer) {
   roadmapBack?.addEventListener("click", () => {
     roadmapView.hidden = true;
     activeRoadmapRoute = null;
-    document.getElementById("roadmap-routes-head")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("roadmap-panels")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
   roadmapSearch?.addEventListener("input", renderRoadmapSearch);
   document.querySelectorAll("[data-roadmap-chip]").forEach((chip) => chip.addEventListener("click", () => {
@@ -3929,7 +3929,7 @@ if (roadmapRoutesContainer) {
     if (item) openRoadmapRoute(item.dataset.continueRoute || item.dataset.assistantRoute, item.dataset.continueTopic || item.dataset.assistantTopic);
   });
   document.querySelectorAll("[data-roadmap-scroll]").forEach((button) => button.addEventListener("click", () => {
-    document.getElementById("roadmap-routes-head")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("roadmap-panels")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }));
   assistantForm?.addEventListener("submit", (event) => {
     event.preventDefault();
