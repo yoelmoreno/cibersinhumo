@@ -710,30 +710,91 @@ select {
 
 
 .hero-routes-card {
-  min-height: auto;
+  min-height: min(68vh, 640px);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .route-mini-list {
   display: grid;
-  gap: 9px;
-  margin-top: 6px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .route-mini-list p {
+  position: relative;
   margin: 0;
-  padding: 8px 9px;
+  min-height: 48px;
+  padding: 8px 10px 8px 44px;
   border: 1px solid rgba(0, 255, 136, 0.12);
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.24);
-  color: var(--text-muted);
-  font-size: 0.88rem;
-  line-height: 1.15;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 14% 50%, rgba(0, 255, 136, 0.13), transparent 38%),
+    rgba(0, 0, 0, 0.27);
+  color: rgba(235, 255, 242, 0.9);
+  font-size: 0.82rem;
+  line-height: 1.16;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 136, 0.035);
+  transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
+}
+
+.route-mini-list p:hover {
+  transform: translateX(-4px);
+  border-color: rgba(0, 255, 136, 0.32);
+  background:
+    radial-gradient(circle at 14% 50%, rgba(0, 255, 136, 0.22), transparent 42%),
+    rgba(0, 18, 10, 0.46);
 }
 
 .route-mini-list strong {
   color: var(--green);
   font-family: var(--font-mono);
-  margin-right: 6px;
+  margin-right: 1px;
+  letter-spacing: 0.06em;
+}
+
+.route-planet {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.92) 0 9%, transparent 10%),
+    radial-gradient(circle at 32% 30%, #d9ffd1 0 8%, transparent 9%),
+    linear-gradient(135deg, #00ff88, #0b6bff 46%, #001d14);
+  box-shadow: 0 0 18px rgba(0, 255, 136, 0.44);
+}
+
+.route-planet::after {
+  content: "";
+  position: absolute;
+  inset: 8px -5px;
+  border: 1px solid rgba(188, 255, 111, 0.48);
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-radius: 50%;
+  transform: rotate(-22deg);
+}
+
+.route-planet-2 { background: radial-gradient(circle at 32% 28%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #00f0ff, #07695f 45%, #00150e); }
+.route-planet-3 { background: radial-gradient(circle at 30% 28%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #55ff66, #112d89 48%, #020613); }
+.route-planet-4 { background: radial-gradient(circle at 34% 30%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #ffd166, #b3261e 52%, #160301); }
+.route-planet-5 { background: radial-gradient(circle at 35% 30%, #fff 0 8%, transparent 9%), repeating-linear-gradient(135deg, #d7ff73 0 5px, #7aa01d 5px 10px); }
+.route-planet-6 { background: radial-gradient(circle at 35% 30%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #8cff00, #0d6d22 46%, #061306); }
+.route-planet-7 { background: radial-gradient(circle at 34% 30%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #00ffe1, #1935ff 52%, #030724); }
+.route-planet-8 { background: radial-gradient(circle at 34% 30%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #a673ff, #43208c 50%, #10021d); }
+.route-planet-9 { background: radial-gradient(circle at 34% 30%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #f4f4f4, #7b8588 48%, #151819); }
+
+.hero-side-right .hud-kicker {
+  align-self: flex-start;
 }
 
 
