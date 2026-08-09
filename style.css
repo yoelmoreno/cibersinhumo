@@ -8221,3 +8221,77 @@ select {
   }
 }
 
+
+/* Roadmap fullscreen: sistema solar independiente v2 */
+body.roadmap-fullscreen-mode { overflow: hidden; }
+
+.video-roadmap-section.is-roadmap-open {
+  position: fixed;
+  inset: var(--header-height, 70px) 0 0;
+  z-index: 120;
+  height: calc(100vh - var(--header-height, 70px));
+  min-height: 0;
+  padding: 0 !important;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 52%, rgba(0, 255, 136, .13), transparent 34%),
+    radial-gradient(circle at 18% 20%, rgba(35, 120, 255, .18), transparent 28%),
+    radial-gradient(circle at 84% 74%, rgba(0, 255, 190, .10), transparent 30%),
+    #010407;
+}
+.video-roadmap-section.is-roadmap-open::before,
+.video-roadmap-section.is-roadmap-open::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
+.video-roadmap-section.is-roadmap-open::before {
+  background:
+    radial-gradient(circle, rgba(255,255,255,.95) 0 1px, transparent 1.6px) 12% 22% / 180px 140px,
+    radial-gradient(circle, rgba(0,255,136,.8) 0 1px, transparent 1.8px) 52% 36% / 230px 190px,
+    radial-gradient(circle, rgba(150,220,255,.75) 0 1px, transparent 1.7px) 78% 18% / 260px 210px;
+  opacity: .42;
+  animation: starDrift 24s linear infinite;
+}
+.video-roadmap-section.is-roadmap-open::after { background: radial-gradient(ellipse at center, transparent 0 42%, rgba(0,0,0,.38) 76%, rgba(0,0,0,.82) 100%); }
+.video-roadmap-section.is-roadmap-open .section-inner { width: 100% !important; max-width: none !important; height: 100%; margin: 0; position: relative; z-index: 2; }
+.video-roadmap-section.is-roadmap-open .video-roadmap-header,
+.video-roadmap-section.is-roadmap-open .roadmap-assistant,
+.video-roadmap-section.is-roadmap-open .continue-card,
+.video-roadmap-section.is-roadmap-open .roadmap-search-panel,
+.video-roadmap-section.is-roadmap-open .roadmap-routes-head,
+.video-roadmap-section.is-roadmap-open .roadmap-explore { display: none !important; }
+.video-roadmap-section.is-roadmap-open .roadmap-panels-zone { display: block !important; position: absolute; inset: 0; width: 100vw !important; height: 100%; margin: 0 !important; padding: 0 !important; border: 0 !important; overflow: hidden; }
+.video-roadmap-section.is-roadmap-open .roadmap-mode-topbar { position: fixed; top: calc(var(--header-height, 70px) + 22px); left: clamp(14px, 3vw, 38px); z-index: 160; margin: 0; }
+.video-roadmap-section.is-roadmap-open .roadmap-chat-back { background: rgba(0, 10, 6, .72); border-color: rgba(0, 255, 136, .34); box-shadow: 0 0 24px rgba(0, 255, 136, .13); backdrop-filter: blur(10px); }
+.video-roadmap-section.is-roadmap-open .roadmap-routes { position: absolute; inset: 0; display: block !important; width: 100%; height: 100%; margin: 0 !important; overflow: hidden; perspective: 1400px; transform-style: preserve-3d; background: linear-gradient(110deg, rgba(0,255,136,.04), transparent 34%, rgba(0,130,255,.05)), radial-gradient(ellipse at 50% 50%, rgba(0,255,136,.12), transparent 18%, rgba(0,0,0,.2) 64%); }
+.video-roadmap-section.is-roadmap-open .roadmap-routes::before { content: ""; position: absolute; left: 50%; top: 52%; width: min(116vw, 1700px); height: min(58vh, 560px); transform: translate(-50%, -50%) rotateX(62deg); border-radius: 50%; background: repeating-radial-gradient(ellipse at center, transparent 0 42px, rgba(0,255,136,.13) 43px 45px, transparent 46px 88px); filter: drop-shadow(0 0 20px rgba(0,255,136,.12)); opacity: .7; }
+.video-roadmap-section.is-roadmap-open .roadmap-routes::after { content: ""; position: absolute; left: 50%; top: 52%; width: clamp(118px, 10vw, 180px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle at 34% 28%, #ffffff 0 7%, #d9ff69 12%, #00ff88 34%, #00a95a 54%, #033919 78%); box-shadow: 0 0 42px rgba(0,255,136,.85), 0 0 120px rgba(0,255,136,.34); animation: sunPulse 3.8s ease-in-out infinite; }
+.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card { position: absolute !important; left: 50% !important; top: 52% !important; width: clamp(168px, 14vw, 238px) !important; min-height: 0 !important; padding: 0 !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; overflow: visible !important; text-align: center; cursor: pointer; opacity: var(--planet-alpha, .9); transform: translate3d(calc(var(--orbit-x, 0) * 1px), calc(var(--orbit-y, 0) * 1px), 0) translate(-50%, -50%) scale(var(--planet-scale, 1)); transition: filter .18s ease, transform .18s ease; }
+.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card:hover { filter: brightness(1.12) drop-shadow(0 0 18px rgba(0,255,136,.3)); transform: translate3d(calc(var(--orbit-x, 0) * 1px), calc(var(--orbit-y, 0) * 1px), 0) translate(-50%, -50%) scale(calc(var(--planet-scale, 1) + .05)); }
+.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card::before,
+.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card::after,
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-meter { display: none !important; }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-route-num { display: grid !important; place-items: center; position: absolute; top: -10px; left: 50%; right: auto; width: 34px; height: 34px; transform: translateX(-50%); border: 1px solid rgba(0,255,136,.55); border-radius: 50%; background: rgba(0, 8, 5, .86); color: #eafff1; font: 800 .92rem/1 'Share Tech Mono', monospace; box-shadow: 0 0 18px rgba(0,255,136,.32); z-index: 4; }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-planet { position: relative; left: auto; top: auto; display: block; width: clamp(82px, 7.5vw, 128px); height: clamp(82px, 7.5vw, 128px); margin: 0 auto 12px; border-radius: 50%; transform: none; filter: drop-shadow(0 0 24px rgba(0,255,136,.24)); animation: planetSpin 11s linear infinite; }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-planet i { position: absolute; inset: 0; border-radius: 50%; background-size: 220% 100%, 100% 100%, 100% 100%; box-shadow: inset -24px -26px 34px rgba(0,0,0,.62), inset 10px 8px 20px rgba(255,255,255,.2), 0 0 34px rgba(0,255,136,.2); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card strong { display: block; width: max-content; max-width: 230px; margin: 0 auto 6px; color: var(--text-main); font-size: clamp(1rem, 1.3vw, 1.3rem); line-height: 1.04; text-shadow: 0 2px 18px rgba(0,0,0,.95); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card > span:not(.roadmap-planet):not(.roadmap-route-num) { display: none !important; }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-stats-line { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-stats-line small { font-size: .56rem; padding: 4px 7px; background: rgba(0, 8, 5, .78); backdrop-filter: blur(6px); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-1 .roadmap-planet i { background: radial-gradient(circle at 32% 25%, rgba(255,255,255,.95) 0 7%, transparent 8%), linear-gradient(112deg, transparent 0 20%, rgba(0,110,255,.85) 22% 33%, transparent 35% 51%, rgba(0,255,136,.9) 53% 64%, transparent 65%), radial-gradient(circle at 36% 31%, #85ffff 0 11%, #0fd36b 30%, #073a90 57%, #06101a 84%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-2 .roadmap-planet i { background: repeating-linear-gradient(8deg, rgba(255,255,255,.18) 0 7px, rgba(0,0,0,.05) 8px 16px), radial-gradient(circle at 32% 26%, #fff6dc 0 10%, #ffd35a 26%, #c17926 58%, #251007 84%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-3 .roadmap-planet i { background: radial-gradient(circle at 31% 25%, rgba(255,255,255,.9) 0 8%, transparent 9%), radial-gradient(circle at 45% 48%, #ff6a4d 0 13%, #9b241c 42%, #250806 82%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-4 .roadmap-planet i { background: repeating-linear-gradient(18deg, rgba(255,255,255,.16) 0 6px, transparent 7px 15px), radial-gradient(circle at 35% 25%, #f6fff2 0 8%, #a6ff2a 20%, #20af31 48%, #071509 80%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-5 .roadmap-planet i { background: repeating-linear-gradient(0deg, rgba(255,255,255,.18) 0 9px, rgba(0,0,0,.10) 10px 20px), radial-gradient(circle at 35% 26%, #fffce7 0 9%, #d7ff75 22%, #73b129 50%, #171507 82%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-6 .roadmap-planet i { background: radial-gradient(circle at 28% 28%, #f2fff8 0 8%, #46fff0 22%, #008d8a 48%, #052222 82%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-7 .roadmap-planet i { background: radial-gradient(circle at 30% 28%, #fffef2 0 8%, #c6ff35 22%, #4eb800 48%, #122006 82%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-8 .roadmap-planet i { background: radial-gradient(circle at 32% 28%, #eef6ff 0 8%, #6a9cff 20%, #3153d6 50%, #080d29 82%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-9 .roadmap-planet i { background: radial-gradient(circle at 30% 24%, #fff 0 7%, transparent 8%), linear-gradient(135deg, rgba(255,255,255,.16), transparent 28%), radial-gradient(circle at 48% 48%, #e9b7ff 0 12%, #7945ff 38%, #12092e 82%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-2 .roadmap-planet::after,
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-5 .roadmap-planet::after { content: ""; position: absolute; left: 50%; top: 50%; width: 168%; height: 43%; border: 3px solid rgba(210,255,130,.58); border-left-color: rgba(0,255,136,.18); border-right-color: rgba(255,255,255,.18); border-radius: 50%; transform: translate(-50%, -50%) rotate(-16deg); box-shadow: 0 0 22px rgba(0,255,136,.18); }
+@keyframes starDrift { from { transform: translate3d(0,0,0); } to { transform: translate3d(-80px,40px,0); } }
+@keyframes sunPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.06); } }
+@media (max-width: 760px) {
+  .video-roadmap-section.is-roadmap-open { height: calc(100dvh - var(--header-height, 70px)); }
+  .video-roadmap-section.is-roadmap-open .roadmap-mode-topbar { top: calc(var(--header-height, 70px) + 12px); left: 12px; }
+  .video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card { width: 132px !important; }
+  .video-roadmap-section.is-roadmap-open .roadmap-planet-card strong { max-width: 142px; font-size: .86rem; }
+  .video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-stats-line { display: none; }
+}

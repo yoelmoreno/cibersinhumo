@@ -1,4 +1,4 @@
-const canvas = document.getElementById("matrix");
+﻿const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
 function resize() {
@@ -3699,11 +3699,13 @@ function routeStats(route) {
 
 function renderRoadmapRoutes() {
   if (!roadmapRoutesContainer) return;
+  const totalRoutes = Math.max(roadmapRoutes.length, 1);
   roadmapRoutesContainer.innerHTML = roadmapRoutes.map((route, index) => {
+    const order = index + 1;
     const stats = routeStats(route);
     return `
-      <button class="roadmap-route-card roadmap-planet-card planet-${((index - 1) % 8) + 1}" style="--orbit-angle:${Math.round(((index - 1) * 360) / roadmapRoutes.length)}deg; --orbit-counter:${-Math.round(((index - 1) * 360) / roadmapRoutes.length)}deg; --planet-delay:${index * -0.42}s" type="button" data-roadmap-route="${route.id}">
-        <span class="roadmap-route-num">${String(index).padStart(2, "0")}</span>
+      <button class="roadmap-route-card roadmap-planet-card planet-${((order - 1) % 9) + 1}" style="--planet-delay:${order * -0.38}s" type="button" data-roadmap-route="${route.id}" data-orbit-index="${index}" data-orbit-total="${totalRoutes}">
+        <span class="roadmap-route-num">${String(order).padStart(2, "0")}</span>
         <span class="roadmap-planet" aria-hidden="true"><i></i></span>
         <strong>${route.title}</strong>
         <span>${route.description}</span>
@@ -3716,8 +3718,55 @@ function renderRoadmapRoutes() {
       </button>
     `;
   }).join("");
+  if (document.getElementById("videos")?.classList.contains("is-roadmap-open")) startRoadmapSolarSystem();
 }
 
+let roadmapSolarFrame = null;
+
+function updateRoadmapSolarSystem(timestamp = 0) {
+  const videosSection = document.getElementById("videos");
+  const shell = roadmapRoutesContainer;
+  if (!videosSection?.classList.contains("is-roadmap-open") || !shell) {
+    roadmapSolarFrame = null;
+    return;
+  }
+
+  const cards = Array.from(shell.querySelectorAll(".roadmap-planet-card"));
+  const rect = shell.getBoundingClientRect();
+  const total = Math.max(cards.length, 1);
+  const maxRadiusX = Math.max(260, rect.width * 0.38);
+  const maxRadiusY = Math.max(120, Math.min(rect.height * 0.24, 230));
+
+  cards.forEach((card, index) => {
+    const order = Number(card.dataset.orbitIndex || index);
+    const lane = 0.36 + (order / Math.max(total - 1, 1)) * 0.66;
+    const speed = 0.000055 + ((total - order) * 0.000007);
+    const angle = (order / total) * Math.PI * 2 + timestamp * speed;
+    const x = Math.cos(angle) * maxRadiusX * lane;
+    const y = Math.sin(angle) * maxRadiusY * lane - 4;
+    const depth = (Math.sin(angle) + 1) / 2;
+    const scale = 0.74 + depth * 0.34;
+
+    card.style.setProperty("--orbit-x", x.toFixed(1));
+    card.style.setProperty("--orbit-y", y.toFixed(1));
+    card.style.setProperty("--planet-scale", scale.toFixed(3));
+    card.style.setProperty("--planet-alpha", (0.72 + depth * 0.28).toFixed(2));
+    card.style.zIndex = String(Math.round(30 + depth * 80));
+  });
+
+  roadmapSolarFrame = window.requestAnimationFrame(updateRoadmapSolarSystem);
+}
+
+function startRoadmapSolarSystem() {
+  if (roadmapSolarFrame) return;
+  roadmapSolarFrame = window.requestAnimationFrame(updateRoadmapSolarSystem);
+}
+
+function stopRoadmapSolarSystem() {
+  if (!roadmapSolarFrame) return;
+  window.cancelAnimationFrame(roadmapSolarFrame);
+  roadmapSolarFrame = null;
+}
 function openRoadmapRoute(routeId, focusTopicId = null) {
   const route = roadmapRoutes.find((item) => item.id === routeId);
   if (!route || !roadmapView || !roadmapPath) return;
@@ -4079,9 +4128,11 @@ if (roadmapRoutesContainer) {
     const videosSection = document.getElementById("videos");
     panels?.classList.add("is-open");
     videosSection?.classList.add("is-roadmap-open");
+    document.body.classList.add("roadmap-fullscreen-mode");
     roadmapView.hidden = true;
     activeRoadmapRoute = null;
     videosSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+    startRoadmapSolarSystem();
   };
 
   const closeRoadmapScreen = () => {
@@ -4089,8 +4140,10 @@ if (roadmapRoutesContainer) {
     const videosSection = document.getElementById("videos");
     panels?.classList.remove("is-open");
     videosSection?.classList.remove("is-roadmap-open");
+    document.body.classList.remove("roadmap-fullscreen-mode");
     roadmapView.hidden = true;
     activeRoadmapRoute = null;
+    stopRoadmapSolarSystem();
     videosSection?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -5277,3 +5330,4 @@ function initVideoSectionReplay() {
 letterizeSectionTitle("canal");
 letterizeSectionTitle("videos");
 initVideoSectionReplay();
+
