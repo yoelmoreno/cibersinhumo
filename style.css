@@ -6522,3 +6522,17 @@ select {
     height: 160px;
   }
 }
+/* Reencuadre imágenes laterales en Actividad */
+#canal .activity-about-card .about-photo {
+  object-fit: contain;
+  object-position: center center;
+  transform: scale(0.96);
+  background: #020805;
+}
+
+#canal .activity-project-card .about-project-mark img {
+  width: 72%;
+  height: 72%;
+  object-position: center top;
+  transform: translateY(-12px);
+}
