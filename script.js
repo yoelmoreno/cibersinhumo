@@ -3858,9 +3858,36 @@ function addAssistantMessage(html, type = "bot") {
   if (!assistantOutput) return;
   const div = document.createElement("div");
   div.className = `assistant-message assistant-message-${type}`;
-  div.innerHTML = html;
   assistantOutput.appendChild(div);
-  assistantOutput.scrollTop = assistantOutput.scrollHeight;
+
+  if (type === "bot") {
+    const temp = document.createElement("div");
+    temp.innerHTML = html;
+    const text = temp.textContent.replace(/\s+/g, " ").trim();
+    const typed = document.createElement("p");
+    div.classList.add("is-typing");
+    div.innerHTML = '<span class="assistant-name">Mantis Assistant</span>';
+    div.appendChild(typed);
+
+    let index = 0;
+    const speed = 15;
+    const write = () => {
+      typed.textContent = text.slice(0, index);
+      assistantOutput.scrollTop = assistantOutput.scrollHeight;
+      index += 1;
+      if (index <= text.length) {
+        window.setTimeout(write, speed);
+      } else {
+        div.classList.remove("is-typing");
+        div.innerHTML = html;
+        assistantOutput.scrollTop = assistantOutput.scrollHeight;
+      }
+    };
+    write();
+  } else {
+    div.innerHTML = html;
+    assistantOutput.scrollTop = assistantOutput.scrollHeight;
+  }
 }
 
 function handleAssistantPrompt(text) {
@@ -3928,14 +3955,18 @@ if (roadmapRoutesContainer) {
     const item = event.target.closest("[data-continue-route], [data-assistant-route]");
     if (item) {
       const panels = document.getElementById("roadmap-panels");
+      const videosSection = document.getElementById("videos");
       panels?.classList.add("is-open");
+      videosSection?.classList.add("is-roadmap-open");
       openRoadmapRoute(item.dataset.continueRoute || item.dataset.assistantRoute, item.dataset.continueTopic || item.dataset.assistantTopic);
     }
   });
   document.querySelectorAll("[data-roadmap-scroll]").forEach((button) => button.addEventListener("click", () => {
     const panels = document.getElementById("roadmap-panels");
+    const videosSection = document.getElementById("videos");
     panels?.classList.add("is-open");
-    panels?.scrollIntoView({ behavior: "smooth", block: "start" });
+    videosSection?.classList.add("is-roadmap-open");
+    videosSection?.scrollIntoView({ behavior: "smooth", block: "start" });
   }));
   assistantForm?.addEventListener("submit", (event) => {
     event.preventDefault();
