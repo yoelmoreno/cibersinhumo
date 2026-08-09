@@ -3734,25 +3734,26 @@ function updateRoadmapSolarSystem(timestamp = 0) {
   const cards = Array.from(shell.querySelectorAll(".roadmap-planet-card"));
   const rect = shell.getBoundingClientRect();
   const total = Math.max(cards.length, 1);
-  const maxRadiusX = Math.max(420, rect.width * 0.46);
-  const maxRadiusY = Math.max(170, Math.min(rect.height * 0.34, 330));
+  const maxRadius = Math.max(190, Math.min(rect.width, rect.height) * 0.42);
+  const minRadius = Math.max(135, maxRadius * 0.42);
   const spread = total > 1 ? total - 1 : 1;
 
   cards.forEach((card, index) => {
     const order = Number(card.dataset.orbitIndex || index);
-    const lane = 0.28 + (order / spread) * 0.74;
-    const baseAngle = (-158 + (order / spread) * 316) * Math.PI / 180;
-    const speed = 0.000012 + ((total - order) * 0.000002);
+    const lane = order / spread;
+    const radius = minRadius + lane * (maxRadius - minRadius);
+    const baseAngle = ((order / total) * Math.PI * 2) - Math.PI / 2;
+    const speed = 0.000045 / (1 + lane * 1.25);
     const angle = baseAngle + timestamp * speed;
-    const x = Math.cos(angle) * maxRadiusX * lane;
-    const y = Math.sin(angle) * maxRadiusY * lane - 6;
+    const x = Math.cos(angle) * radius;
+    const y = Math.sin(angle) * radius;
     const depth = (Math.sin(angle) + 1) / 2;
-    const scale = 0.66 + depth * 0.22 + lane * 0.12;
+    const scale = 0.72 + depth * 0.18;
 
     card.style.setProperty("--orbit-x", x.toFixed(1));
     card.style.setProperty("--orbit-y", y.toFixed(1));
     card.style.setProperty("--planet-scale", scale.toFixed(3));
-    card.style.setProperty("--planet-alpha", (0.72 + depth * 0.28).toFixed(2));
+    card.style.setProperty("--planet-alpha", (0.82 + depth * 0.18).toFixed(2));
     card.style.zIndex = String(Math.round(30 + depth * 80));
   });
 
@@ -3985,76 +3986,202 @@ function analyzeAssistantIntent(text) {
   const words = normalized.split(/\s+/).filter(Boolean);
   const isGreeting = /^(hola|hey|buenas|buenos dias|buenas tardes|buenas noches|que tal|holaa)\b/.test(normalized);
   const isThanks = /\b(gracias|perfecto|vale|ok|genial|guay|muchas gracias)\b/.test(normalized);
-  const asksHelp = /\b(ayuda|por donde empiezo|empezar|no se|perdido|perdida|recomienda|recomiendame|ruta|aprender)\b/.test(normalized);
-  const asksDefinition = /\b(que es|que son|explica|explicame|como funciona|para que sirve|diferencia|diferencias)\b/.test(normalized);
+  const asksHelp = /\b(ayuda|por donde empiezo|empezar|no se|perdido|perdida|recomienda|recomiendame|ruta|aprender|estudiar|orientame|guiame)\b/.test(normalized);
+  const asksDefinition = /\b(que es|que son|explica|explicame|como funciona|para que sirve|diferencia|diferencias|entiendo|entender)\b/.test(normalized);
+  const wantsPractice = /\b(practicar|practica|herramienta|herramientas|laboratorio|lab|instalar|probar|hacerlo|junto a mi)\b/.test(normalized);
+  const wantsVideo = /\b(video|videos|ver|youtube|clase|tutorial)\b/.test(normalized);
+  return { normalized, words, isGreeting, isThanks, asksHelp, asksDefinition, wantsPractice, wantsVideo };
+}
 
-  const topics = [
-    { key: "phishing", terms: ["phishing", "correo falso", "email falso", "suplantacion"], answer: "El phishing es un engaño para que entregues datos, contraseñas o dinero creyendo que hablas con una entidad real. Mira remitente, enlaces, urgencia artificial y páginas de inicio de sesión raras.", route: "fundamentos-ciber" },
-    { key: "troyanos", terms: ["troyano", "trojano", "malware", "virus", "infectado"], answer: "Un troyano es malware disfrazado de algo legítimo. Lo peligroso es que tú lo ejecutas pensando que es normal y por detrás puede robar datos, abrir puertas o descargar más amenazas.", route: "fundamentos-ciber" },
-    { key: "spyware", terms: ["spyware", "camara", "keylogger", "teclado", "espiar"], answer: "El spyware intenta vigilar lo que haces: cámara, teclado, pantalla, navegación o archivos. Se combate con permisos mínimos, descargas fiables, actualizaciones y revisando comportamientos raros.", route: "fundamentos-ciber" },
-    { key: "ransomware", terms: ["ransomware", "cifrado", "rescate", "archivos bloqueados"], answer: "El ransomware cifra archivos y pide dinero por recuperarlos. La defensa de verdad son copias de seguridad, actualizaciones y mucho cuidado con adjuntos o programas sospechosos.", route: "fundamentos-ciber" },
-    { key: "ip", terms: ["ip", "direccion ip", "publica", "privada"], answer: "Una IP es una dirección para identificar dispositivos o redes. La pública te representa en Internet; la privada funciona dentro de tu red local, como la de casa.", route: "redes-desde-cero" },
-    { key: "mac", terms: ["mac", "direccion mac", "wifi"], answer: "La dirección MAC identifica una tarjeta de red dentro de una red local. No es tu IP: la MAC trabaja más cerca del hardware y se usa para comunicarse dentro de la LAN.", route: "redes-desde-cero" },
-    { key: "puertos", terms: ["puerto", "puertos", "nmap", "escaneo"], answer: "Los puertos son puertas lógicas por donde un equipo ofrece servicios. Por ejemplo, una web suele usar 80 o 443. Escanear puertos sirve para ver qué servicios están expuestos.", route: "hacking-pentesting" },
-    { key: "vpn", terms: ["vpn", "privacidad", "tunel"], answer: "Una VPN cifra tu conexión hasta un servidor intermedio y oculta tu IP real frente a muchas webs. Ayuda en WiFi públicas y privacidad, pero no te hace anónimo ni evita un phishing.", route: "como-funciona-web" },
-    { key: "linux", terms: ["linux", "kali", "terminal", "comandos", "bash"], answer: "Linux es muy usado en ciber porque da control, herramientas y una terminal potente. Si empiezas, aprende carpetas, permisos, procesos, red y comandos básicos antes de ir a herramientas avanzadas.", route: "linux-sistemas" },
-    { key: "web", terms: ["web", "internet", "http", "https", "dns", "cookie", "deep web"], answer: "La web funciona por capas: el navegador pregunta DNS, conecta con un servidor, usa HTTP/HTTPS y recibe HTML, CSS y JavaScript. Entender eso ayuda muchísimo para ciber web.", route: "como-funciona-web" },
-    { key: "osint", terms: ["osint", "metadatos", "investigar", "shodan"], answer: "OSINT es obtener información usando fuentes abiertas: buscadores, redes, metadatos, registros públicos o herramientas como Shodan. La clave es hacerlo con ética y contexto.", route: "casos-reales" },
-    { key: "maquinas virtuales", terms: ["maquina virtual", "maquinas virtuales", "virtualizacion", "virtualbox", "vmware", "hypervisor", "vm", "laboratorio virtual"], answer: "Una máquina virtual es como tener un ordenador simulado dentro de tu ordenador. Te permite practicar con Linux, Kali o laboratorios de ciber sin tocar tu sistema principal. Para empezar, entiende qué es un sistema operativo, recursos compartidos, snapshots y redes NAT/bridge.", route: "linux-sistemas" },
-    { key: "wireshark", terms: ["wireshark", "paquetes", "trafico", "captura"], answer: "Wireshark sirve para ver paquetes de red. Es perfecto cuando ya entiendes IP, DNS, puertos y HTTP, porque te deja ver la comunicación real entre equipos.", route: "redes-desde-cero" },
-    { key: "kali", terms: ["kali linux", "instalar kali", "parrot", "herramientas"], answer: "Kali Linux es una distribución con herramientas de seguridad. Lo ideal es probarla en máquina virtual y aprender primero terminal, permisos, red y snapshots para practicar sin romper nada.", route: "linux-sistemas" },
-  ];
-  const matched = topics.filter((topic) => topic.terms.some((term) => normalized.includes(term)));
-  return { normalized, words, isGreeting, isThanks, asksHelp, asksDefinition, matched };
+const assistantDirectMatches = [
+  { route: "casos-reales", topicTerms: ["qr phishing", "qrishing", "codigo qr", "qr"], terms: ["qr phishing", "qrishing", "codigo qr", "qr"] },
+  { route: "casos-reales", topicTerms: ["phishing", "qr phishing"], terms: ["phishing", "correo falso", "email falso", "suplantacion", "madphisher"] },
+  { route: "casos-reales", topicTerms: ["troyano", "robo contrasenas"], terms: ["troyano", "trojano", "trojan", "virus roba", "roba contrasenas", "malware roba", "infecto"] },
+  { route: "casos-reales", topicTerms: ["wannacry"], terms: ["wannacry", "ransomware", "rescate", "cifrado", "archivos bloqueados"] },
+  { route: "fundamentos-ciber", topicTerms: ["spyware"], terms: ["spyware", "camara", "webcam", "keylogger", "teclado", "espiar", "grabando"] },
+  { route: "redes-desde-cero", topicTerms: ["direccion mac", "mac"], terms: ["mac", "direccion mac", "wifi", "tarjeta de red"] },
+  { route: "redes-desde-cero", topicTerms: ["puerto"], terms: ["puerto", "puertos", "nmap", "escaneo de puertos", "servicios"] },
+  { route: "redes-desde-cero", topicTerms: ["direccion ip", "ip publica", "ip privada"], terms: ["ip", "direccion ip", "ip publica", "ip privada", "ipv4", "ipv6"] },
+  { route: "redes-desde-cero", topicTerms: ["vpn"], terms: ["vpn", "tunel", "ocultar ip", "wifi publica"] },
+  { route: "linux-sistemas", topicTerms: ["maquina virtual"], terms: ["maquina virtual", "maquinas virtuales", "virtualizacion", "virtualbox", "vmware"] },
+  { route: "linux-sistemas", topicTerms: ["comandos basicos", "terminal"], terms: ["linux", "kali", "terminal", "bash", "comandos", "permisos", "sudo"] },
+  { route: "hacking-pentesting", topicTerms: ["osint"], terms: ["osint", "metadatos", "shodan", "investigar", "huella digital"] },
+  { route: "hacking-pentesting", topicTerms: ["white hat", "black hat", "grey hat", "green hat"], terms: ["sombreros", "white hat", "black hat", "grey hat", "green hat", "red team", "blue team"] },
+  { route: "como-funciona-web", topicTerms: ["cookies"], terms: ["cookie", "cookies", "anuncios", "rastreo"] },
+  { route: "casos-reales", topicTerms: ["deep web", "onion"], terms: ["deep web", "dark web", "tor", "onion"] },
+  { route: "como-funciona-web", topicTerms: ["pagina web", "servidor web", "http"], terms: ["web", "pagina web", "internet", "http", "https", "navegador", "servidor", "api"] },
+];
+
+function findTopicByTerms(routeId, terms = [], preferPublished = false) {
+  const route = roadmapRoutes.find((item) => item.id === routeId) || roadmapRoutes[0];
+  const normalizedTerms = terms.map(normalizeRoadmapText).filter(Boolean);
+  const topics = preferPublished ? route.topics.filter((topic) => topic.status === "published") : route.topics;
+  const pool = topics.length ? topics : route.topics;
+  const scored = pool.map((topic) => {
+    const text = normalizeRoadmapText([topic.title, topic.summary, ...(topic.tags || [])].join(" "));
+    const score = normalizedTerms.reduce((total, term) => total + (text.includes(term) ? 20 + term.length : 0), 0) + (topic.status === "published" ? 3 : 0);
+    return { topic, score };
+  }).sort((a, b) => b.score - a.score);
+  return scored[0]?.score > 0 ? scored[0].topic : (pool.find((topic) => topic.status === "published") || route.topics[0]);
+}
+
+function findDirectAssistantMatch(intent) {
+  const scored = assistantDirectMatches.map((match) => {
+    const score = assistantTextScore(intent.normalized, match.terms);
+    return { ...match, score };
+  }).sort((a, b) => b.score - a.score);
+  const best = scored[0];
+  if (!best || best.score <= 0) return null;
+  const route = roadmapRoutes.find((item) => item.id === best.route) || roadmapRoutes[0];
+  const topic = findTopicByTerms(route.id, best.topicTerms, intent.wantsVideo);
+  return { route, topic, score: best.score + 30 };
+}
+const assistantConcepts = [
+  { key: "phishing", route: "casos-reales", terms: ["phishing", "correo falso", "email falso", "suplantacion", "qrishing", "qr"], answer: "El phishing es un engaño para que entregues datos, contraseñas o dinero creyendo que hablas con una entidad real. Si aparece QR, urgencia, inicio de sesión raro o un enlace extraño, toca parar y verificar." },
+  { key: "troyano", route: "casos-reales", terms: ["troyano", "trojano", "trojan", "virus", "malware", "infectado", "infeccion", "roba contrasenas"], answer: "Un troyano es malware disfrazado de algo normal. El peligro está en ejecutarlo tú mismo pensando que es seguro: puede robar datos, abrir una puerta trasera o descargar más amenazas." },
+  { key: "spyware", route: "fundamentos-ciber", terms: ["spyware", "camara", "webcam", "keylogger", "teclado", "espiar", "pantalla", "grabando"], answer: "El spyware busca vigilarte: cámara, teclado, navegación o pantalla. Para entenderlo bien conviene ver permisos, descargas sospechosas y señales de comportamiento raro." },
+  { key: "ransomware", route: "casos-reales", terms: ["ransomware", "rescate", "cifrado", "archivos bloqueados", "encriptado"], answer: "El ransomware cifra archivos y pide dinero. La defensa real no es una herramienta mágica: copias de seguridad, actualizaciones y no ejecutar adjuntos dudosos." },
+  { key: "ip", route: "redes-desde-cero", terms: ["ip", "direccion ip", "ip publica", "ip privada", "localizacion ip"], answer: "Una IP identifica un dispositivo o una red. La pública es la que sale a Internet; la privada funciona dentro de tu red local." },
+  { key: "mac", route: "redes-desde-cero", terms: ["mac", "direccion mac", "wifi", "tarjeta de red"], answer: "La MAC identifica una interfaz de red dentro de una red local. No es lo mismo que la IP: la IP sirve para enrutar, la MAC para comunicar dentro del enlace local." },
+  { key: "puertos", route: "redes-desde-cero", terms: ["puerto", "puertos", "80", "443", "servicios", "nmap", "escaneo de puertos"], answer: "Los puertos son entradas lógicas donde un equipo ofrece servicios. Entenderlos es clave antes de escanear con Nmap o interpretar qué hay expuesto." },
+  { key: "dns", route: "redes-desde-cero", terms: ["dns", "dominio", "url", "nombre de dominio"], answer: "DNS traduce nombres como cibersinhumo.es a direcciones IP. Es una pieza básica para entender cómo navegas y cómo se investigan problemas de red." },
+  { key: "vpn", route: "como-funciona-web", terms: ["vpn", "tunel", "privacidad", "ocultar ip", "wifi publica"], answer: "Una VPN cifra tu conexión hasta un servidor intermedio y oculta tu IP real frente a muchas webs. Ayuda, pero no te hace anónimo ni evita que caigas en phishing." },
+  { key: "cookies", route: "como-funciona-web", terms: ["cookie", "cookies", "anuncios", "rastreo", "publicidad"], answer: "Las cookies guardan información en el navegador. Algunas son necesarias y otras permiten recordar sesiones, medir visitas o perfilar publicidad." },
+  { key: "web", route: "como-funciona-web", terms: ["web", "internet", "http", "https", "navegador", "servidor", "pagina web", "api", "javascript"], answer: "La web mezcla navegador, DNS, servidores, HTTP/HTTPS, HTML, CSS y JavaScript. Entender esa cadena te prepara para ciber web y análisis real." },
+  { key: "deep web", route: "casos-reales", terms: ["deep web", "dark web", "tor", "internet oculta"], answer: "La Deep Web no es magia: son páginas no indexadas por buscadores. La parte importante es distinguir mito, privacidad, indexación y riesgos reales." },
+  { key: "linux", route: "linux-sistemas", terms: ["linux", "kali", "terminal", "bash", "comandos", "permisos", "sistema", "paquetes"], answer: "Linux es una base muy útil en ciber porque te da control sobre procesos, red, permisos y herramientas. Antes de correr herramientas, conviene entender la terminal." },
+  { key: "maquinas virtuales", route: "linux-sistemas", terms: ["maquina virtual", "maquinas virtuales", "virtualizacion", "virtualbox", "vmware", "hypervisor", "vm", "laboratorio virtual", "snapshots"], answer: "Una máquina virtual es un ordenador simulado dentro de tu ordenador. Te permite practicar con Linux o Kali sin tocar tu sistema principal. Lo clave: recursos, snapshots y red NAT/bridge." },
+  { key: "wireshark", route: "hacking-pentesting", terms: ["wireshark", "paquetes", "trafico", "captura", "sniffer"], answer: "Wireshark sirve para ver paquetes de red. Para aprovecharlo, primero entiende IP, DNS, puertos y HTTP; después ya puedes interpretar tráfico real." },
+  { key: "osint", route: "hacking-pentesting", terms: ["osint", "metadatos", "investigar", "shodan", "huella digital", "informacion publica"], answer: "OSINT es investigar usando fuentes abiertas: buscadores, metadatos, registros públicos o herramientas como Shodan. La clave es hacerlo con método y ética." },
+  { key: "red team", route: "defensa-siguiente-paso", terms: ["red team", "blue team", "sombreros", "white hat", "black hat", "roles", "defensa", "soc", "siem"], answer: "Los roles de ciber ayudan a entender quién ataca, quién defiende y quién audita. Es una buena forma de ordenar el mapa mental antes de elegir camino." },
+  { key: "pentesting", route: "hacking-pentesting", terms: ["pentesting", "hacking etico", "nmap", "john", "fuerza bruta", "burp", "laboratorio", "practica guiada"], answer: "El pentesting consiste en probar la seguridad de forma autorizada. Primero base de redes y sistemas; después herramientas como Nmap, Wireshark, Burp o John con laboratorios controlados." },
+  { key: "hacking web", route: "hacking-web", terms: ["sql injection", "xss", "csrf", "burp suite", "owasp", "sesiones", "hacking web"], answer: "El hacking web necesita entender cómo viajan las peticiones, sesiones, cookies y datos. Después entran vulnerabilidades como SQL Injection, XSS o CSRF." },
+];
+
+function assistantTextScore(haystack, terms) {
+  const text = normalizeRoadmapText(haystack);
+  return terms.reduce((score, term) => {
+    const normalizedTerm = normalizeRoadmapText(term);
+    if (!normalizedTerm) return score;
+    if (text.includes(normalizedTerm)) return score + Math.max(4, normalizedTerm.split(/\s+/).length * 3);
+    return score;
+  }, 0);
+}
+
+function rankAssistantRecommendation(input) {
+  const intent = analyzeAssistantIntent(input);
+  const queryWords = intent.words.filter((word) => word.length > 2);
+  const direct = findDirectAssistantMatch(intent);
+  let bestConcept = null;
+  let bestConceptScore = 0;
+
+  assistantConcepts.forEach((concept) => {
+    const score = assistantTextScore(intent.normalized, concept.terms);
+    if (score > bestConceptScore) {
+      bestConcept = concept;
+      bestConceptScore = score;
+    }
+  });
+
+  if (direct) {
+    const matchingConcept = assistantConcepts.find((concept) => concept.route === direct.route.id && assistantTextScore(intent.normalized, concept.terms) > 0) || bestConcept;
+    return {
+      route: direct.route,
+      topic: direct.topic,
+      concept: matchingConcept,
+      confidence: direct.score,
+      exactTopic: true,
+      intent,
+    };
+  }
+
+  const candidates = allRoadmapTopics().map((topic) => {
+    const route = roadmapRoutes.find((item) => item.id === topic.routeId) || roadmapRoutes[0];
+    const topicText = [topic.title, topic.summary, topic.routeTitle, route.description, topic.statusLabel, ...(topic.tags || [])].join(" ");
+    const normalizedTopicText = normalizeRoadmapText(topicText);
+    let score = 0;
+    queryWords.forEach((word) => {
+      if (normalizedTopicText.includes(word)) score += word.length > 5 ? 5 : 2;
+    });
+    if (bestConcept?.route === route.id) score += bestConceptScore + 10;
+    if (bestConcept && assistantTextScore(topicText, [bestConcept.key, ...bestConcept.terms])) score += 18;
+    if (intent.wantsPractice && /practica|laboratorio|herramienta|nmap|wireshark|kali|linux|puertos|john|burp/i.test(topicText)) score += 7;
+    if (intent.wantsVideo && topic.status === "published") score += 5;
+    if (topic.status === "published") score += 2;
+    return { route, topic, score };
+  }).sort((a, b) => b.score - a.score);
+
+  let recommendation = candidates[0];
+  if (!recommendation || recommendation.score <= 0) {
+    const fallbackRouteId = intent.wantsPractice ? "hacking-pentesting" : "informatica-base";
+    return { ...getRouteRecommendation(fallbackRouteId), concept: null, confidence: 0, exactTopic: false, intent };
+  }
+
+  if (bestConceptScore > 0 && bestConcept?.route) {
+    const conceptRoute = roadmapRoutes.find((item) => item.id === bestConcept.route);
+    if (conceptRoute && recommendation.route.id !== conceptRoute.id && recommendation.score < bestConceptScore + 24) {
+      recommendation = { route: conceptRoute, topic: findTopicByTerms(conceptRoute.id, [bestConcept.key, ...bestConcept.terms], intent.wantsVideo), score: bestConceptScore + 24 };
+    }
+  }
+
+  if (intent.wantsVideo && recommendation.topic.status !== "published") {
+    const publishedAlternative = candidates.find((candidate) => candidate.route.id === recommendation.route.id && candidate.topic.status === "published")
+      || candidates.find((candidate) => candidate.topic.status === "published" && candidate.score > 8);
+    if (publishedAlternative) recommendation = publishedAlternative;
+  }
+
+  return {
+    route: recommendation.route,
+    topic: recommendation.topic,
+    concept: bestConcept,
+    confidence: recommendation.score,
+    exactTopic: bestConceptScore > 0 || recommendation.score >= 8,
+    intent,
+  };
 }
 
 function getRouteRecommendation(routeId, preferredTopicKey = "") {
   const route = roadmapRoutes.find((item) => item.id === routeId) || roadmapRoutes[0];
-  const topic = route.topics.find((item) => item.status === "published" && normalizeRoadmapText(item.title).includes(preferredTopicKey))
+  const normalizedKey = normalizeRoadmapText(preferredTopicKey);
+  const topic = route.topics.find((item) => item.status === "published" && normalizeRoadmapText([item.title, item.summary, ...(item.tags || [])].join(" ")).includes(normalizedKey))
     || route.topics.find((item) => item.status === "published")
     || route.topics[0];
   return { route, topic };
 }
 
 function recommendTopicFromText(text) {
-  const intent = analyzeAssistantIntent(text);
-  if (intent.matched.length) return getRouteRecommendation(intent.matched[0].route, intent.matched[0].key);
-  const normalized = intent.normalized;
-  const intentGroups = [
-    { terms: ["cero", "principiante", "no se", "empezar", "perdido"], route: "informatica-base" },
-    { terms: ["linux", "terminal", "bash", "kali", "maquina virtual", "maquinas virtuales", "virtualizacion", "virtualbox", "vmware", "hypervisor", "laboratorio"], route: "linux-sistemas" },
-    { terms: ["red", "redes", "ip", "dns", "puerto", "wifi", "mac"], route: "redes-desde-cero" },
-    { terms: ["web", "http", "html", "api", "cookie"], route: "como-funciona-web" },
-    { terms: ["phishing", "malware", "ransomware", "ataque", "ciberseguridad"], route: "fundamentos-ciber" },
-    { terms: ["pentesting", "hacking", "nmap", "wireshark", "osint"], route: "hacking-pentesting" },
-    { terms: ["sql", "xss", "burp", "inyeccion", "hacking web"], route: "hacking-web" },
-    { terms: ["caso", "real", "shodan", "deep web", "qr"], route: "casos-reales" },
-    { terms: ["defensa", "blue", "soc", "siem", "edr"], route: "defensa-siguiente-paso" },
-  ];
-  const match = intentGroups.find((group) => group.terms.some((term) => normalized.includes(term)));
-  return getRouteRecommendation(match?.route || "informatica-base");
+  const recommendation = rankAssistantRecommendation(text);
+  return { route: recommendation.route, topic: recommendation.topic };
+}
+
+function assistantRouteButton(route, topic, label = "Abrir recomendación") {
+  const topicAttr = topic?.id ? ` data-assistant-topic="${topic.id}"` : "";
+  return `<button type="button" class="assistant-route-link" data-assistant-route="${route.id}"${topicAttr}>${label}</button>`;
 }
 
 function buildAssistantReply(text) {
   const intent = analyzeAssistantIntent(text);
   if (intent.isGreeting && intent.words.length <= 4) {
-    return `<span class="assistant-name">Mantis Assistant</span><p>¡Hola! Soy la mantis de Ciber Sin Humo. Puedes preguntarme cosas tipo <strong>qué es una IP</strong>, <strong>cómo funciona el phishing</strong>, <strong>por dónde empezar</strong> o <strong>qué vídeo ver primero</strong>.</p>`;
+    return `<span class="assistant-name">Mantis Assistant</span><p>¡Hola! Dime qué quieres aprender o qué te lía: redes, malware, Linux, web, privacidad, OSINT, herramientas o empezar desde cero. Te recomendaré una ruta o un vídeo concreto si ya existe.</p>`;
   }
   if (intent.isThanks && intent.words.length <= 5) {
-    return `<span class="assistant-name">Mantis Assistant</span><p>De nada. Cuando quieras, dime un tema y te lo explico sin humo: redes, malware, web, Linux, privacidad o ataques.</p>`;
+    return `<span class="assistant-name">Mantis Assistant</span><p>De nada. Cuando quieras, dime un tema en lenguaje normal y lo traduzco a una ruta clara.</p>`;
   }
-  if (intent.matched.length) {
-    const main = intent.matched[0];
-    const { route, topic } = getRouteRecommendation(main.route, main.key);
-    const intro = intent.asksDefinition ? main.answer : `${main.answer} Si quieres verlo con ejemplos, te recomiendo esta parte del roadmap.`;
-    return `<span class="assistant-name">Mantis Assistant</span><p>${intro}</p><p>Ruta recomendada: <strong>${route.title}</strong>. Primer paso útil: <strong>${topic.title}</strong>.</p><button type="button" class="assistant-route-link" data-assistant-route="${route.id}" data-assistant-topic="${topic.id}">Abrir esta ruta</button>`;
-  }
-  const learningIntent = /\b(quiero|me gustaria|aprender|estudiar|entender|practicar|ver|saber|empezar)\b/.test(intent.normalized);
-  if (intent.asksHelp || intent.asksDefinition || learningIntent) {
-    const { route, topic } = recommendTopicFromText(text);
-    return `<span class="assistant-name">Mantis Assistant</span><p>Te orientaría hacia <strong>${route.title}</strong>, porque encaja mejor con lo que estás buscando.</p><p>Empieza por <strong>${topic.title}</strong>. Si el tema es práctico, ve paso a paso: primero concepto, luego ejemplo, y después herramienta.</p><button type="button" class="assistant-route-link" data-assistant-route="${route.id}" data-assistant-topic="${topic.id}">Abrir esta ruta</button>`;
-  }
-  return `<span class="assistant-name">Mantis Assistant</span><p>Te leo, pero necesito un poco más de contexto para no mandarte a una ruta al azar. Prueba con algo como: <strong>quiero aprender redes</strong>, <strong>explícame phishing</strong>, <strong>qué es una VPN</strong> o <strong>quiero practicar con herramientas</strong>.</p>`;
+
+  const recommendation = rankAssistantRecommendation(text);
+  const { route, topic, concept, confidence, exactTopic } = recommendation;
+  const hasPublishedVideo = topic?.status === "published" && !!topic.url;
+  const intro = concept?.answer || (exactTopic
+    ? "He encontrado una parte del roadmap que encaja con lo que has escrito."
+    : "No lo tengo clarísimo con una sola frase, pero esta es la ruta más segura para empezar sin perderte.");
+  const videoLine = hasPublishedVideo
+    ? `Te mandaría directamente al vídeo <strong>${topic.title}</strong>.`
+    : `Ahora mismo lo más útil es abrir la ruta <strong>${route.title}</strong>; si ese tema aún no tiene vídeo, verás el punto preparado en el roadmap.`;
+  const confidenceLine = confidence >= 16
+    ? "La recomendación es bastante directa."
+    : "Si quieres afinar más, dime si lo quieres para entenderlo, practicarlo o protegerte.";
+
+  return `<span class="assistant-name">Mantis Assistant</span><p>${intro}</p><p>${videoLine}</p><p>Ruta: <strong>${route.title}</strong>. Punto recomendado: <strong>${topic.title}</strong>. ${confidenceLine}</p>${assistantRouteButton(route, topic, hasPublishedVideo ? "Abrir vídeo/ruta" : "Abrir ruta")}`;
 }
 
 function escapeAssistantHtml(value) {
@@ -4065,7 +4192,10 @@ function addAssistantMessage(content, type = "bot") {
   if (!assistantOutput) return;
   const message = document.createElement("div");
   message.className = `assistant-message assistant-message-${type}`;
-  message.innerHTML = `<div class="assistant-bubble">${content}</div>`;
+  const avatar = type === "user"
+    ? `<div class="assistant-avatar assistant-avatar-user" aria-hidden="true">TÚ</div>`
+    : `<div class="assistant-avatar assistant-avatar-bot" aria-hidden="true"><img src="logo-cibersinhumo-transparent.png?v=1" alt=""></div>`;
+  message.innerHTML = `${avatar}<div class="assistant-bubble">${content}</div>`;
   assistantOutput.appendChild(message);
   assistantOutput.scrollTop = assistantOutput.scrollHeight;
 }
@@ -5365,6 +5495,10 @@ function initVideoSectionReplay() {
 letterizeSectionTitle("canal");
 letterizeSectionTitle("videos");
 initVideoSectionReplay();
+
+
+
+
 
 
 
