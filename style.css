@@ -6254,3 +6254,101 @@ select {
 .hero-side-right {
   top: 16%;
 }
+/* Actividad con laterales Sobre mí / Proyecto */
+.channel-dashboard-expanded {
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.12fr) minmax(320px, 0.78fr) minmax(220px, 0.72fr);
+  align-items: start;
+}
+
+.channel-column-about,
+.channel-column-project {
+  min-width: 0;
+}
+
+.activity-side-card {
+  padding: 14px;
+  height: 100%;
+}
+
+.activity-side-card .about-photo-frame {
+  min-height: 0;
+  height: 150px;
+  margin-bottom: 12px;
+}
+
+.activity-side-card .about-photo {
+  object-position: 48% 58%;
+}
+
+.activity-side-card .about-copy {
+  padding: 0;
+}
+
+.activity-side-card .about-copy h3 {
+  margin: 10px 0 8px;
+  font-size: clamp(1.18rem, 1.45vw, 1.45rem);
+}
+
+.activity-side-card .about-copy p {
+  font-size: 0.88rem;
+  line-height: 1.48;
+}
+
+.activity-side-card .about-project-mark {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+}
+
+.activity-side-card .about-project-mark img {
+  width: 96%;
+  height: 96%;
+  object-fit: contain;
+  object-position: center 22%;
+  mix-blend-mode: screen;
+  filter: brightness(1.18) contrast(1.22) saturate(1.08);
+}
+
+#videos .videos-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+#videos .videos-main {
+  width: 100%;
+}
+
+@media (max-width: 1380px) {
+  .channel-dashboard-expanded {
+    grid-template-columns: minmax(210px, 0.76fr) minmax(0, 1.08fr) minmax(300px, 0.78fr) minmax(210px, 0.76fr);
+    gap: 14px;
+  }
+
+  .activity-side-card .about-copy p {
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  .channel-dashboard-expanded {
+    grid-template-columns: 1fr;
+  }
+
+  .channel-column-about {
+    order: 1;
+  }
+
+  .channel-column-left {
+    order: 2;
+  }
+
+  .channel-column-right {
+    order: 3;
+  }
+
+  .channel-column-project {
+    order: 4;
+  }
+}
