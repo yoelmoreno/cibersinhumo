@@ -4454,13 +4454,19 @@ function assistantCorrectionButtons() {
   return `<div class="assistant-actions"><button type="button" class="assistant-route-link" data-assistant-action="start">Empezar aquí</button><button type="button" class="assistant-route-link" data-assistant-action="known">Esto ya me lo sé</button><button type="button" class="assistant-route-link" data-assistant-action="earlier">Necesito empezar antes</button><button type="button" class="assistant-route-link" data-assistant-action="diagnose">Evaluar mejor mi nivel</button></div>`;
 }
 
+const ASSISTANT_DISPLAY_NAME = "Asistente de Ciber Sin Humo";
+
+function assistantNameMarkup() {
+  return `<span class="assistant-name">${ASSISTANT_DISPLAY_NAME}</span>`;
+}
+
 function buildAssistantReply(text) {
   const decision = makeAssistantDecision(text);
   assistantLastDecision = decision.type === "recommendation" ? decision : assistantLastDecision;
-  if (decision.type === "smalltalk") return `<span class="assistant-name">Mantis Assistant</span><p>¡Hola! Dime qué objetivo tienes y qué sabes ya. Si quieres algo avanzado, primero comprobaré la base para no mandarte demasiado lejos.</p>`;
-  if (decision.type === "thanks") return `<span class="assistant-name">Mantis Assistant</span><p>De nada. Cuando quieras seguimos afinando tu ruta.</p>`;
+  if (decision.type === "smalltalk") return `${assistantNameMarkup()}<p>¡Hola! Dime qué objetivo tienes y qué sabes ya. Si quieres algo avanzado, primero comprobaré la base para no mandarte demasiado lejos.</p>`;
+  if (decision.type === "thanks") return `${assistantNameMarkup()}<p>De nada. Cuando quieras seguimos afinando tu ruta.</p>`;
   if (decision.type === "diagnostic") {
-    return `<span class="assistant-name">Mantis Assistant</span><p>${decision.question.text}</p>${decision.question.type === "checklist" ? renderAssistantChecklist(decision.question) : `<div class="assistant-actions"><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="known">Sí, lo controlo</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="beginner">Lo he tocado poco</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="unknown">No, empiezo ahí</button></div>`}`;
+    return `${assistantNameMarkup()}<p>${decision.question.text}</p>${decision.question.type === "checklist" ? renderAssistantChecklist(decision.question) : `<div class="assistant-actions"><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="known">Sí, lo controlo</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="beginner">Lo he tocado poco</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="unknown">No, empiezo ahí</button></div>`}`;
   }
   const { route, topic, reason, availability, missingPrerequisites, confidence } = decision;
   const isAvailable = availability === "published" && topic?.url;
@@ -4475,7 +4481,7 @@ function buildAssistantReply(text) {
     ? `Empieza por el vídeo <strong>${topic.title}</strong>.`
     : `El punto correcto es <strong>${topic.title}</strong>, pero está marcado como <strong>${topic.statusLabel}</strong>. Te lo abro en el roadmap para que veas dónde encaja.`;
   const debug = `<!-- assistant-debug ${escapeAssistantHtml(JSON.stringify({ recommendedNodeId: decision.recommendedNodeId, sectionId: decision.sectionId, reason, missingPrerequisites, confidence }))} -->`;
-  return `<span class="assistant-name">Mantis Assistant</span><p>Te recomiendo empezar por:</p><p><strong>${route.title}</strong><br><strong>${topic.title}</strong></p><p>${why}</p><p>${availabilityLine}</p>${assistantRouteButton(route, topic, isAvailable ? "Abrir vídeo/ruta" : "Abrir roadmap")}${assistantCorrectionButtons()}${debug}`;
+  return `${assistantNameMarkup()}<p>Te recomiendo empezar por:</p><p><strong>${route.title}</strong><br><strong>${topic.title}</strong></p><p>${why}</p><p>${availabilityLine}</p>${assistantRouteButton(route, topic, isAvailable ? "Abrir vídeo/ruta" : "Abrir roadmap")}${assistantCorrectionButtons()}${debug}`;
 }
 
 function recommendTopicFromText(text) {
@@ -4521,7 +4527,7 @@ function handleAssistantCorrectionAction(action) {
   if (action === "diagnose") {
     assistantPendingQuestion = { type: "checklist", block: "pentesting", text: "Vamos a ubicar tu base general. Marca lo que controles." };
     addAssistantMessage(`<p>Evaluar mejor mi nivel.</p>`, "user");
-    window.setTimeout(() => addAssistantMessage(`<span class="assistant-name">Mantis Assistant</span><p>${assistantPendingQuestion.text}</p>${renderAssistantChecklist(assistantPendingQuestion)}`, "bot"), 120);
+    window.setTimeout(() => addAssistantMessage(`${assistantNameMarkup()}<p>${assistantPendingQuestion.text}</p>${renderAssistantChecklist(assistantPendingQuestion)}`, "bot"), 120);
   }
 }
 
@@ -4532,6 +4538,42 @@ function escapeAssistantHtml(value) {
   return String(value || "").replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[char]));
 }
 
+function assistantPlainTextFromHtml(content) {
+  const parser = document.createElement("div");
+  parser.innerHTML = content;
+  return (parser.textContent || "").replace(/\s+/g, " ").trim();
+}
+
+function typeAssistantBubble(bubble, content, message) {
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  const plainText = assistantPlainTextFromHtml(content);
+  if (reduceMotion || !plainText) {
+    bubble.innerHTML = content;
+    return;
+  }
+
+  message.classList.add("is-typing");
+  bubble.textContent = "";
+
+  let index = 0;
+  const step = () => {
+    bubble.textContent = plainText.slice(0, index);
+    assistantOutput.scrollTop = assistantOutput.scrollHeight;
+    index += 1;
+
+    if (index <= plainText.length) {
+      window.setTimeout(step, 12);
+      return;
+    }
+
+    bubble.innerHTML = content;
+    message.classList.remove("is-typing");
+    assistantOutput.scrollTop = assistantOutput.scrollHeight;
+  };
+
+  step();
+}
+
 function addAssistantMessage(content, type = "bot") {
   if (!assistantOutput) return;
   const message = document.createElement("div");
@@ -4539,7 +4581,13 @@ function addAssistantMessage(content, type = "bot") {
   const avatar = type === "user"
     ? `<div class="assistant-avatar assistant-avatar-user" aria-hidden="true">TÚ</div>`
     : `<div class="assistant-avatar assistant-avatar-bot" aria-hidden="true"><img src="logo-cibersinhumo-transparent.png?v=1" alt=""></div>`;
-  message.innerHTML = `${avatar}<div class="assistant-bubble">${content}</div>`;
+  message.innerHTML = `${avatar}<div class="assistant-bubble"></div>`;
+  const bubble = message.querySelector(".assistant-bubble");
+  if (type === "bot") {
+    typeAssistantBubble(bubble, content, message);
+  } else {
+    bubble.innerHTML = content;
+  }
   assistantOutput.appendChild(message);
   assistantOutput.scrollTop = assistantOutput.scrollHeight;
 }
@@ -4547,7 +4595,7 @@ function replayAssistantIntro() {
   if (!assistantOutput) return;
   assistantOutput.innerHTML = "";
   assistantOutput.dataset.initialized = "true";
-  addAssistantMessage(`<span class="assistant-name">Mantis Assistant</span><p>Hola, soy la mantis de Ciber Sin Humo. Dime qué quieres aprender, qué tema te lía o qué vídeo estás buscando, y te oriento paso a paso.</p><p class="assistant-hint">Prueba: “no sé nada de redes”, “explícame VPN” o “quiero practicar con herramientas”.</p>`, "bot");
+  addAssistantMessage(`${assistantNameMarkup()}<p>Hola, soy el asistente de Ciber Sin Humo. Dime qué quieres aprender, qué tema te lía o qué vídeo estás buscando, y te oriento paso a paso.</p><p class="assistant-hint">Prueba: “no sé nada de redes”, “explícame VPN” o “quiero practicar con herramientas”.</p>`, "bot");
 }
 
 function handleAssistantPrompt(text) {
@@ -4566,7 +4614,7 @@ function handleAssistantPrompt(text) {
       }
     } catch (error) {
       console.warn("Roadmap assistant fallback", error);
-      addAssistantMessage(`<span class="assistant-name">Mantis Assistant</span><p>Te leo, pero ahora mismo necesito que me lo digas con una palabra clave: redes, phishing, Linux, web, privacidad o herramientas.</p>`, "bot");
+      addAssistantMessage(`${assistantNameMarkup()}<p>Te leo, pero ahora mismo necesito que me lo digas con una palabra clave: redes, phishing, Linux, web, privacidad o herramientas.</p>`, "bot");
     }
   }, 160);
 }

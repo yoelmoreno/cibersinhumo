@@ -7296,6 +7296,18 @@ select {
   animation: caretBlink .8s steps(1) infinite;
 }
 
+.assistant-message.is-typing .assistant-bubble:after {
+  content: "";
+  display: inline-block;
+  width: .55em;
+  height: 1em;
+  margin-left: .18em;
+  background: var(--accent);
+  vertical-align: -.15em;
+  box-shadow: 0 0 14px rgba(0, 255, 136, .65);
+  animation: caretBlink .8s steps(1) infinite;
+}
+
 @keyframes caretBlink {
   50% { opacity: 0; }
 }
@@ -8581,6 +8593,70 @@ body.roadmap-fullscreen-mode > * {
   border: 2px solid rgba(0, 18, 10, .82);
   border-radius: 999px;
   box-shadow: 0 0 12px rgba(0,255,136,.35);
+}
+
+/* Ajuste final: el chatbot aprovecha todo el ancho útil de la sección de vídeos */
+.video-roadmap-section:not(.is-roadmap-open) .section-inner {
+  width: min(calc(100% - 32px), 1560px) !important;
+}
+
+.video-roadmap-header {
+  max-width: 1180px;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .roadmap-assistant {
+  max-width: min(1460px, 100%) !important;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-chat {
+  max-width: 1460px !important;
+  min-height: clamp(500px, 58vh, 680px) !important;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-output {
+  min-height: clamp(300px, 38vh, 450px) !important;
+  max-height: clamp(360px, 48vh, 560px) !important;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-form {
+  min-height: 68px !important;
+  padding: 8px 10px 8px 22px !important;
+  grid-template-columns: minmax(0, 1fr) 54px !important;
+  border-radius: 24px !important;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-form input {
+  min-height: 50px !important;
+  font-size: 1.02rem;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-form button {
+  width: 52px !important;
+  min-width: 52px !important;
+  min-height: 52px !important;
+  border-radius: 18px !important;
+}
+
+@media (max-width: 760px) {
+  .video-roadmap-section:not(.is-roadmap-open) .section-inner {
+    width: min(calc(100% - 20px), 1560px) !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-chat {
+    min-height: 58vh !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-form {
+    min-height: 62px !important;
+    grid-template-columns: minmax(0, 1fr) 48px !important;
+    padding: 7px 8px 7px 16px !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-form button {
+    width: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+  }
 }
 
 .assistant-message,
