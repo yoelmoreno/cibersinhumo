@@ -1874,3 +1874,40 @@ async function initYoutubeChannelPanel() {
 }
 
 initYoutubeChannelPanel();
+function initChannelTitleReveal() {
+  const section = document.getElementById("canal");
+  const title = section?.querySelector(".section-title");
+  if (!section || !title || title.dataset.letterized === "true") return;
+
+  const text = title.textContent || "";
+  title.textContent = "";
+  title.classList.add("channel-title-letters");
+  title.dataset.letterized = "true";
+
+  Array.from(text).forEach((char, index) => {
+    const span = document.createElement("span");
+    span.className = "title-letter";
+    span.style.setProperty("--i", String(index));
+    span.textContent = char === " " ? "\u00a0" : char;
+    title.appendChild(span);
+  });
+
+  const reveal = () => section.classList.add("is-title-visible");
+  if (!("IntersectionObserver" in window)) {
+    reveal();
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        reveal();
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.28 });
+
+  observer.observe(section);
+}
+
+initChannelTitleReveal();

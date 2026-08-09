@@ -6440,3 +6440,85 @@ select {
     grid-template-columns: 1fr;
   }
 }
+/* Pulido visual de Actividad */
+#canal .channel-header {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  margin-bottom: 34px;
+}
+
+#canal .channel-header .section-desc {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#canal .channel-title-letters {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.02em;
+}
+
+#canal .channel-title-letters .title-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(18px) scale(0.96);
+  filter: blur(8px);
+}
+
+#canal.is-title-visible .channel-title-letters .title-letter {
+  animation: channelLetterReveal 0.58s cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
+  animation-delay: calc(var(--i) * 0.035s);
+}
+
+@keyframes channelLetterReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#canal .activity-side-card .about-photo-frame {
+  height: 172px;
+  background: #020805;
+}
+
+#canal .activity-side-card .about-photo {
+  object-fit: cover;
+  object-position: 50% 64%;
+  transform: scale(1.04);
+}
+
+#canal .activity-side-card .about-project-mark {
+  height: 172px;
+  display: grid;
+  place-items: center;
+  background: #000;
+}
+
+#canal .activity-side-card .about-project-mark img {
+  width: 78%;
+  height: 78%;
+  object-fit: contain;
+  object-position: center center;
+  transform: none;
+  mix-blend-mode: screen;
+}
+
+@media (max-width: 640px) {
+  #canal .channel-header {
+    text-align: left;
+    justify-items: start;
+  }
+
+  #canal .channel-title-letters {
+    justify-content: flex-start;
+  }
+
+  #canal .activity-side-card .about-photo-frame,
+  #canal .activity-side-card .about-project-mark {
+    height: 160px;
+  }
+}
