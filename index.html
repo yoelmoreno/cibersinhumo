@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
   <meta property="og:image" content="https://www.cibersinhumo.es/favicon-cibersinhumo.png?v=3">
   <meta name="twitter:image" content="https://www.cibersinhumo.es/favicon-cibersinhumo.png?v=3">
-  <link rel="stylesheet" href="style.css?v=120">
+  <link rel="stylesheet" href="style.css?v=121">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -328,120 +328,96 @@
   </div>
 </section>
 
-<section class="section" id="videos">
+<section class="section video-roadmap-section" id="videos">
   <div class="section-inner">
-    <div class="section-header">
-      <h2 class="section-title">Vídeos</h2>
-      <p class="section-desc">Aprende con contenido claro y directo, organizado por temática.</p>
+    <div class="roadmap-hero">
+      <span class="section-tag">roadmap interactivo</span>
+      <h2 class="section-title">Aprende ciberseguridad a tu ritmo</h2>
+      <p class="section-desc">Cu&eacute;ntame qu&eacute; sabes, qu&eacute; quieres aprender o explora las rutas desde cero. Todo sale del roadmap oficial de Ciber Sin Humo.</p>
     </div>
 
-    <div class="videos-layout">
-      <div class="videos-main">
-        <div class="video-discovery">
-          <div class="video-search-panel">
-            <div class="search-radar" aria-hidden="true">
-              <span></span>
-            </div>
-            <div class="video-search-content">
-              <label class="video-search-label" for="video-search">Buscar contenido</label>
-              <div class="video-search-box">
-                <input id="video-search" type="search" placeholder="Busca phishing, spyware, PDF, DDoS..." autocomplete="off">
-              </div>
-              <div class="search-chips" aria-label="Búsquedas rápidas">
-                <button type="button" data-search-chip="phishing">Phishing</button>
-                <button type="button" data-search-chip="spyware">Spyware</button>
-                <button type="button" data-search-chip="troyanos">Troyanos</button>
-                <button type="button" data-search-chip="PDF">PDF</button>
-              </div>
-              <p class="video-search-hint">Busca por tema, ataque, herramienta, recurso o estado.</p>
-            </div>
-          </div>
+    <div class="roadmap-assistant" id="roadmap-assistant">
+      <div class="assistant-orbit" aria-hidden="true"></div>
+      <div class="assistant-mantis" aria-hidden="true">
+        <img src="logo-cibersinhumo-transparent.png?v=1" alt="">
+      </div>
+      <div class="assistant-chat">
+        <div class="assistant-message assistant-message-bot">
+          <span class="assistant-name">Mantis Assistant</span>
+          <p>Hola, soy la mantis de Ciber Sin Humo. Cu&eacute;ntame qu&eacute; sabes o qu&eacute; quieres aprender y te recomiendo una ruta real del roadmap.</p>
         </div>
-
-        <div class="search-view" id="search-view" hidden>
-          <div class="route-topbar">
-            <button class="route-back" id="search-back" type="button">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-              Volver
-            </button>
-            <div>
-              <span class="section-tag">resultados</span>
-              <h3 class="route-title" id="search-title">Resultados</h3>
-              <p class="route-desc" id="search-desc"></p>
-            </div>
-          </div>
-          <div class="video-grid route-video-grid" id="search-video-grid"></div>
+        <div class="assistant-output" id="roadmap-assistant-output" aria-live="polite"></div>
+        <form class="assistant-form" id="roadmap-assistant-form">
+          <input id="roadmap-assistant-input" type="text" placeholder="Ej: s&eacute; algo de Linux pero quiero aprender pentesting..." autocomplete="off">
+          <button type="submit">Enviar</button>
+        </form>
+        <div class="assistant-quick-actions" aria-label="Opciones r&aacute;pidas">
+          <button type="button" data-assistant-prompt="Empezar desde cero">Empezar desde cero</button>
+          <button type="button" data-assistant-prompt="Quiero aprender Linux">Linux</button>
+          <button type="button" data-assistant-prompt="Quiero aprender redes">Redes</button>
+          <button type="button" data-assistant-prompt="Quiero aprender hacking web">Hacking web</button>
+          <button type="button" data-assistant-prompt="No s&eacute; por d&oacute;nde seguir">No s&eacute; por d&oacute;nde seguir</button>
         </div>
+        <button class="assistant-skip" type="button" data-roadmap-scroll>Explorar las rutas por mi cuenta</button>
+      </div>
+    </div>
 
-        <div class="learning-paths" id="learning-paths">
-          <button class="path-card" type="button" data-route="principiante">
-            <span class="path-illustration">
-              <img src="ruta-cero-ilustracion.png" alt="" loading="lazy">
-            </span>
-            <span class="path-num">01</span>
-            <span class="path-kicker">Empieza desde cero</span>
-            <strong>No sé nada de ciber</strong>
-            <span>Conceptos básicos, riesgos comunes y primeros hábitos seguros.</span>
-            <span class="path-folders">
-              <span>Intro</span>
-              <span>Ataques</span>
-              <span>Noticias</span>
-              <span>Historia</span>
-              <span>Privacidad</span>
-            </span>
-          </button>
+    <div class="continue-card" id="roadmap-continue" hidden></div>
 
-          <button class="path-card" type="button" data-route="privacidad">
-            <span class="path-illustration">
-              <img src="ruta-practica-ilustracion.png" alt="" loading="lazy">
-            </span>
-            <span class="path-num">02</span>
-            <span class="path-kicker">Pasa a la acción</span>
-            <strong>Aplicar la teoría a la práctica</strong>
-            <span>Pruebas guiadas, herramientas reales y pequeños laboratorios para entender haciendo.</span>
-            <span class="path-folders">
-              <span>Puertos</span>
-              <span>Wireshark</span>
-              <span>John</span>
-              <span>Labs</span>
-            </span>
-          </button>
-
-          <button class="path-card" type="button" data-route="sistema">
-            <span class="path-illustration">
-              <img src="ruta-fundamentos-ilustracion.png" alt="" loading="lazy">
-            </span>
-            <span class="path-num">03</span>
-            <span class="path-kicker">Base técnica</span>
-            <strong>Entender informática para entender ciber</strong>
-            <span>Conceptos como redes, sistemas y web para luego analizarlos con herramientas reales.</span>
-            <span class="path-folders">
-              <span>Conceptos</span>
-              <span>Redes</span>
-              <span>Web</span>
-              <span>Sistemas</span>
-            </span>
-          </button>
+    <div class="roadmap-search-panel" id="roadmap-search-panel">
+      <div class="search-radar" aria-hidden="true"><span></span></div>
+      <div class="video-search-content">
+        <label class="video-search-label" for="roadmap-search">Buscar en todo el roadmap</label>
+        <div class="video-search-box">
+          <input id="roadmap-search" type="search" placeholder="Busca Linux, Nmap, IP, phishing, SQL Injection..." autocomplete="off">
         </div>
-
-        <div class="route-view" id="route-view" hidden>
-          <div class="route-topbar">
-            <button class="route-back" id="route-back" type="button">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-              Volver
-            </button>
-            <div>
-              <span class="section-tag" id="route-tag">ruta</span>
-              <h3 class="route-title" id="route-title"></h3>
-              <p class="route-desc" id="route-desc"></p>
-            </div>
-          </div>
-
-          <div class="route-filters" id="route-filters"></div>
-          <div class="video-grid route-video-grid" id="route-video-grid"></div>
+        <div class="search-chips" aria-label="B&uacute;squedas r&aacute;pidas">
+          <button type="button" data-roadmap-chip="linux">Linux</button>
+          <button type="button" data-roadmap-chip="redes">Redes</button>
+          <button type="button" data-roadmap-chip="phishing">Phishing</button>
+          <button type="button" data-roadmap-chip="nmap">Nmap</button>
+          <button type="button" data-roadmap-chip="web">Web</button>
         </div>
       </div>
-</div>
+      <div class="roadmap-search-results" id="roadmap-search-results" hidden></div>
+    </div>
+
+    <div class="roadmap-routes-head" id="roadmap-routes-head">
+      <span class="section-tag">rutas del PDF</span>
+      <h3>Elige una ruta</h3>
+      <p>Todos los temas est&aacute;n ordenados como en el roadmap: publicados, en preparaci&oacute;n y pendientes.</p>
+    </div>
+    <div class="roadmap-routes" id="roadmap-routes"></div>
+
+    <div class="roadmap-view" id="roadmap-view" hidden>
+      <div class="route-topbar roadmap-route-topbar">
+        <button class="route-back" id="roadmap-back" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          Volver a rutas
+        </button>
+        <div>
+          <span class="section-tag" id="roadmap-route-level">ruta</span>
+          <h3 class="route-title" id="roadmap-route-title"></h3>
+          <p class="route-desc" id="roadmap-route-desc"></p>
+        </div>
+      </div>
+      <div class="roadmap-path-shell">
+        <div class="roadmap-path" id="roadmap-path"></div>
+        <aside class="roadmap-detail" id="roadmap-detail">
+          <span class="section-tag">selecciona un nodo</span>
+          <h3>Tu siguiente paso aparecer&aacute; aqu&iacute;</h3>
+          <p>Pulsa cualquier punto del camino para ver estado, requisitos, anterior, siguiente y acceso al v&iacute;deo si existe.</p>
+        </aside>
+      </div>
+    </div>
+
+    <div class="roadmap-explore" id="roadmap-explore">
+      <div class="roadmap-routes-head">
+        <span class="section-tag">explora v&iacute;deos</span>
+        <h3>Publicados y casos destacados</h3>
+      </div>
+      <div class="roadmap-explore-grid" id="roadmap-explore-grid"></div>
+    </div>
   </div>
 </section>
 <section class="section section-alt" id="recursos">
@@ -812,6 +788,6 @@
     }, { once: true });
   }());
 </script>
-<script src="script.js?v=110"></script>
+<script src="script.js?v=111"></script>
 </body>
 </html>
