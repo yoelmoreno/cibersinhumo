@@ -8659,6 +8659,39 @@ body.roadmap-fullscreen-mode > * {
   }
 }
 
+/* Ajuste fino del encabezado de vídeos: evita cortes raros como "empe zar" */
+.video-roadmap-header {
+  max-width: min(1180px, 100%) !important;
+  margin-inline: auto;
+}
+
+.video-roadmap-header .section-title {
+  max-width: 1120px;
+  font-size: clamp(2rem, 4.1vw, 4.15rem) !important;
+  line-height: 1.04 !important;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+  text-wrap: balance;
+}
+
+.video-roadmap-header .section-desc {
+  max-width: 780px;
+  font-size: clamp(1.08rem, 1.5vw, 1.28rem) !important;
+  line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+  .video-roadmap-header .section-title {
+    font-size: clamp(1.85rem, 10.5vw, 3.05rem) !important;
+    text-wrap: pretty;
+  }
+
+  .video-roadmap-header .section-desc {
+    font-size: 1.08rem !important;
+  }
+}
+
 .assistant-message,
 .assistant-message-user {
   grid-template-columns: minmax(0, 1fr) !important;
