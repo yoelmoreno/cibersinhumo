@@ -3734,26 +3734,23 @@ function updateRoadmapSolarSystem(timestamp = 0) {
   const cards = Array.from(shell.querySelectorAll(".roadmap-planet-card"));
   const rect = shell.getBoundingClientRect();
   const total = Math.max(cards.length, 1);
-  const maxRadius = Math.max(190, Math.min(rect.width, rect.height) * 0.42);
-  const minRadius = Math.max(135, maxRadius * 0.42);
-  const spread = total > 1 ? total - 1 : 1;
+  const radiusX = Math.max(260, Math.min(rect.width * 0.38, 690));
+  const radiusY = Math.max(115, Math.min(rect.height * 0.24, 245));
+  const angularSpeed = 0.000026;
 
   cards.forEach((card, index) => {
     const order = Number(card.dataset.orbitIndex || index);
-    const lane = order / spread;
-    const radius = minRadius + lane * (maxRadius - minRadius);
     const baseAngle = ((order / total) * Math.PI * 2) - Math.PI / 2;
-    const speed = 0.000045 / (1 + lane * 1.25);
-    const angle = baseAngle + timestamp * speed;
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius;
+    const angle = baseAngle + timestamp * angularSpeed;
+    const x = Math.cos(angle) * radiusX;
+    const y = Math.sin(angle) * radiusY;
     const depth = (Math.sin(angle) + 1) / 2;
-    const scale = 0.72 + depth * 0.18;
+    const scale = 0.78 + depth * 0.18;
 
     card.style.setProperty("--orbit-x", x.toFixed(1));
     card.style.setProperty("--orbit-y", y.toFixed(1));
     card.style.setProperty("--planet-scale", scale.toFixed(3));
-    card.style.setProperty("--planet-alpha", (0.82 + depth * 0.18).toFixed(2));
+    card.style.setProperty("--planet-alpha", (0.84 + depth * 0.16).toFixed(2));
     card.style.zIndex = String(Math.round(30 + depth * 80));
   });
 
@@ -5495,6 +5492,8 @@ function initVideoSectionReplay() {
 letterizeSectionTitle("canal");
 letterizeSectionTitle("videos");
 initVideoSectionReplay();
+
+
 
 
 

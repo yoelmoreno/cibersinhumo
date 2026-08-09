@@ -8875,3 +8875,201 @@ body.roadmap-fullscreen-mode > * {
     min-width: 32px !important;
   }
 }
+
+/* Roadmap v3: orbita horizontal estable + camino de circulos */
+#videos.video-roadmap-section.is-roadmap-open::before {
+  background:
+    radial-gradient(circle, rgba(255,255,255,.95) 0 1px, transparent 1.8px) 8% 12% / 150px 120px,
+    radial-gradient(circle, rgba(0,255,136,.72) 0 1px, transparent 1.8px) 42% 28% / 210px 170px,
+    radial-gradient(circle, rgba(160,220,255,.8) 0 1px, transparent 1.7px) 78% 18% / 250px 210px,
+    radial-gradient(circle, rgba(255,255,255,.72) 0 1px, transparent 1.7px) 18% 72% / 190px 160px,
+    radial-gradient(circle, rgba(0,255,180,.62) 0 1px, transparent 1.7px) 70% 78% / 230px 190px !important;
+  opacity: .55 !important;
+  animation: starDrift 42s linear infinite, cshStarTwinkle 3.8s ease-in-out infinite alternate !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-panels-zone::before,
+#videos.video-roadmap-section.is-roadmap-open .roadmap-panels-zone::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  width: clamp(110px, 10vw, 180px);
+  height: 2px;
+  pointer-events: none;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.95), rgba(0,255,136,.85), transparent);
+  filter: drop-shadow(0 0 12px rgba(0,255,136,.55));
+  opacity: 0;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-panels-zone::before {
+  top: 18%;
+  left: -12%;
+  animation: cshMeteorOne 9s ease-in-out infinite;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-panels-zone::after {
+  top: 68%;
+  right: -14%;
+  animation: cshMeteorTwo 13s ease-in-out 4s infinite;
+}
+
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-panels-zone::before,
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-panels-zone::after {
+  display: none !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-routes {
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 50% 52%, rgba(255, 189, 61, .13), transparent 20%),
+    radial-gradient(circle at 20% 24%, rgba(30, 95, 255, .14), transparent 24%),
+    radial-gradient(circle at 82% 70%, rgba(0, 255, 190, .10), transparent 26%),
+    linear-gradient(180deg, #000207, #020909 52%, #000203) !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-routes::before {
+  display: none !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-routes::after {
+  top: 52% !important;
+  width: clamp(104px, 8vw, 154px) !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card {
+  top: 52% !important;
+  width: clamp(142px, 12vw, 206px) !important;
+  transition: filter .18s ease, transform .18s ease !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-planet {
+  width: clamp(74px, 6.7vw, 116px) !important;
+  height: clamp(74px, 6.7vw, 116px) !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-planet-card strong {
+  font-size: clamp(.86rem, 1.05vw, 1.1rem) !important;
+  max-width: 190px !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-stats-line {
+  display: none !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-path-shell {
+  grid-template-columns: minmax(0, 1fr) clamp(320px, 24vw, 390px) !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-path {
+  position: relative !important;
+  display: grid !important;
+  gap: 10px !important;
+  padding: 18px 18px 18px 22px !important;
+  overflow: visible !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-path::before {
+  left: 43px !important;
+  top: 28px !important;
+  bottom: 28px !important;
+  width: 2px !important;
+  background: linear-gradient(180deg, rgba(0,255,136,.08), rgba(0,255,136,.8), rgba(0,255,136,.08)) !important;
+  opacity: .65 !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-node,
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-node.is-left,
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-node.is-right {
+  justify-self: stretch !important;
+  width: 100% !important;
+  min-height: 58px !important;
+  display: grid !important;
+  grid-template-columns: 44px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 7px 10px !important;
+  border: 0 !important;
+  border-radius: 16px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  text-align: left !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-node::after {
+  content: "";
+  position: absolute;
+  left: 43px;
+  top: 50%;
+  width: clamp(16px, 4vw, 48px);
+  height: 1px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, rgba(0,255,136,.48), transparent);
+  z-index: -1;
+}
+
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .node-core {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle at 35% 28%, rgba(210,255,225,.22), rgba(0,255,136,.12) 44%, rgba(0,10,6,.96) 72%) !important;
+  border: 1px solid rgba(0,255,136,.55) !important;
+  box-shadow: 0 0 18px rgba(0,255,136,.18), inset 0 0 12px rgba(0,255,136,.08) !important;
+  color: var(--text-main) !important;
+  z-index: 2 !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .node-copy {
+  width: min(100%, 720px);
+  padding: 10px 12px;
+  border: 1px solid rgba(0,255,136,.14);
+  border-radius: 14px;
+  background: rgba(0, 9, 5, .72);
+}
+
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-node:hover .node-core,
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-node.is-current .node-core {
+  border-color: rgba(0,255,136,.9) !important;
+  box-shadow: 0 0 26px rgba(0,255,136,.34), inset 0 0 14px rgba(0,255,136,.12) !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-node:hover,
+#videos.video-roadmap-section.is-roadmap-open.is-route-detail-open .roadmap-node.is-current {
+  transform: translateX(3px) !important;
+}
+
+@keyframes cshStarTwinkle {
+  0% { opacity: .38; filter: brightness(.9); }
+  50% { opacity: .7; filter: brightness(1.4); }
+  100% { opacity: .48; filter: brightness(1.05); }
+}
+
+@keyframes cshMeteorOne {
+  0%, 64%, 100% { opacity: 0; transform: translate3d(0, 0, 0) rotate(16deg); }
+  70% { opacity: .95; }
+  82% { opacity: 0; transform: translate3d(74vw, 34vh, 0) rotate(16deg); }
+}
+
+@keyframes cshMeteorTwo {
+  0%, 58%, 100% { opacity: 0; transform: translate3d(0, 0, 0) rotate(154deg); }
+  66% { opacity: .82; }
+  78% { opacity: 0; transform: translate3d(-76vw, 28vh, 0) rotate(154deg); }
+}
+
+@media (max-width: 760px) {
+  #videos.video-roadmap-section.is-roadmap-open .roadmap-routes {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    overflow-y: auto !important;
+    padding: 82px 18px 30px !important;
+  }
+
+  #videos.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    min-height: 180px !important;
+  }
+}
