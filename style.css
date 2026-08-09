@@ -6615,7 +6615,7 @@ select {
 #canal .activity-about-card .about-photo {
   object-fit: cover;
   object-position: 50% 60%;
-  transform: scale(1.08);
+  transform: translateY(8px) scale(1.08);
 }
 
 #canal .activity-project-card .about-project-mark img {
