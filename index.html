@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
   <meta property="og:image" content="https://www.cibersinhumo.es/favicon-cibersinhumo.png?v=3">
   <meta name="twitter:image" content="https://www.cibersinhumo.es/favicon-cibersinhumo.png?v=3">
-  <link rel="stylesheet" href="style.css?v=126">
+  <link rel="stylesheet" href="style.css?v=130">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-cookie-banner="enabled" data-gtm-id="GTM-5VSRHPV2">
@@ -336,10 +336,6 @@
         <img src="logo-cibersinhumo-transparent.png?v=1" alt="">
       </div>
       <div class="assistant-chat">
-        <div class="assistant-message assistant-message-bot">
-          <span class="assistant-name">Mantis Assistant</span>
-          <p>Hola, soy la mantis de Ciber Sin Humo. Cu&eacute;ntame qu&eacute; sabes, qu&eacute; te interesa o por d&oacute;nde te pierdes, y te digo por d&oacute;nde empezar.</p>
-        </div>
         <div class="assistant-output" id="roadmap-assistant-output" aria-live="polite"></div>
         <form class="assistant-form" id="roadmap-assistant-form">
           <input id="roadmap-assistant-input" type="text" placeholder="" aria-label="Escribe tu duda" autocomplete="off">
@@ -352,6 +348,12 @@
     <div class="continue-card" id="roadmap-continue" hidden></div>
 
     <div class="roadmap-panels-zone" id="roadmap-panels">
+      <div class="roadmap-mode-topbar">
+        <button class="route-back roadmap-chat-back" type="button" data-roadmap-chat-back>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          Volver al chat
+        </button>
+      </div>
     <div class="roadmap-search-panel" id="roadmap-search-panel">
       <div class="search-radar" aria-hidden="true"><span></span></div>
       <div class="video-search-content">
@@ -379,10 +381,16 @@
 
     <div class="roadmap-view" id="roadmap-view" hidden>
       <div class="route-topbar roadmap-route-topbar">
-        <button class="route-back" id="roadmap-back" type="button">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-          Volver a rutas
-        </button>
+        <div class="route-actions-inline">
+          <button class="route-back" id="roadmap-back" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+            Volver a rutas
+          </button>
+          <button class="route-back roadmap-chat-back" type="button" data-roadmap-chat-back>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+            Volver al chat
+          </button>
+        </div>
         <div>
           <span class="section-tag" id="roadmap-route-level">ruta</span>
           <h3 class="route-title" id="roadmap-route-title"></h3>
@@ -778,6 +786,6 @@
     }, { once: true });
   }());
 </script>
-<script src="script.js?v=116"></script>
+<script src="script.js?v=120"></script>
 </body>
 </html>

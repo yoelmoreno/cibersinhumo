@@ -3750,6 +3750,97 @@ function renderRoadmapPath(route) {
   }).join("");
 }
 
+
+function getYoutubeVideoId(url) {
+  const value = String(url || "");
+  const match = value.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{6,})/);
+  return match ? match[1] : "";
+}
+
+function getYoutubeThumbnail(topic) {
+  const explicit = topic.thumbnail || topic.thumbnailUrl;
+  if (explicit) return explicit;
+  const id = getYoutubeVideoId(topic.url);
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : "";
+}
+
+function formatYoutubeDate(value) {
+  if (!value) return "Fecha pendiente";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" });
+}
+
+function formatYoutubeDuration(value) {
+  if (!value) return "Duración pendiente";
+  const iso = String(value);
+  const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return iso;
+  const hours = Number(match[1] || 0);
+  const minutes = Number(match[2] || 0);
+  const seconds = Number(match[3] || 0);
+  if (hours) return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+let youtubeMetaPromise = null;
+let youtubeMetaById = new Map();
+
+async function loadYoutubeVideoMeta() {
+  if (youtubeMetaById.size) return youtubeMetaById;
+  if (!youtubeMetaPromise) {
+    youtubeMetaPromise = fetch(`/api/youtube-channel?ts=${Date.now()}`, { cache: "no-store" })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        const videos = Array.isArray(data?.allVideos) ? data.allVideos : Array.isArray(data?.latestVideos) ? data.latestVideos : [];
+        youtubeMetaById = new Map(videos.map((video) => [video.id, video]));
+        return youtubeMetaById;
+      })
+      .catch(() => youtubeMetaById);
+  }
+  return youtubeMetaPromise;
+}
+
+function renderTopicVideoPreview(topic, meta = null) {
+  if (!topic.url) return "";
+  const id = getYoutubeVideoId(topic.url);
+  const thumbnail = meta?.thumbnail || getYoutubeThumbnail(topic);
+  const title = meta?.title || topic.title;
+  const published = topic.publishedAt || meta?.publishedAt || "";
+  const duration = topic.duration || meta?.duration || "";
+  return `
+    <a class="topic-video-preview" href="${topic.url}" target="_blank" rel="noopener" data-video-id="${id}">
+      <span class="topic-video-frame">
+        ${thumbnail ? `<img src="${thumbnail}" alt="Portada de ${title}" loading="lazy">` : `<span class="topic-video-placeholder">${topic.number}</span>`}
+        <span class="topic-video-play" aria-hidden="true"></span>
+        <span class="topic-video-duration" data-video-duration>${formatYoutubeDuration(duration)}</span>
+      </span>
+      <span class="topic-video-copy">
+        <small>Vídeo publicado</small>
+        <strong data-video-title>${title}</strong>
+        <em data-video-date>${formatYoutubeDate(published)}</em>
+      </span>
+    </a>
+  `;
+}
+
+async function hydrateTopicVideoMeta(topic) {
+  const id = getYoutubeVideoId(topic.url);
+  if (!id || !roadmapDetail) return;
+  const meta = (await loadYoutubeVideoMeta()).get(id);
+  const card = roadmapDetail.querySelector(`.topic-video-preview[data-video-id="${id}"]`);
+  if (!meta || !card) return;
+  const img = card.querySelector("img");
+  const title = card.querySelector("[data-video-title]");
+  const date = card.querySelector("[data-video-date]");
+  const duration = card.querySelector("[data-video-duration]");
+  if (img && meta.thumbnail) img.src = meta.thumbnail;
+  if (title && meta.title) title.textContent = meta.title;
+  if (date) date.textContent = formatYoutubeDate(topic.publishedAt || meta.publishedAt);
+  if (duration) duration.textContent = formatYoutubeDuration(topic.duration || meta.duration);
+}
+
+
 function selectRoadmapTopic(topicId) {
   const topic = allRoadmapTopics().find((item) => item.id === topicId);
   if (!topic || !roadmapDetail) return;
@@ -3766,6 +3857,7 @@ function selectRoadmapTopic(topicId) {
       <span class="topic-pill is-${topic.status}">${topic.statusLabel}</span>
       <span>Tema ${topic.number} de 224</span>
     </div>
+    ${renderTopicVideoPreview(topic)}
     <p>${topic.summary}</p>
     <div class="topic-tags">${topic.tags.map((tag) => `<span>${tag}</span>`).join("")}</div>
     <div class="topic-nav-mini">
@@ -3782,6 +3874,7 @@ function selectRoadmapTopic(topicId) {
   p.lastRouteId = topic.routeId;
   saveRoadmapProgress(p);
   renderContinueCard();
+  hydrateTopicVideoMeta(topic);
 }
 
 function toggleTopic(topicId) {
@@ -3961,13 +4054,28 @@ if (roadmapRoutesContainer) {
       openRoadmapRoute(item.dataset.continueRoute || item.dataset.assistantRoute, item.dataset.continueTopic || item.dataset.assistantTopic);
     }
   });
-  document.querySelectorAll("[data-roadmap-scroll]").forEach((button) => button.addEventListener("click", () => {
+  const openRoadmapScreen = () => {
     const panels = document.getElementById("roadmap-panels");
     const videosSection = document.getElementById("videos");
     panels?.classList.add("is-open");
     videosSection?.classList.add("is-roadmap-open");
+    roadmapView.hidden = true;
+    activeRoadmapRoute = null;
     videosSection?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }));
+  };
+
+  const closeRoadmapScreen = () => {
+    const panels = document.getElementById("roadmap-panels");
+    const videosSection = document.getElementById("videos");
+    panels?.classList.remove("is-open");
+    videosSection?.classList.remove("is-roadmap-open");
+    roadmapView.hidden = true;
+    activeRoadmapRoute = null;
+    videosSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  document.querySelectorAll("[data-roadmap-scroll]").forEach((button) => button.addEventListener("click", openRoadmapScreen));
+  document.querySelectorAll("[data-roadmap-chat-back]").forEach((button) => button.addEventListener("click", closeRoadmapScreen));
   assistantForm?.addEventListener("submit", (event) => {
     event.preventDefault();
     const text = assistantInput.value.trim();
@@ -3976,6 +4084,14 @@ if (roadmapRoutesContainer) {
     handleAssistantPrompt(text);
   });
   document.querySelectorAll("[data-assistant-prompt]").forEach((button) => button.addEventListener("click", () => handleAssistantPrompt(button.dataset.assistantPrompt)));
+
+  if (assistantOutput && !assistantOutput.dataset.initialized) {
+    assistantOutput.dataset.initialized = "true";
+    window.setTimeout(() => addAssistantMessage(`
+      <span class="assistant-name">Mantis Assistant</span>
+      <p>Hola, soy la mantis de Ciber Sin Humo. Cuéntame qué sabes, qué te interesa o por dónde te pierdes, y te digo por dónde empezar.</p>
+    `, "bot"), 260);
+  }
 }
 
 const learningRoutes = Object.fromEntries(roadmapRoutes.map((route) => [route.id, {

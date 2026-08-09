@@ -33,15 +33,34 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ configured: false, reason: "channel_not_found" });
     }
 
-    const videosUrl = `${YOUTUBE_API}/search?part=snippet&channelId=${encodeURIComponent(resolvedChannelId)}&order=date&maxResults=12&type=video&key=${encodeURIComponent(key)}`;
+    const videosUrl = `${YOUTUBE_API}/search?part=snippet&channelId=${encodeURIComponent(resolvedChannelId)}&order=date&maxResults=50&type=video&key=${encodeURIComponent(key)}`;
     const videosResponse = await fetch(videosUrl);
     const videosJson = await videosResponse.json();
-    const allVideos = (videosJson.items || []).map((item) => ({
+    let allVideos = (videosJson.items || []).map((item) => ({
       id: item.id?.videoId,
       title: item.snippet?.title || "Vídeo de Ciber Sin Humo",
       url: `https://www.youtube.com/watch?v=${item.id?.videoId}`,
-      thumbnail: item.snippet?.thumbnails?.high?.url || item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || null
+      thumbnail: item.snippet?.thumbnails?.high?.url || item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || null,
+      publishedAt: item.snippet?.publishedAt || null
     })).filter((video) => video.id && video.url && !video.url.endsWith("undefined"));
+
+    if (allVideos.length) {
+      const detailsUrl = `${YOUTUBE_API}/videos?part=contentDetails,snippet&id=${encodeURIComponent(allVideos.map((video) => video.id).join(","))}&key=${encodeURIComponent(key)}`;
+      const detailsResponse = await fetch(detailsUrl);
+      if (detailsResponse.ok) {
+        const detailsJson = await detailsResponse.json();
+        const detailsById = new Map((detailsJson.items || []).map((item) => [item.id, item]));
+        allVideos = allVideos.map((video) => {
+          const details = detailsById.get(video.id);
+          return {
+            ...video,
+            duration: details?.contentDetails?.duration || null,
+            publishedAt: details?.snippet?.publishedAt || video.publishedAt,
+            thumbnail: details?.snippet?.thumbnails?.maxres?.url || details?.snippet?.thumbnails?.high?.url || video.thumbnail,
+          };
+        });
+      }
+    }
 
     const normalizeTitle = (value) => String(value || "")
       .normalize("NFD")
@@ -89,6 +108,7 @@ module.exports = async function handler(req, res) {
       videos: channelData.statistics?.videoCount || null,
       views: channelData.statistics?.viewCount || null,
       latestVideos,
+      allVideos: allVideos.map(addCategory),
       featuredComments
     });
   } catch (error) {
