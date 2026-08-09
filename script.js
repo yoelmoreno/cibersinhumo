@@ -4049,6 +4049,21 @@ function buildAssistantReply(text) {
   return `<span class="assistant-name">Mantis Assistant</span><p>Te leo, pero necesito un poco más de contexto para no mandarte a una ruta al azar. Prueba con algo como: <strong>quiero aprender redes</strong>, <strong>explícame phishing</strong>, <strong>qué es una VPN</strong> o <strong>quiero practicar con herramientas</strong>.</p>`;
 }
 
+function escapeAssistantHtml(value) {
+  return String(value || "").replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[char]));
+}
+
+function addAssistantMessage(content, type = "bot") {
+  if (!assistantOutput) return;
+  const message = document.createElement("div");
+  message.className = `assistant-message assistant-message-${type}`;
+  const avatar = type === "bot"
+    ? `<span class="assistant-avatar assistant-avatar-bot"><img src="logo-cibersinhumo-transparent.png?v=1" alt=""></span>`
+    : `<span class="assistant-avatar assistant-avatar-user" aria-hidden="true">TÚ</span>`;
+  message.innerHTML = `${avatar}<div class="assistant-bubble">${content}</div>`;
+  assistantOutput.appendChild(message);
+  assistantOutput.scrollTop = assistantOutput.scrollHeight;
+}
 function replayAssistantIntro() {
   if (!assistantOutput) return;
   assistantOutput.innerHTML = "";
@@ -4057,13 +4072,24 @@ function replayAssistantIntro() {
 }
 
 function handleAssistantPrompt(text) {
-  addAssistantMessage(`<p>${text}</p>`, "user");
-  addAssistantMessage(buildAssistantReply(text), "bot");
-  const { route, topic } = recommendTopicFromText(text);
-  const progress = getRoadmapProgress();
-  progress.recommendedRouteId = route.id;
-  progress.recommendedTopicId = topic.id;
-  saveRoadmapProgress(progress);
+  const cleanText = String(text || "").trim();
+  if (!cleanText) return;
+  addAssistantMessage(`<p>${escapeAssistantHtml(cleanText)}</p>`, "user");
+  window.setTimeout(() => {
+    try {
+      addAssistantMessage(buildAssistantReply(cleanText), "bot");
+      const recommendation = recommendTopicFromText(cleanText);
+      if (recommendation?.route && recommendation?.topic) {
+        const progress = getRoadmapProgress();
+        progress.recommendedRouteId = recommendation.route.id;
+        progress.recommendedTopicId = recommendation.topic.id;
+        saveRoadmapProgress(progress);
+      }
+    } catch (error) {
+      console.warn("Roadmap assistant fallback", error);
+      addAssistantMessage(`<span class="assistant-name">Mantis Assistant</span><p>Te leo, pero ahora mismo necesito que me lo digas con una palabra clave: redes, phishing, Linux, web, privacidad o herramientas.</p>`, "bot");
+    }
+  }, 160);
 }
 
 function renderExploreVideos() {
@@ -5330,4 +5356,5 @@ function initVideoSectionReplay() {
 letterizeSectionTitle("canal");
 letterizeSectionTitle("videos");
 initVideoSectionReplay();
+
 

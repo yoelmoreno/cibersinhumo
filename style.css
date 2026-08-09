@@ -8295,3 +8295,198 @@ body.roadmap-fullscreen-mode { overflow: hidden; }
   .video-roadmap-section.is-roadmap-open .roadmap-planet-card strong { max-width: 142px; font-size: .86rem; }
   .video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-stats-line { display: none; }
 }
+
+/* Ajuste final videos/chat + roadmap aislado */
+body.roadmap-fullscreen-mode {
+  overflow: hidden !important;
+}
+
+body.roadmap-fullscreen-mode > *:not(#videos):not(.site-header):not(header):not(.navbar) {
+  pointer-events: none;
+}
+
+#videos.video-roadmap-section.is-roadmap-open {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10000 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 50% 52%, rgba(0, 255, 136, .12), transparent 31%),
+    radial-gradient(circle at 18% 28%, rgba(43, 90, 255, .18), transparent 25%),
+    radial-gradient(circle at 82% 68%, rgba(0, 245, 190, .12), transparent 28%),
+    linear-gradient(180deg, #000204, #020707 48%, #000203) !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .section-inner {
+  width: 100vw !important;
+  height: 100dvh !important;
+  max-width: none !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-panels-zone,
+#videos.video-roadmap-section.is-roadmap-open .roadmap-routes {
+  width: 100vw !important;
+  height: 100dvh !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-routes::after {
+  width: clamp(96px, 8vw, 150px) !important;
+  background:
+    radial-gradient(circle at 31% 25%, #fffdf0 0 8%, #fff383 12%, #f6cc3d 28%, #ff8a00 48%, #7e2500 78%) !important;
+  box-shadow: 0 0 52px rgba(255, 191, 0, .86), 0 0 145px rgba(0, 255, 136, .25) !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-mode-topbar {
+  top: 22px !important;
+  left: 22px !important;
+}
+
+#videos.video-roadmap-section.is-roadmap-open .roadmap-chat-back {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 14px;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .roadmap-assistant {
+  max-width: min(980px, calc(100vw - 44px)) !important;
+  margin: 0 auto 18px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-orbit,
+.video-roadmap-section:not(.is-roadmap-open) .assistant-mantis {
+  display: none !important;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-chat {
+  display: grid;
+  gap: 14px;
+  max-width: 980px !important;
+  min-height: 0 !important;
+  padding: clamp(14px, 2vw, 22px) !important;
+  border: 1px solid rgba(0, 255, 136, .10) !important;
+  border-radius: 24px !important;
+  background: linear-gradient(180deg, rgba(0, 14, 9, .32), rgba(0, 7, 5, .46)) !important;
+  box-shadow: 0 20px 70px rgba(0,0,0,.22) !important;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-output {
+  display: grid;
+  gap: 12px;
+  min-height: clamp(210px, 26vh, 300px) !important;
+  max-height: clamp(260px, 34vh, 390px) !important;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.assistant-message {
+  display: grid !important;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 10px;
+  align-items: end;
+  width: min(760px, 92%) !important;
+  max-width: 92% !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.assistant-message-user {
+  justify-self: end;
+  grid-template-columns: minmax(0, 1fr) 38px;
+}
+
+.assistant-message-user .assistant-avatar { order: 2; }
+.assistant-message-user .assistant-bubble { order: 1; background: rgba(0, 255, 136, .12); border-color: rgba(0, 255, 136, .28); color: var(--text-main); }
+
+.assistant-avatar {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(0, 255, 136, .25);
+  border-radius: 50%;
+  background: rgba(0, 8, 5, .78);
+  color: var(--accent);
+  font: 800 .64rem/1 var(--font-mono);
+  overflow: hidden;
+  box-shadow: 0 0 18px rgba(0,255,136,.14);
+}
+
+.assistant-avatar img {
+  width: 78%;
+  height: 78%;
+  object-fit: contain;
+}
+
+.assistant-bubble {
+  min-width: 0;
+  padding: 13px 15px;
+  border: 1px solid rgba(0, 255, 136, .13);
+  border-radius: 18px 18px 18px 6px;
+  background: rgba(0, 10, 7, .68);
+  color: var(--text-muted);
+}
+
+.assistant-message-user .assistant-bubble { border-radius: 18px 18px 6px 18px; }
+.assistant-bubble p { margin: 0 0 8px; }
+.assistant-bubble p:last-child { margin-bottom: 0; }
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-form {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 44px !important;
+  min-height: 52px !important;
+  padding: 6px 7px 6px 16px !important;
+  border: 1px solid rgba(0, 255, 136, .14) !important;
+  border-radius: 999px !important;
+  background: rgba(0, 8, 5, .82) !important;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-form input {
+  min-height: 40px !important;
+  padding: 0 8px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-form button {
+  width: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: grid;
+  place-items: center;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-skip {
+  justify-self: center !important;
+  min-height: 38px !important;
+  padding: 0 18px !important;
+  border-radius: 999px !important;
+  font-size: .76rem !important;
+  background: rgba(0,255,136,.06) !important;
+}
+
+@media (max-width: 760px) {
+  .assistant-message { width: 100% !important; max-width: 100% !important; grid-template-columns: 32px minmax(0, 1fr); }
+  .assistant-message-user { grid-template-columns: minmax(0, 1fr) 32px; }
+  .assistant-avatar { width: 32px; height: 32px; }
+  .assistant-bubble { padding: 12px 13px; }
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-chat { border-radius: 18px !important; }
+}
+
+/* El overlay ya tapa la página; mantenemos los clicks vivos dentro del roadmap. */
+body.roadmap-fullscreen-mode > * {
+  pointer-events: auto !important;
+}
