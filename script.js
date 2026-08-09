@@ -3990,165 +3990,460 @@ function analyzeAssistantIntent(text) {
   return { normalized, words, isGreeting, isThanks, asksHelp, asksDefinition, wantsPractice, wantsVideo };
 }
 
-const assistantDirectMatches = [
-  { route: "casos-reales", topicTerms: ["qr phishing", "qrishing", "codigo qr", "qr"], terms: ["qr phishing", "qrishing", "codigo qr", "qr"] },
-  { route: "casos-reales", topicTerms: ["phishing", "qr phishing"], terms: ["phishing", "correo falso", "email falso", "suplantacion", "madphisher"] },
-  { route: "casos-reales", topicTerms: ["troyano", "robo contrasenas"], terms: ["troyano", "trojano", "trojan", "virus roba", "roba contrasenas", "malware roba", "infecto"] },
-  { route: "casos-reales", topicTerms: ["wannacry"], terms: ["wannacry", "ransomware", "rescate", "cifrado", "archivos bloqueados"] },
-  { route: "fundamentos-ciber", topicTerms: ["spyware"], terms: ["spyware", "camara", "webcam", "keylogger", "teclado", "espiar", "grabando"] },
-  { route: "redes-desde-cero", topicTerms: ["direccion mac", "mac"], terms: ["mac", "direccion mac", "wifi", "tarjeta de red"] },
-  { route: "redes-desde-cero", topicTerms: ["puerto"], terms: ["puerto", "puertos", "nmap", "escaneo de puertos", "servicios"] },
-  { route: "redes-desde-cero", topicTerms: ["direccion ip", "ip publica", "ip privada"], terms: ["ip", "direccion ip", "ip publica", "ip privada", "ipv4", "ipv6"] },
-  { route: "redes-desde-cero", topicTerms: ["vpn"], terms: ["vpn", "tunel", "ocultar ip", "wifi publica"] },
-  { route: "linux-sistemas", topicTerms: ["maquina virtual"], terms: ["maquina virtual", "maquinas virtuales", "virtualizacion", "virtualbox", "vmware"] },
-  { route: "linux-sistemas", topicTerms: ["comandos basicos", "terminal"], terms: ["linux", "kali", "terminal", "bash", "comandos", "permisos", "sudo"] },
-  { route: "hacking-pentesting", topicTerms: ["osint"], terms: ["osint", "metadatos", "shodan", "investigar", "huella digital"] },
-  { route: "hacking-pentesting", topicTerms: ["white hat", "black hat", "grey hat", "green hat"], terms: ["sombreros", "white hat", "black hat", "grey hat", "green hat", "red team", "blue team"] },
-  { route: "como-funciona-web", topicTerms: ["cookies"], terms: ["cookie", "cookies", "anuncios", "rastreo"] },
-  { route: "casos-reales", topicTerms: ["deep web", "onion"], terms: ["deep web", "dark web", "tor", "onion"] },
-  { route: "como-funciona-web", topicTerms: ["pagina web", "servidor web", "http"], terms: ["web", "pagina web", "internet", "http", "https", "navegador", "servidor", "api"] },
-];
+const assistantKnowledgeState = {
+  unknown: 0,
+  uncertain: 1,
+  beginner: 2,
+  known: 3,
+  confident: 4,
+};
+const assistantProfileStorageKey = "ciber-sin-humo-knowledge-profile";
+let assistantLastDecision = null;
+let assistantPendingGoal = null;
+let assistantPendingQuestion = null;
 
-function findTopicByTerms(routeId, terms = [], preferPublished = false) {
-  const route = roadmapRoutes.find((item) => item.id === routeId) || roadmapRoutes[0];
-  const normalizedTerms = terms.map(normalizeRoadmapText).filter(Boolean);
-  const topics = preferPublished ? route.topics.filter((topic) => topic.status === "published") : route.topics;
-  const pool = topics.length ? topics : route.topics;
-  const scored = pool.map((topic) => {
-    const text = normalizeRoadmapText([topic.title, topic.summary, ...(topic.tags || [])].join(" "));
-    const score = normalizedTerms.reduce((total, term) => total + (text.includes(term) ? 20 + term.length : 0), 0) + (topic.status === "published" ? 3 : 0);
-    return { topic, score };
-  }).sort((a, b) => b.score - a.score);
-  return scored[0]?.score > 0 ? scored[0].topic : (pool.find((topic) => topic.status === "published") || route.topics[0]);
+const assistantConceptAliases = {
+  computer_basics: ["informatica", "ordenador", "hardware", "software", "base", "desde cero"],
+  operating_systems: ["sistema operativo", "windows", "linux", "macos"],
+  linux: ["linux", "kali", "parrot", "ubuntu", "debian"],
+  terminal: ["terminal", "consola", "bash", "shell", "comandos"],
+  virtual_machines: ["maquina virtual", "maquinas virtuales", "virtualbox", "vmware", "virtualizacion"],
+  networking: ["red", "redes", "networking", "internet"],
+  ip: ["ip", "direccion ip", "ipv4", "ipv6"],
+  router: ["router", "gateway", "puerta de enlace"],
+  mac: ["mac", "direccion mac"],
+  ports: ["puerto", "puertos", "servicio", "servicios"],
+  tcp_udp: ["tcp", "udp", "tcp udp", "tcp/udp"],
+  dns: ["dns", "dominio", "dominios"],
+  vpn: ["vpn", "red privada virtual"],
+  http: ["http", "https"],
+  web_basics: ["web", "pagina web", "navegador", "servidor", "cliente servidor"],
+  http_requests: ["peticion http", "peticiones http", "request", "cabeceras"],
+  get_post: ["get", "post", "get post"],
+  cookies: ["cookie", "cookies"],
+  sessions: ["sesion", "sesiones", "login"],
+  sql: ["sql", "base de datos", "bases de datos"],
+  cybersecurity: ["ciber", "ciberseguridad", "seguridad informatica"],
+  phishing: ["phishing", "qr phishing", "qrishing", "correo falso", "suplantacion"],
+  malware: ["malware", "virus", "troyano", "spyware", "keylogger", "ransomware"],
+  pentesting: ["pentesting", "hacking etico", "nmap", "wireshark", "john", "burp", "kali"],
+  osint: ["osint", "metadatos", "shodan", "investigar"],
+  web_hacking: ["hacking web", "sql injection", "xss", "csrf", "owasp", "burp suite"],
+};
+
+const assistantTopicMetadata = {
+  "topic-1": { conceptsTaught: ["computer_basics"], prerequisites: [], difficulty: 0 },
+  "topic-3": { conceptsTaught: ["operating_systems"], prerequisites: ["computer_basics"], difficulty: 0 },
+  "topic-16": { conceptsTaught: ["linux"], prerequisites: ["operating_systems"], difficulty: 1 },
+  "topic-20": { conceptsTaught: ["terminal"], prerequisites: ["linux"], difficulty: 1 },
+  "topic-26": { conceptsTaught: ["terminal", "linux"], prerequisites: ["linux"], difficulty: 1 },
+  "topic-41": { conceptsTaught: ["virtual_machines"], prerequisites: ["operating_systems"], difficulty: 1 },
+  "topic-50": { conceptsTaught: ["networking"], prerequisites: ["computer_basics"], difficulty: 1 },
+  "topic-53": { conceptsTaught: ["networking", "ip"], prerequisites: ["computer_basics"], difficulty: 1 },
+  "topic-54": { conceptsTaught: ["ip"], prerequisites: ["ip"], difficulty: 1 },
+  "topic-55": { conceptsTaught: ["ip"], prerequisites: ["ip"], difficulty: 1 },
+  "topic-56": { conceptsTaught: ["mac", "networking"], prerequisites: ["networking"], difficulty: 1 },
+  "topic-58": { conceptsTaught: ["router"], prerequisites: ["ip"], difficulty: 1 },
+  "topic-67": { conceptsTaught: ["web_basics"], prerequisites: ["networking"], difficulty: 1 },
+  "topic-69": { conceptsTaught: ["ports"], prerequisites: ["ip", "router"], difficulty: 2 },
+  "topic-71": { conceptsTaught: ["tcp_udp"], prerequisites: ["ports"], difficulty: 2 },
+  "topic-75": { conceptsTaught: ["dns"], prerequisites: ["ip"], difficulty: 2 },
+  "topic-80": { conceptsTaught: ["vpn"], prerequisites: ["ip", "web_basics"], difficulty: 2 },
+  "topic-85": { conceptsTaught: ["web_basics"], prerequisites: ["networking"], difficulty: 2 },
+  "topic-88": { conceptsTaught: ["web_basics"], prerequisites: ["networking"], difficulty: 2 },
+  "topic-89": { conceptsTaught: ["dns"], prerequisites: ["ip"], difficulty: 2 },
+  "topic-91": { conceptsTaught: ["web_basics"], prerequisites: ["dns"], difficulty: 2 },
+  "topic-92": { conceptsTaught: ["http"], prerequisites: ["web_basics", "dns"], difficulty: 2 },
+  "topic-96": { conceptsTaught: ["http_requests"], prerequisites: ["http"], difficulty: 2 },
+  "topic-97": { conceptsTaught: ["get_post"], prerequisites: ["http_requests"], difficulty: 2 },
+  "topic-100": { conceptsTaught: ["html"], prerequisites: ["web_basics"], difficulty: 2 },
+  "topic-102": { conceptsTaught: ["javascript"], prerequisites: ["html"], difficulty: 2 },
+  "topic-103": { conceptsTaught: ["cookies"], prerequisites: ["http"], difficulty: 2 },
+  "topic-104": { conceptsTaught: ["sessions"], prerequisites: ["cookies", "http"], difficulty: 2 },
+  "topic-175": { conceptsTaught: ["sql"], prerequisites: ["web_basics"], difficulty: 3 },
+  "topic-176": { conceptsTaught: ["sql_injection", "web_hacking"], prerequisites: ["http_requests", "get_post", "sql"], difficulty: 4 },
+  "topic-122": { conceptsTaught: ["phishing", "cybersecurity"], prerequisites: [], difficulty: 1 },
+  "topic-123": { conceptsTaught: ["social_engineering", "cybersecurity"], prerequisites: ["phishing"], difficulty: 1 },
+  "topic-124": { conceptsTaught: ["trojan", "malware"], prerequisites: ["cybersecurity"], difficulty: 1 },
+  "topic-125": { conceptsTaught: ["spyware", "malware"], prerequisites: ["cybersecurity"], difficulty: 1 },
+  "topic-126": { conceptsTaught: ["keylogger", "malware"], prerequisites: ["spyware"], difficulty: 1 },
+  "topic-127": { conceptsTaught: ["ransomware", "malware"], prerequisites: ["malware"], difficulty: 2 },
+  "topic-128": { conceptsTaught: ["ddos"], prerequisites: ["networking", "ip"], difficulty: 2 },
+  "topic-129": { conceptsTaught: ["mitm"], prerequisites: ["networking", "http"], difficulty: 2 },
+  "topic-147": { conceptsTaught: ["pentesting", "cyber_roles"], prerequisites: ["cybersecurity"], difficulty: 2 },
+  "topic-152": { conceptsTaught: ["osint"], prerequisites: ["web_basics"], difficulty: 2 },
+  "topic-154": { conceptsTaught: ["network_scanning", "pentesting"], prerequisites: ["ports", "tcp_udp"], difficulty: 3 },
+  "topic-155": { conceptsTaught: ["nmap", "pentesting"], prerequisites: ["network_scanning", "ports", "tcp_udp"], difficulty: 3 },
+  "topic-159": { conceptsTaught: ["wireshark"], prerequisites: ["tcp_udp", "dns"], difficulty: 3 },
+  "topic-173": { conceptsTaught: ["burp"], prerequisites: ["http_requests", "get_post"], difficulty: 3 },
+  "topic-192": { conceptsTaught: ["deep_web"], prerequisites: ["web_basics"], difficulty: 2 },
+  "topic-193": { conceptsTaught: ["ransomware"], prerequisites: ["malware"], difficulty: 2 },
+  "topic-195": { conceptsTaught: ["phishing"], prerequisites: ["phishing"], difficulty: 2 },
+  "topic-196": { conceptsTaught: ["trojan", "malware"], prerequisites: ["trojan"], difficulty: 2 },
+  "topic-197": { conceptsTaught: ["incident_analysis"], prerequisites: ["malware", "cybersecurity"], difficulty: 2 },
+  "topic-211": { conceptsTaught: ["cyber_roles"], prerequisites: ["cybersecurity"], difficulty: 2 },
+};
+
+const assistantGoalTargets = {
+  general_learning: ["topic-1"],
+  continue_learning: [],
+  linux: ["topic-26"],
+  networking: ["topic-53"],
+  web: ["topic-92"],
+  cybersecurity: ["topic-122"],
+  pentesting: ["topic-155"],
+  web_hacking: ["topic-176"],
+  sql_injection: ["topic-176"],
+  phishing: ["topic-122"],
+  malware: ["topic-124"],
+  osint: ["topic-152"],
+  vpn: ["topic-80"],
+  linux_tools: ["topic-26"],
+  virtual_machines: ["topic-41"],
+  ip: ["topic-53"],
+  mac: ["topic-56"],
+  ports: ["topic-69"],
+  dns: ["topic-75"],
+  http: ["topic-92"],
+  cookies: ["topic-103"],
+  trojan: ["topic-124"],
+  spyware: ["topic-125"],
+  keylogger: ["topic-126"],
+  ransomware: ["topic-127"],
+  ddos: ["topic-128"],
+  mitm: ["topic-129"],
+  deep_web: ["topic-192"],
+};
+
+const assistantDiagnosticBlocks = {
+  networking: ["ip", "router", "ports", "tcp_udp", "dns"],
+  web: ["web_basics", "dns", "http", "http_requests", "get_post", "cookies", "sessions", "sql"],
+  pentesting: ["linux", "terminal", "ip", "router", "ports", "tcp_udp", "dns"],
+  linux: ["linux", "terminal", "virtual_machines"],
+};
+
+const assistantSpecificGoals = new Set([
+  "virtual_machines", "ip", "mac", "ports", "dns", "http", "cookies", "sql_injection",
+  "phishing", "vpn", "trojan", "spyware", "keylogger", "ransomware", "ddos", "mitm", "osint", "deep_web"
+]);
+
+function loadAssistantProfile() {
+  try {
+    return JSON.parse(localStorage.getItem(assistantProfileStorageKey) || "{}");
+  } catch (error) {
+    return {};
+  }
 }
 
-function findDirectAssistantMatch(intent) {
-  const scored = assistantDirectMatches.map((match) => {
-    const score = assistantTextScore(intent.normalized, match.terms);
-    return { ...match, score };
-  }).sort((a, b) => b.score - a.score);
-  const best = scored[0];
-  if (!best || best.score <= 0) return null;
-  const route = roadmapRoutes.find((item) => item.id === best.route) || roadmapRoutes[0];
-  const topic = findTopicByTerms(route.id, best.topicTerms, intent.wantsVideo);
-  return { route, topic, score: best.score + 30 };
-}
-const assistantConcepts = [
-  { key: "phishing", route: "casos-reales", terms: ["phishing", "correo falso", "email falso", "suplantacion", "qrishing", "qr"], answer: "El phishing es un engaño para que entregues datos, contraseñas o dinero creyendo que hablas con una entidad real. Si aparece QR, urgencia, inicio de sesión raro o un enlace extraño, toca parar y verificar." },
-  { key: "troyano", route: "casos-reales", terms: ["troyano", "trojano", "trojan", "virus", "malware", "infectado", "infeccion", "roba contrasenas"], answer: "Un troyano es malware disfrazado de algo normal. El peligro está en ejecutarlo tú mismo pensando que es seguro: puede robar datos, abrir una puerta trasera o descargar más amenazas." },
-  { key: "spyware", route: "fundamentos-ciber", terms: ["spyware", "camara", "webcam", "keylogger", "teclado", "espiar", "pantalla", "grabando"], answer: "El spyware busca vigilarte: cámara, teclado, navegación o pantalla. Para entenderlo bien conviene ver permisos, descargas sospechosas y señales de comportamiento raro." },
-  { key: "ransomware", route: "casos-reales", terms: ["ransomware", "rescate", "cifrado", "archivos bloqueados", "encriptado"], answer: "El ransomware cifra archivos y pide dinero. La defensa real no es una herramienta mágica: copias de seguridad, actualizaciones y no ejecutar adjuntos dudosos." },
-  { key: "ip", route: "redes-desde-cero", terms: ["ip", "direccion ip", "ip publica", "ip privada", "localizacion ip"], answer: "Una IP identifica un dispositivo o una red. La pública es la que sale a Internet; la privada funciona dentro de tu red local." },
-  { key: "mac", route: "redes-desde-cero", terms: ["mac", "direccion mac", "wifi", "tarjeta de red"], answer: "La MAC identifica una interfaz de red dentro de una red local. No es lo mismo que la IP: la IP sirve para enrutar, la MAC para comunicar dentro del enlace local." },
-  { key: "puertos", route: "redes-desde-cero", terms: ["puerto", "puertos", "80", "443", "servicios", "nmap", "escaneo de puertos"], answer: "Los puertos son entradas lógicas donde un equipo ofrece servicios. Entenderlos es clave antes de escanear con Nmap o interpretar qué hay expuesto." },
-  { key: "dns", route: "redes-desde-cero", terms: ["dns", "dominio", "url", "nombre de dominio"], answer: "DNS traduce nombres como cibersinhumo.es a direcciones IP. Es una pieza básica para entender cómo navegas y cómo se investigan problemas de red." },
-  { key: "vpn", route: "como-funciona-web", terms: ["vpn", "tunel", "privacidad", "ocultar ip", "wifi publica"], answer: "Una VPN cifra tu conexión hasta un servidor intermedio y oculta tu IP real frente a muchas webs. Ayuda, pero no te hace anónimo ni evita que caigas en phishing." },
-  { key: "cookies", route: "como-funciona-web", terms: ["cookie", "cookies", "anuncios", "rastreo", "publicidad"], answer: "Las cookies guardan información en el navegador. Algunas son necesarias y otras permiten recordar sesiones, medir visitas o perfilar publicidad." },
-  { key: "web", route: "como-funciona-web", terms: ["web", "internet", "http", "https", "navegador", "servidor", "pagina web", "api", "javascript"], answer: "La web mezcla navegador, DNS, servidores, HTTP/HTTPS, HTML, CSS y JavaScript. Entender esa cadena te prepara para ciber web y análisis real." },
-  { key: "deep web", route: "casos-reales", terms: ["deep web", "dark web", "tor", "internet oculta"], answer: "La Deep Web no es magia: son páginas no indexadas por buscadores. La parte importante es distinguir mito, privacidad, indexación y riesgos reales." },
-  { key: "linux", route: "linux-sistemas", terms: ["linux", "kali", "terminal", "bash", "comandos", "permisos", "sistema", "paquetes"], answer: "Linux es una base muy útil en ciber porque te da control sobre procesos, red, permisos y herramientas. Antes de correr herramientas, conviene entender la terminal." },
-  { key: "maquinas virtuales", route: "linux-sistemas", terms: ["maquina virtual", "maquinas virtuales", "virtualizacion", "virtualbox", "vmware", "hypervisor", "vm", "laboratorio virtual", "snapshots"], answer: "Una máquina virtual es un ordenador simulado dentro de tu ordenador. Te permite practicar con Linux o Kali sin tocar tu sistema principal. Lo clave: recursos, snapshots y red NAT/bridge." },
-  { key: "wireshark", route: "hacking-pentesting", terms: ["wireshark", "paquetes", "trafico", "captura", "sniffer"], answer: "Wireshark sirve para ver paquetes de red. Para aprovecharlo, primero entiende IP, DNS, puertos y HTTP; después ya puedes interpretar tráfico real." },
-  { key: "osint", route: "hacking-pentesting", terms: ["osint", "metadatos", "investigar", "shodan", "huella digital", "informacion publica"], answer: "OSINT es investigar usando fuentes abiertas: buscadores, metadatos, registros públicos o herramientas como Shodan. La clave es hacerlo con método y ética." },
-  { key: "red team", route: "defensa-siguiente-paso", terms: ["red team", "blue team", "sombreros", "white hat", "black hat", "roles", "defensa", "soc", "siem"], answer: "Los roles de ciber ayudan a entender quién ataca, quién defiende y quién audita. Es una buena forma de ordenar el mapa mental antes de elegir camino." },
-  { key: "pentesting", route: "hacking-pentesting", terms: ["pentesting", "hacking etico", "nmap", "john", "fuerza bruta", "burp", "laboratorio", "practica guiada"], answer: "El pentesting consiste en probar la seguridad de forma autorizada. Primero base de redes y sistemas; después herramientas como Nmap, Wireshark, Burp o John con laboratorios controlados." },
-  { key: "hacking web", route: "hacking-web", terms: ["sql injection", "xss", "csrf", "burp suite", "owasp", "sesiones", "hacking web"], answer: "El hacking web necesita entender cómo viajan las peticiones, sesiones, cookies y datos. Después entran vulnerabilidades como SQL Injection, XSS o CSRF." },
-];
-
-function assistantTextScore(haystack, terms) {
-  const text = normalizeRoadmapText(haystack);
-  return terms.reduce((score, term) => {
-    const normalizedTerm = normalizeRoadmapText(term);
-    if (!normalizedTerm) return score;
-    if (text.includes(normalizedTerm)) return score + Math.max(4, normalizedTerm.split(/\s+/).length * 3);
-    return score;
-  }, 0);
+function saveAssistantProfile(profile) {
+  try { localStorage.setItem(assistantProfileStorageKey, JSON.stringify(profile)); } catch (error) {}
 }
 
-function rankAssistantRecommendation(input) {
-  const intent = analyzeAssistantIntent(input);
-  const queryWords = intent.words.filter((word) => word.length > 2);
-  const direct = findDirectAssistantMatch(intent);
-  let bestConcept = null;
-  let bestConceptScore = 0;
-
-  assistantConcepts.forEach((concept) => {
-    const score = assistantTextScore(intent.normalized, concept.terms);
-    if (score > bestConceptScore) {
-      bestConcept = concept;
-      bestConceptScore = score;
-    }
-  });
-
-  if (direct) {
-    const matchingConcept = assistantConcepts.find((concept) => concept.route === direct.route.id && assistantTextScore(intent.normalized, concept.terms) > 0) || bestConcept;
-    return {
-      route: direct.route,
-      topic: direct.topic,
-      concept: matchingConcept,
-      confidence: direct.score,
-      exactTopic: true,
-      intent,
-    };
+function setAssistantConcept(profile, concept, state, source = "message") {
+  if (!concept) return;
+  profile.concepts = profile.concepts || {};
+  const current = profile.concepts[concept];
+  const next = { state, source, updatedAt: Date.now() };
+  if (!current || source === "message" || source === "diagnostic" || assistantKnowledgeState[state] >= assistantKnowledgeState[current.state || "unknown"]) {
+    profile.concepts[concept] = next;
   }
+}
 
-  const candidates = allRoadmapTopics().map((topic) => {
-    const route = roadmapRoutes.find((item) => item.id === topic.routeId) || roadmapRoutes[0];
-    const topicText = [topic.title, topic.summary, topic.routeTitle, route.description, topic.statusLabel, ...(topic.tags || [])].join(" ");
-    const normalizedTopicText = normalizeRoadmapText(topicText);
-    let score = 0;
-    queryWords.forEach((word) => {
-      if (normalizedTopicText.includes(word)) score += word.length > 5 ? 5 : 2;
-    });
-    if (bestConcept?.route === route.id) score += bestConceptScore + 10;
-    if (bestConcept && assistantTextScore(topicText, [bestConcept.key, ...bestConcept.terms])) score += 18;
-    if (intent.wantsPractice && /practica|laboratorio|herramienta|nmap|wireshark|kali|linux|puertos|john|burp/i.test(topicText)) score += 7;
-    if (intent.wantsVideo && topic.status === "published") score += 5;
-    if (topic.status === "published") score += 2;
-    return { route, topic, score };
-  }).sort((a, b) => b.score - a.score);
+function getAssistantConceptState(profile, concept) {
+  return profile?.concepts?.[concept]?.state || "unknown";
+}
 
-  let recommendation = candidates[0];
-  if (!recommendation || recommendation.score <= 0) {
-    const fallbackRouteId = intent.wantsPractice ? "hacking-pentesting" : "informatica-base";
-    return { ...getRouteRecommendation(fallbackRouteId), concept: null, confidence: 0, exactTopic: false, intent };
-  }
+function assistantConceptKnown(profile, concept) {
+  const state = getAssistantConceptState(profile, concept);
+  return assistantKnowledgeState[state] >= assistantKnowledgeState.known;
+}
 
-  if (bestConceptScore > 0 && bestConcept?.route) {
-    const conceptRoute = roadmapRoutes.find((item) => item.id === bestConcept.route);
-    if (conceptRoute && recommendation.route.id !== conceptRoute.id && recommendation.score < bestConceptScore + 24) {
-      recommendation = { route: conceptRoute, topic: findTopicByTerms(conceptRoute.id, [bestConcept.key, ...bestConcept.terms], intent.wantsVideo), score: bestConceptScore + 24 };
-    }
-  }
-
-  if (intent.wantsVideo && recommendation.topic.status !== "published") {
-    const publishedAlternative = candidates.find((candidate) => candidate.route.id === recommendation.route.id && candidate.topic.status === "published")
-      || candidates.find((candidate) => candidate.topic.status === "published" && candidate.score > 8);
-    if (publishedAlternative) recommendation = publishedAlternative;
-  }
-
+function getRoadmapNode(topicId) {
+  const topic = allRoadmapTopics().find((item) => item.id === topicId);
+  if (!topic) return null;
+  const route = roadmapRoutes.find((item) => item.id === topic.routeId) || roadmapRoutes[0];
+  const meta = assistantTopicMetadata[topic.id] || {};
   return {
-    route: recommendation.route,
-    topic: recommendation.topic,
-    concept: bestConcept,
-    confidence: recommendation.score,
-    exactTopic: bestConceptScore > 0 || recommendation.score >= 8,
-    intent,
+    ...topic,
+    route,
+    sectionId: route.id,
+    sectionTitle: route.title,
+    conceptsTaught: meta.conceptsTaught || inferConceptsFromTopic(topic),
+    prerequisites: meta.prerequisites || [],
+    difficulty: meta.difficulty ?? (Number(String(topic.level || "0").replace(/\D/g, "")) || 1),
   };
 }
 
-function getRouteRecommendation(routeId, preferredTopicKey = "") {
-  const route = roadmapRoutes.find((item) => item.id === routeId) || roadmapRoutes[0];
-  const normalizedKey = normalizeRoadmapText(preferredTopicKey);
-  const topic = route.topics.find((item) => item.status === "published" && normalizeRoadmapText([item.title, item.summary, ...(item.tags || [])].join(" ")).includes(normalizedKey))
-    || route.topics.find((item) => item.status === "published")
-    || route.topics[0];
-  return { route, topic };
+function allRoadmapNodes() {
+  return allRoadmapTopics().map((topic) => getRoadmapNode(topic.id)).filter(Boolean);
 }
 
-function recommendTopicFromText(text) {
-  const recommendation = rankAssistantRecommendation(text);
-  return { route: recommendation.route, topic: recommendation.topic };
+function inferConceptsFromTopic(topic) {
+  const text = normalizeRoadmapText([topic.title, topic.summary, ...(topic.tags || [])].join(" "));
+  return Object.entries(assistantConceptAliases)
+    .filter(([, aliases]) => aliases.some((alias) => text.includes(normalizeRoadmapText(alias))))
+    .map(([concept]) => concept);
+}
+
+function findTopicTeachingConcept(concept, preferPublished = false) {
+  const nodes = allRoadmapNodes().filter((node) => node.conceptsTaught.includes(concept));
+  const published = nodes.filter((node) => node.status === "published");
+  if (preferPublished && published.length) return published[0];
+  return nodes[0] || null;
+}
+
+function topicIsAvailable(node) {
+  return node?.status === "published" && !!node.url;
+}
+
+function transitivePrerequisitesForNode(node, seen = new Set()) {
+  const ordered = [];
+  (node?.prerequisites || []).forEach((concept) => {
+    if (seen.has(concept)) return;
+    seen.add(concept);
+    const teachingNode = findTopicTeachingConcept(concept, false);
+    transitivePrerequisitesForNode(teachingNode, seen).forEach((item) => {
+      if (!ordered.includes(item)) ordered.push(item);
+    });
+    ordered.push(concept);
+  });
+  return ordered;
+}
+
+function validateAssistantKnowledgeGraph() {
+  const ids = new Set();
+  const duplicateIds = [];
+  allRoadmapTopics().forEach((topic) => { if (ids.has(topic.id)) duplicateIds.push(topic.id); ids.add(topic.id); });
+  const missingPrerequisites = [];
+  Object.entries(assistantTopicMetadata).forEach(([topicId, meta]) => {
+    if (!getRoadmapNode(topicId)) missingPrerequisites.push(`topic_missing:${topicId}`);
+    (meta.prerequisites || []).forEach((concept) => {
+      if (!findTopicTeachingConcept(concept, false) && concept !== "html" && concept !== "javascript" && concept !== "sql_injection") missingPrerequisites.push(`${topicId}:${concept}`);
+    });
+  });
+  return { duplicateIds, missingPrerequisites };
+}
+
+function parseAssistantIntent(input) {
+  const normalized = normalizeRoadmapText(input);
+  const words = normalized.split(/\s+/).filter(Boolean);
+  const absoluteBeginner = /\b(no se nada|no tengo ni idea|desde cero|desde 0|empiezo de cero|empiezo desde cero|completamente nuevo|principiante absoluto|nunca he estudiado|no se absolutamente nada)\b/.test(normalized);
+  const asksDefinition = /\b(que es|que son|explicame|explica|como funciona|para que sirve)\b/.test(normalized);
+  const learningRequest = /\b(quiero aprender|quiero empezar|aprender|estudiar|meterme|practicar|me gustaria aprender)\b/.test(normalized);
+  const continueLearning = /\b(por donde sigo|continuar|seguir|siguiente|que veo ahora)\b/.test(normalized);
+  const isGreeting = /^(hola|buenas|hey|ey|que tal)/.test(normalized);
+  const isThanks = /\b(gracias|perfecto|vale gracias)\b/.test(normalized);
+  let goal = "general_learning";
+  const goalChecks = [
+    ["sql_injection", ["sql injection", "sqli", "inyeccion sql"]],
+    ["virtual_machines", ["maquina virtual", "maquinas virtuales", "virtualbox", "vmware", "virtualizacion"]],
+    ["web_hacking", ["hacking web", "burp", "xss", "csrf", "owasp"]],
+    ["pentesting", ["pentesting", "hacking etico", "nmap", "wireshark", "john", "kali"]],
+    ["mac", ["direccion mac", "mac"]],
+    ["ports", ["puerto", "puertos"]],
+    ["dns", ["dns", "dominio"]],
+    ["networking", ["redes", "networking", "ip", "tcp", "udp", "router"]],
+    ["linux", ["linux", "terminal", "bash", "comandos", "kali"]],
+    ["cookies", ["cookie", "cookies"]],
+    ["http", ["http", "https"]],
+    ["web", ["web", "navegador", "servidor", "api"]],
+    ["phishing", ["phishing", "qrishing"]],
+    ["trojan", ["troyano", "trojan"]],
+    ["spyware", ["spyware"]],
+    ["keylogger", ["keylogger"]],
+    ["ransomware", ["ransomware"]],
+    ["ddos", ["ddos", "denegacion de servicio"]],
+    ["mitm", ["mitm", "man in the middle", "intermediario"]],
+    ["deep_web", ["deep web", "dark web", "onion"]],
+    ["malware", ["malware", "virus"]],
+    ["osint", ["osint", "metadatos", "shodan"]],
+    ["vpn", ["vpn"]],
+  ];
+  for (const [candidate, aliases] of goalChecks) {
+    if (aliases.some((alias) => normalized.includes(normalizeRoadmapText(alias)))) { goal = candidate; break; }
+  }
+  if (continueLearning) goal = "continue_learning";
+  return { normalized, words, absoluteBeginner, asksDefinition, learningRequest, continueLearning, isGreeting, isThanks, goal };
+}
+
+function conceptsInText(normalized) {
+  const found = new Set();
+  Object.entries(assistantConceptAliases).forEach(([concept, aliases]) => {
+    if (aliases.some((alias) => normalized.includes(normalizeRoadmapText(alias)))) found.add(concept);
+  });
+  if (found.has("ports") || found.has("tcp_udp") || found.has("dns") || found.has("ip")) found.add("networking");
+  if (found.has("http") || found.has("cookies") || found.has("sessions")) found.add("web_basics");
+  return [...found];
+}
+
+function updateProfileFromText(profile, input) {
+  const normalized = normalizeRoadmapText(input);
+  const sentences = normalized.split(/[.!?;]| pero | aunque | y /).map((item) => item.trim()).filter(Boolean);
+  const globalKnown = /\b(se|controlo|entiendo|tengo claro|domino|manejo|conozco)\b/.test(normalized);
+  const globalUncertain = /\b(me suena|mas o menos|no se si|dudo|regular)\b/.test(normalized);
+  const globalUnknown = /\b(no se|no entiendo|ni idea|nunca he usado|no conozco|no controlo|no tengo claro)\b/.test(normalized);
+
+  sentences.forEach((sentence) => {
+    const concepts = conceptsInText(sentence);
+    if (!concepts.length) return;
+    const hasUnknown = /\b(no se|no entiendo|ni idea|nunca he usado|no conozco|no controlo|no tengo claro)\b/.test(sentence);
+    const hasUncertain = /\b(me suena|mas o menos|no se si|dudo|regular)\b/.test(sentence);
+    const hasKnown = /\b(se|controlo|entiendo|tengo claro|domino|manejo|conozco)\b/.test(sentence);
+    concepts.forEach((concept) => {
+      if (hasUnknown) setAssistantConcept(profile, concept, "unknown", "message");
+      else if (hasUncertain) setAssistantConcept(profile, concept, "uncertain", "message");
+      else if (hasKnown) setAssistantConcept(profile, concept, "known", "message");
+      else if (/\b(he usado|uso|he probado)\b/.test(sentence)) setAssistantConcept(profile, concept, "beginner", "message");
+    });
+  });
+
+  if (globalUnknown && /\b(redes|networking)\b/.test(normalized)) assistantDiagnosticBlocks.networking.forEach((concept) => setAssistantConcept(profile, concept, "unknown", "message"));
+  if (globalUnknown && /\b(linux|terminal|kali)\b/.test(normalized)) ["linux", "terminal"].forEach((concept) => setAssistantConcept(profile, concept, "unknown", "message"));
+  if (globalKnown && /\b(redes|networking)\b/.test(normalized) && !/puerto/.test(normalized)) ["networking", "ip", "router"].forEach((concept) => setAssistantConcept(profile, concept, "known", "message"));
+  if (globalKnown && /\b(linux|terminal)\b/.test(normalized)) ["computer_basics", "operating_systems", "linux", "terminal"].forEach((concept) => setAssistantConcept(profile, concept, "known", "message"));
+  if (globalUncertain && /\b(redes|networking)\b/.test(normalized)) ["networking", "ports", "tcp_udp", "dns"].forEach((concept) => setAssistantConcept(profile, concept, "uncertain", "message"));
+  return profile;
+}
+
+function applyProgressToProfile(profile) {
+  const progress = getRoadmapProgress();
+  (progress.completed || []).forEach((topicId) => {
+    const node = getRoadmapNode(topicId);
+    (node?.conceptsTaught || []).forEach((concept) => {
+      if (getAssistantConceptState(profile, concept) === "unknown") setAssistantConcept(profile, concept, "beginner", "progress");
+    });
+  });
+  return profile;
+}
+
+function firstPublishedOrPrepared(node) {
+  return node || null;
+}
+
+function targetNodesForGoal(goal) {
+  const ids = assistantGoalTargets[goal] || assistantGoalTargets.general_learning;
+  return ids.map(getRoadmapNode).filter(Boolean);
+}
+
+function missingPrerequisitesForNode(node, profile) {
+  const prereqs = transitivePrerequisitesForNode(node);
+  return prereqs.filter((concept) => !assistantConceptKnown(profile, concept));
+}
+
+function chooseDiagnosticQuestion(goal, profile) {
+  if (goal === "pentesting") {
+    if (!assistantConceptKnown(profile, "linux") && getAssistantConceptState(profile, "linux") === "unknown") {
+      return { type: "single", concept: "linux", text: "Perfecto. Antes de decirte por dónde empezar: ¿has usado Linux o una terminal alguna vez?" };
+    }
+    const unknownNetworking = assistantDiagnosticBlocks.networking.filter((concept) => !assistantConceptKnown(profile, concept));
+    if (unknownNetworking.length >= 3) return { type: "checklist", block: "networking", text: "Para no mandarte demasiado adelante, marca lo que tengas claro de redes." };
+  }
+  if (goal === "web_hacking" || goal === "sql_injection") {
+    const unknownWeb = assistantDiagnosticBlocks.web.filter((concept) => !assistantConceptKnown(profile, concept));
+    if (unknownWeb.length >= 4) return { type: "checklist", block: "web", text: "Antes de hacking web, necesito ubicar tu base de Web. Marca lo que controles." };
+  }
+  if (goal === "networking" && !assistantConceptKnown(profile, "ip") && getAssistantConceptState(profile, "networking") !== "unknown") {
+    return { type: "single", concept: "networking", text: "¿Quieres empezar redes desde cero o ya tienes claro qué es una IP?" };
+  }
+  return null;
+}
+
+function continueRecommendation(profile) {
+  const progress = getRoadmapProgress();
+  if (progress.recommendedTopicId) {
+    const current = getRoadmapNode(progress.recommendedTopicId);
+    const route = roadmapRoutes.find((item) => item.id === current?.routeId);
+    const next = route?.topics.find((topic) => topic.number > current.number && topic.status === "published");
+    if (next) return buildRecommendationResult(getRoadmapNode(next.id), "progress_next", 0.82, []);
+  }
+  return buildRecommendationResult(getRoadmapNode("topic-1"), "progress_empty", 0.55, []);
+}
+
+function buildRecommendationResult(node, reason, confidence, missing = [], targetNode = null) {
+  const safeNode = firstPublishedOrPrepared(node) || getRoadmapNode("topic-1");
+  const route = roadmapRoutes.find((item) => item.id === safeNode.routeId) || safeNode.route;
+  const nextNodeIds = route.topics.filter((topic) => topic.number > safeNode.number).slice(0, 2).map((topic) => topic.id);
+  return {
+    type: "recommendation",
+    recommendedNodeId: safeNode.id,
+    originalNodeId: node?.id || safeNode.id,
+    sectionId: route.id,
+    reason,
+    nextNodeIds,
+    confidence,
+    missingPrerequisites: missing,
+    targetNodeId: targetNode?.id || safeNode.id,
+    topic: safeNode,
+    route,
+    availability: topicIsAvailable(safeNode) ? "published" : safeNode.status,
+  };
+}
+
+function makeAssistantDecision(input, options = {}) {
+  const profile = applyProgressToProfile(options.profile || loadAssistantProfile());
+  const intent = parseAssistantIntent(input);
+  updateProfileFromText(profile, input);
+  if (intent.isGreeting && intent.words.length <= 4) return { type: "smalltalk", profile, intent };
+  if (intent.isThanks && intent.words.length <= 5) return { type: "thanks", profile, intent };
+  if (/\b(eso ya me lo se|ya me lo se|esto ya lo se|ya lo entiendo)\b/.test(intent.normalized) && assistantLastDecision?.topic) {
+    (assistantLastDecision.topic.conceptsTaught || []).forEach((concept) => setAssistantConcept(profile, concept, "known", "message"));
+    saveAssistantProfile(profile);
+    return makeAssistantDecision(assistantPendingGoal ? `quiero aprender ${assistantPendingGoal}` : "por donde sigo", { profile });
+  }
+  if (/\b(necesito empezar antes|empieza antes|mas basico|no lo entiendo)\b/.test(intent.normalized)) {
+    const previousConcept = assistantLastDecision?.missingPrerequisites?.[0] || "computer_basics";
+    setAssistantConcept(profile, previousConcept, "unknown", "message");
+  }
+  if (intent.absoluteBeginner) {
+    assistantPendingGoal = intent.goal;
+    saveAssistantProfile(profile);
+    return buildRecommendationResult(getRoadmapNode("topic-1"), "absolute_beginner", 0.96, [], getRoadmapNode("topic-1"));
+  }
+  if (intent.continueLearning) {
+    saveAssistantProfile(profile);
+    return continueRecommendation(profile);
+  }
+  assistantPendingGoal = intent.goal;
+  const targets = targetNodesForGoal(intent.goal);
+  const target = targets[0] || getRoadmapNode("topic-1");
+  const missing = missingPrerequisitesForNode(target, profile);
+  const diagnostic = chooseDiagnosticQuestion(intent.goal, profile);
+  if (diagnostic && !intent.asksDefinition && missing.length >= 3 && !options.forceRecommend) {
+    assistantPendingQuestion = diagnostic;
+    saveAssistantProfile(profile);
+    return { type: "diagnostic", question: diagnostic, profile, intent, confidence: 0.46 };
+  }
+  const directDefinition = target && (intent.asksDefinition || assistantSpecificGoals.has(intent.goal));
+  const firstMissing = directDefinition ? null : missing[0];
+  const firstMissingNode = firstMissing ? findTopicTeachingConcept(firstMissing, false) : target;
+  const reason = directDefinition ? "direct_definition" : firstMissing ? "first_unsatisfied_prerequisite" : "target_ready";
+  const confidence = firstMissing ? 0.76 : 0.9;
+  const result = buildRecommendationResult(firstMissingNode, reason, confidence, missing, target);
+  saveAssistantProfile(profile);
+  return result;
+}
+
+function renderAssistantChecklist(question) {
+  const concepts = assistantDiagnosticBlocks[question.block] || [];
+  const labels = {
+    ip: "Dirección IP",
+    router: "Router",
+    ports: "Puertos",
+    tcp_udp: "TCP / UDP",
+    dns: "DNS",
+    web_basics: "Cliente / servidor y web básica",
+    http: "HTTP / HTTPS",
+    http_requests: "Peticiones HTTP",
+    get_post: "GET / POST",
+    cookies: "Cookies",
+    sessions: "Sesiones",
+    sql: "SQL básico",
+    linux: "Linux",
+    terminal: "Terminal",
+    virtual_machines: "Máquinas virtuales",
+  };
+  const buttons = concepts.map((concept) => `<button type="button" class="assistant-route-link" data-assistant-knowledge="${concept}" data-knowledge-state="known">${labels[concept] || concept}</button>`).join("");
+  return `<div class="assistant-actions">${buttons}<button type="button" class="assistant-route-link" data-assistant-block="${question.block}" data-knowledge-state="unknown">No conozco ninguno</button><button type="button" class="assistant-route-link" data-assistant-block="${question.block}" data-knowledge-state="known">Conozco casi todos</button></div>`;
 }
 
 function assistantRouteButton(route, topic, label = "Abrir recomendación") {
@@ -4156,31 +4451,84 @@ function assistantRouteButton(route, topic, label = "Abrir recomendación") {
   return `<button type="button" class="assistant-route-link" data-assistant-route="${route.id}"${topicAttr}>${label}</button>`;
 }
 
-function buildAssistantReply(text) {
-  const intent = analyzeAssistantIntent(text);
-  if (intent.isGreeting && intent.words.length <= 4) {
-    return `<span class="assistant-name">Mantis Assistant</span><p>¡Hola! Dime qué quieres aprender o qué te lía: redes, malware, Linux, web, privacidad, OSINT, herramientas o empezar desde cero. Te recomendaré una ruta o un vídeo concreto si ya existe.</p>`;
-  }
-  if (intent.isThanks && intent.words.length <= 5) {
-    return `<span class="assistant-name">Mantis Assistant</span><p>De nada. Cuando quieras, dime un tema en lenguaje normal y lo traduzco a una ruta clara.</p>`;
-  }
-
-  const recommendation = rankAssistantRecommendation(text);
-  const { route, topic, concept, confidence, exactTopic } = recommendation;
-  const hasPublishedVideo = topic?.status === "published" && !!topic.url;
-  const intro = concept?.answer || (exactTopic
-    ? "He encontrado una parte del roadmap que encaja con lo que has escrito."
-    : "No lo tengo clarísimo con una sola frase, pero esta es la ruta más segura para empezar sin perderte.");
-  const videoLine = hasPublishedVideo
-    ? `Te mandaría directamente al vídeo <strong>${topic.title}</strong>.`
-    : `Ahora mismo lo más útil es abrir la ruta <strong>${route.title}</strong>; si ese tema aún no tiene vídeo, verás el punto preparado en el roadmap.`;
-  const confidenceLine = confidence >= 16
-    ? "La recomendación es bastante directa."
-    : "Si quieres afinar más, dime si lo quieres para entenderlo, practicarlo o protegerte.";
-
-  return `<span class="assistant-name">Mantis Assistant</span><p>${intro}</p><p>${videoLine}</p><p>Ruta: <strong>${route.title}</strong>. Punto recomendado: <strong>${topic.title}</strong>. ${confidenceLine}</p>${assistantRouteButton(route, topic, hasPublishedVideo ? "Abrir vídeo/ruta" : "Abrir ruta")}`;
+function assistantCorrectionButtons() {
+  return `<div class="assistant-actions"><button type="button" class="assistant-route-link" data-assistant-action="start">Empezar aquí</button><button type="button" class="assistant-route-link" data-assistant-action="known">Esto ya me lo sé</button><button type="button" class="assistant-route-link" data-assistant-action="earlier">Necesito empezar antes</button><button type="button" class="assistant-route-link" data-assistant-action="diagnose">Evaluar mejor mi nivel</button></div>`;
 }
 
+function buildAssistantReply(text) {
+  const decision = makeAssistantDecision(text);
+  assistantLastDecision = decision.type === "recommendation" ? decision : assistantLastDecision;
+  if (decision.type === "smalltalk") return `<span class="assistant-name">Mantis Assistant</span><p>¡Hola! Dime qué objetivo tienes y qué sabes ya. Si quieres algo avanzado, primero comprobaré la base para no mandarte demasiado lejos.</p>`;
+  if (decision.type === "thanks") return `<span class="assistant-name">Mantis Assistant</span><p>De nada. Cuando quieras seguimos afinando tu ruta.</p>`;
+  if (decision.type === "diagnostic") {
+    return `<span class="assistant-name">Mantis Assistant</span><p>${decision.question.text}</p>${decision.question.type === "checklist" ? renderAssistantChecklist(decision.question) : `<div class="assistant-actions"><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="known">Sí, lo controlo</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="beginner">Lo he tocado poco</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="unknown">No, empiezo ahí</button></div>`}`;
+  }
+  const { route, topic, reason, availability, missingPrerequisites, confidence } = decision;
+  const isAvailable = availability === "published" && topic?.url;
+  const why = reason === "absolute_beginner"
+    ? "Como me dices que empiezas desde cero, lo pedagógico es arrancar por el primer fundamento y no saltar a herramientas."
+    : reason === "direct_definition"
+      ? "Te llevo al tema concreto que has pedido. Si todavía no hay vídeo, quedará marcado como próximo contenido."
+    : reason === "first_unsatisfied_prerequisite"
+      ? `Tu objetivo va por buen camino, pero antes falta reforzar: <strong>${missingPrerequisites[0]}</strong>.`
+      : "Con lo que me has dicho, ya tienes base suficiente para este punto.";
+  const availabilityLine = isAvailable
+    ? `Empieza por el vídeo <strong>${topic.title}</strong>.`
+    : `El punto correcto es <strong>${topic.title}</strong>, pero está marcado como <strong>${topic.statusLabel}</strong>. Te lo abro en el roadmap para que veas dónde encaja.`;
+  const debug = `<!-- assistant-debug ${escapeAssistantHtml(JSON.stringify({ recommendedNodeId: decision.recommendedNodeId, sectionId: decision.sectionId, reason, missingPrerequisites, confidence }))} -->`;
+  return `<span class="assistant-name">Mantis Assistant</span><p>Te recomiendo empezar por:</p><p><strong>${route.title}</strong><br><strong>${topic.title}</strong></p><p>${why}</p><p>${availabilityLine}</p>${assistantRouteButton(route, topic, isAvailable ? "Abrir vídeo/ruta" : "Abrir roadmap")}${assistantCorrectionButtons()}${debug}`;
+}
+
+function recommendTopicFromText(text) {
+  const decision = makeAssistantDecision(text, { forceRecommend: true });
+  if (decision.type !== "recommendation") return { route: null, topic: null, decision };
+  return { route: decision.route, topic: decision.topic, decision };
+}
+
+function handleAssistantKnowledgeAction(button) {
+  const profile = loadAssistantProfile();
+  const state = button.dataset.knowledgeState || "known";
+  const concept = button.dataset.assistantKnowledge;
+  const block = button.dataset.assistantBlock;
+  if (concept) setAssistantConcept(profile, concept, state, "diagnostic");
+  if (block) (assistantDiagnosticBlocks[block] || []).forEach((item) => setAssistantConcept(profile, item, state, "diagnostic"));
+  saveAssistantProfile(profile);
+  const goalText = assistantPendingGoal ? `quiero aprender ${assistantPendingGoal}` : "por donde sigo";
+  addAssistantMessage(`<p>${escapeAssistantHtml(button.textContent.trim())}</p>`, "user");
+  window.setTimeout(() => addAssistantMessage(buildAssistantReply(goalText), "bot"), 120);
+}
+
+function handleAssistantCorrectionAction(action) {
+  if (!assistantLastDecision) return;
+  const profile = loadAssistantProfile();
+  if (action === "start") {
+    openRoadmapRoute(assistantLastDecision.route.id, assistantLastDecision.topic.id);
+    return;
+  }
+  if (action === "known") {
+    (assistantLastDecision.topic.conceptsTaught || []).forEach((concept) => setAssistantConcept(profile, concept, "known", "message"));
+    saveAssistantProfile(profile);
+    addAssistantMessage(`<p>Esto ya me lo sé.</p>`, "user");
+    window.setTimeout(() => addAssistantMessage(buildAssistantReply(assistantPendingGoal ? `quiero aprender ${assistantPendingGoal}` : "por donde sigo"), "bot"), 120);
+    return;
+  }
+  if (action === "earlier") {
+    (assistantLastDecision.topic.prerequisites || ["computer_basics"]).forEach((concept) => setAssistantConcept(profile, concept, "unknown", "message"));
+    saveAssistantProfile(profile);
+    addAssistantMessage(`<p>Necesito empezar antes.</p>`, "user");
+    window.setTimeout(() => addAssistantMessage(buildAssistantReply("necesito empezar antes"), "bot"), 120);
+    return;
+  }
+  if (action === "diagnose") {
+    assistantPendingQuestion = { type: "checklist", block: "pentesting", text: "Vamos a ubicar tu base general. Marca lo que controles." };
+    addAssistantMessage(`<p>Evaluar mejor mi nivel.</p>`, "user");
+    window.setTimeout(() => addAssistantMessage(`<span class="assistant-name">Mantis Assistant</span><p>${assistantPendingQuestion.text}</p>${renderAssistantChecklist(assistantPendingQuestion)}`, "bot"), 120);
+  }
+}
+
+if (typeof globalThis !== "undefined") {
+  globalThis.__cshAssistantEngine = { makeAssistantDecision, parseAssistantIntent, updateProfileFromText, validateAssistantKnowledgeGraph, loadAssistantProfile, saveAssistantProfile };
+}
 function escapeAssistantHtml(value) {
   return String(value || "").replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[char]));
 }
@@ -4274,6 +4622,16 @@ if (roadmapRoutesContainer) {
     if (item) openRoadmapRoute(item.dataset.searchRoute, item.dataset.searchTopic);
   });
   document.addEventListener("click", (event) => {
+    const knowledgeButton = event.target.closest("[data-assistant-knowledge], [data-assistant-block]");
+    if (knowledgeButton) {
+      handleAssistantKnowledgeAction(knowledgeButton);
+      return;
+    }
+    const actionButton = event.target.closest("[data-assistant-action]");
+    if (actionButton) {
+      handleAssistantCorrectionAction(actionButton.dataset.assistantAction);
+      return;
+    }
     const item = event.target.closest("[data-continue-route], [data-assistant-route]");
     if (item) {
       const panels = document.getElementById("roadmap-panels");
@@ -5492,18 +5850,5 @@ function initVideoSectionReplay() {
 letterizeSectionTitle("canal");
 letterizeSectionTitle("videos");
 initVideoSectionReplay();
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
