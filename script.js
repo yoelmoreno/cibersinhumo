@@ -3734,18 +3734,20 @@ function updateRoadmapSolarSystem(timestamp = 0) {
   const cards = Array.from(shell.querySelectorAll(".roadmap-planet-card"));
   const rect = shell.getBoundingClientRect();
   const total = Math.max(cards.length, 1);
-  const maxRadiusX = Math.max(260, rect.width * 0.38);
-  const maxRadiusY = Math.max(120, Math.min(rect.height * 0.24, 230));
+  const maxRadiusX = Math.max(420, rect.width * 0.46);
+  const maxRadiusY = Math.max(170, Math.min(rect.height * 0.34, 330));
+  const spread = total > 1 ? total - 1 : 1;
 
   cards.forEach((card, index) => {
     const order = Number(card.dataset.orbitIndex || index);
-    const lane = 0.36 + (order / Math.max(total - 1, 1)) * 0.66;
-    const speed = 0.000055 + ((total - order) * 0.000007);
-    const angle = (order / total) * Math.PI * 2 + timestamp * speed;
+    const lane = 0.28 + (order / spread) * 0.74;
+    const baseAngle = (-158 + (order / spread) * 316) * Math.PI / 180;
+    const speed = 0.000012 + ((total - order) * 0.000002);
+    const angle = baseAngle + timestamp * speed;
     const x = Math.cos(angle) * maxRadiusX * lane;
-    const y = Math.sin(angle) * maxRadiusY * lane - 4;
+    const y = Math.sin(angle) * maxRadiusY * lane - 6;
     const depth = (Math.sin(angle) + 1) / 2;
-    const scale = 0.74 + depth * 0.34;
+    const scale = 0.66 + depth * 0.22 + lane * 0.12;
 
     card.style.setProperty("--orbit-x", x.toFixed(1));
     card.style.setProperty("--orbit-y", y.toFixed(1));
@@ -3775,6 +3777,8 @@ function openRoadmapRoute(routeId, focusTopicId = null) {
   roadmapRouteTitle.textContent = route.title;
   roadmapRouteDesc.textContent = route.description;
   roadmapView.hidden = false;
+  document.getElementById("videos")?.classList.add("is-route-detail-open");
+  stopRoadmapSolarSystem();
   renderRoadmapPath(route);
   const topic = focusTopicId ? route.topics.find((item) => item.id === focusTopicId) : route.topics.find((item) => item.status === "published") || route.topics[0];
   if (topic) selectRoadmapTopic(topic.id);
@@ -3996,6 +4000,9 @@ function analyzeAssistantIntent(text) {
     { key: "linux", terms: ["linux", "kali", "terminal", "comandos", "bash"], answer: "Linux es muy usado en ciber porque da control, herramientas y una terminal potente. Si empiezas, aprende carpetas, permisos, procesos, red y comandos básicos antes de ir a herramientas avanzadas.", route: "linux-sistemas" },
     { key: "web", terms: ["web", "internet", "http", "https", "dns", "cookie", "deep web"], answer: "La web funciona por capas: el navegador pregunta DNS, conecta con un servidor, usa HTTP/HTTPS y recibe HTML, CSS y JavaScript. Entender eso ayuda muchísimo para ciber web.", route: "como-funciona-web" },
     { key: "osint", terms: ["osint", "metadatos", "investigar", "shodan"], answer: "OSINT es obtener información usando fuentes abiertas: buscadores, redes, metadatos, registros públicos o herramientas como Shodan. La clave es hacerlo con ética y contexto.", route: "casos-reales" },
+    { key: "maquinas virtuales", terms: ["maquina virtual", "maquinas virtuales", "virtualizacion", "virtualbox", "vmware", "hypervisor", "vm", "laboratorio virtual"], answer: "Una máquina virtual es como tener un ordenador simulado dentro de tu ordenador. Te permite practicar con Linux, Kali o laboratorios de ciber sin tocar tu sistema principal. Para empezar, entiende qué es un sistema operativo, recursos compartidos, snapshots y redes NAT/bridge.", route: "linux-sistemas" },
+    { key: "wireshark", terms: ["wireshark", "paquetes", "trafico", "captura"], answer: "Wireshark sirve para ver paquetes de red. Es perfecto cuando ya entiendes IP, DNS, puertos y HTTP, porque te deja ver la comunicación real entre equipos.", route: "redes-desde-cero" },
+    { key: "kali", terms: ["kali linux", "instalar kali", "parrot", "herramientas"], answer: "Kali Linux es una distribución con herramientas de seguridad. Lo ideal es probarla en máquina virtual y aprender primero terminal, permisos, red y snapshots para practicar sin romper nada.", route: "linux-sistemas" },
   ];
   const matched = topics.filter((topic) => topic.terms.some((term) => normalized.includes(term)));
   return { normalized, words, isGreeting, isThanks, asksHelp, asksDefinition, matched };
@@ -4015,7 +4022,7 @@ function recommendTopicFromText(text) {
   const normalized = intent.normalized;
   const intentGroups = [
     { terms: ["cero", "principiante", "no se", "empezar", "perdido"], route: "informatica-base" },
-    { terms: ["linux", "terminal", "bash", "kali"], route: "linux-sistemas" },
+    { terms: ["linux", "terminal", "bash", "kali", "maquina virtual", "maquinas virtuales", "virtualizacion", "virtualbox", "vmware", "hypervisor", "laboratorio"], route: "linux-sistemas" },
     { terms: ["red", "redes", "ip", "dns", "puerto", "wifi", "mac"], route: "redes-desde-cero" },
     { terms: ["web", "http", "html", "api", "cookie"], route: "como-funciona-web" },
     { terms: ["phishing", "malware", "ransomware", "ataque", "ciberseguridad"], route: "fundamentos-ciber" },
@@ -4042,9 +4049,10 @@ function buildAssistantReply(text) {
     const intro = intent.asksDefinition ? main.answer : `${main.answer} Si quieres verlo con ejemplos, te recomiendo esta parte del roadmap.`;
     return `<span class="assistant-name">Mantis Assistant</span><p>${intro}</p><p>Ruta recomendada: <strong>${route.title}</strong>. Primer paso útil: <strong>${topic.title}</strong>.</p><button type="button" class="assistant-route-link" data-assistant-route="${route.id}" data-assistant-topic="${topic.id}">Abrir esta ruta</button>`;
   }
-  if (intent.asksHelp || intent.asksDefinition) {
+  const learningIntent = /\b(quiero|me gustaria|aprender|estudiar|entender|practicar|ver|saber|empezar)\b/.test(intent.normalized);
+  if (intent.asksHelp || intent.asksDefinition || learningIntent) {
     const { route, topic } = recommendTopicFromText(text);
-    return `<span class="assistant-name">Mantis Assistant</span><p>Por cómo lo planteas, te llevaría a <strong>${route.title}</strong>. Ahí puedes avanzar sin saltarte base y ver ejemplos reales cuando toque.</p><p>Empieza por <strong>${topic.title}</strong>. Si quieres, pregúntame también el concepto concreto y te lo explico aquí antes de abrir el vídeo.</p><button type="button" class="assistant-route-link" data-assistant-route="${route.id}" data-assistant-topic="${topic.id}">Abrir esta ruta</button>`;
+    return `<span class="assistant-name">Mantis Assistant</span><p>Te orientaría hacia <strong>${route.title}</strong>, porque encaja mejor con lo que estás buscando.</p><p>Empieza por <strong>${topic.title}</strong>. Si el tema es práctico, ve paso a paso: primero concepto, luego ejemplo, y después herramienta.</p><button type="button" class="assistant-route-link" data-assistant-route="${route.id}" data-assistant-topic="${topic.id}">Abrir esta ruta</button>`;
   }
   return `<span class="assistant-name">Mantis Assistant</span><p>Te leo, pero necesito un poco más de contexto para no mandarte a una ruta al azar. Prueba con algo como: <strong>quiero aprender redes</strong>, <strong>explícame phishing</strong>, <strong>qué es una VPN</strong> o <strong>quiero practicar con herramientas</strong>.</p>`;
 }
@@ -4057,10 +4065,7 @@ function addAssistantMessage(content, type = "bot") {
   if (!assistantOutput) return;
   const message = document.createElement("div");
   message.className = `assistant-message assistant-message-${type}`;
-  const avatar = type === "bot"
-    ? `<span class="assistant-avatar assistant-avatar-bot"><img src="logo-cibersinhumo-transparent.png?v=1" alt=""></span>`
-    : `<span class="assistant-avatar assistant-avatar-user" aria-hidden="true">TÚ</span>`;
-  message.innerHTML = `${avatar}<div class="assistant-bubble">${content}</div>`;
+  message.innerHTML = `<div class="assistant-bubble">${content}</div>`;
   assistantOutput.appendChild(message);
   assistantOutput.scrollTop = assistantOutput.scrollHeight;
 }
@@ -4126,7 +4131,9 @@ if (roadmapRoutesContainer) {
   });
   roadmapBack?.addEventListener("click", () => {
     roadmapView.hidden = true;
+    document.getElementById("videos")?.classList.remove("is-route-detail-open");
     activeRoadmapRoute = null;
+    startRoadmapSolarSystem();
     document.getElementById("roadmap-panels")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
   roadmapSearch?.addEventListener("input", renderRoadmapSearch);
@@ -4146,6 +4153,7 @@ if (roadmapRoutesContainer) {
       const videosSection = document.getElementById("videos");
       panels?.classList.add("is-open");
       videosSection?.classList.add("is-roadmap-open");
+      document.body.classList.add("roadmap-fullscreen-mode");
       openRoadmapRoute(item.dataset.continueRoute || item.dataset.assistantRoute, item.dataset.continueTopic || item.dataset.assistantTopic);
     }
   });
@@ -4166,6 +4174,7 @@ if (roadmapRoutesContainer) {
     const videosSection = document.getElementById("videos");
     panels?.classList.remove("is-open");
     videosSection?.classList.remove("is-roadmap-open");
+    videosSection?.classList.remove("is-route-detail-open");
     document.body.classList.remove("roadmap-fullscreen-mode");
     roadmapView.hidden = true;
     activeRoadmapRoute = null;
@@ -5356,5 +5365,12 @@ function initVideoSectionReplay() {
 letterizeSectionTitle("canal");
 letterizeSectionTitle("videos");
 initVideoSectionReplay();
+
+
+
+
+
+
+
 
 
