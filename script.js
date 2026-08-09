@@ -3702,10 +3702,9 @@ function renderRoadmapRoutes() {
   roadmapRoutesContainer.innerHTML = roadmapRoutes.map((route, index) => {
     const stats = routeStats(route);
     return `
-      <button class="roadmap-route-card roadmap-planet-card planet-${((index - 1) % 8) + 1}" type="button" data-roadmap-route="${route.id}">
+      <button class="roadmap-route-card roadmap-planet-card planet-${((index - 1) % 8) + 1}" style="--orbit-angle:${Math.round(((index - 1) * 360) / roadmapRoutes.length)}deg; --orbit-counter:${-Math.round(((index - 1) * 360) / roadmapRoutes.length)}deg; --planet-delay:${index * -0.42}s" type="button" data-roadmap-route="${route.id}">
         <span class="roadmap-route-num">${String(index).padStart(2, "0")}</span>
         <span class="roadmap-planet" aria-hidden="true"><i></i></span>
-        <span class="section-tag">${route.level}</span>
         <strong>${route.title}</strong>
         <span>${route.description}</span>
         <div class="route-meter"><i style="width:${Math.max(stats.percent, stats.published ? 8 : 0)}%"></i></div>
@@ -4005,7 +4004,7 @@ function replayAssistantIntro() {
   if (!assistantOutput) return;
   assistantOutput.innerHTML = "";
   assistantOutput.dataset.initialized = "true";
-  addAssistantMessage(`<span class="assistant-name">Mantis Assistant</span><p>Hola, soy la mantis de Ciber Sin Humo. Cuéntame qué sabes, qué te interesa o por dónde te pierdes, y te digo por dónde empezar.</p>`, "bot");
+  addAssistantMessage(`<span class="assistant-name">Mantis Assistant</span><p>Hola, soy la mantis de Ciber Sin Humo. Dime qué quieres aprender, qué tema te lía o qué vídeo estás buscando, y te oriento paso a paso.</p><p class="assistant-hint">Prueba: “no sé nada de redes”, “explícame VPN” o “quiero practicar con herramientas”.</p>`, "bot");
 }
 
 function handleAssistantPrompt(text) {

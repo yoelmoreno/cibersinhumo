@@ -7944,3 +7944,280 @@ select {
   font-weight: 700;
 }
 
+/* Ajuste: chat más compacto y bienvenida visible */
+.video-roadmap-header .section-tag {
+  display: none;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) {
+  align-items: center;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .section-inner {
+  width: min(calc(100% - 44px), 1120px);
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-chat {
+  min-height: clamp(420px, 48vh, 540px);
+  max-width: 1080px;
+  border-radius: 24px;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-output {
+  min-height: clamp(250px, 30vh, 340px);
+  max-height: clamp(300px, 36vh, 400px);
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-form {
+  min-height: 54px;
+  padding: 6px 7px 6px 16px;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-form input {
+  min-height: 42px;
+}
+
+.video-roadmap-section:not(.is-roadmap-open) .assistant-form button {
+  width: 44px;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.assistant-hint {
+  color: rgba(219, 255, 232, .66);
+  font-size: .95em;
+}
+
+/* Sistema solar orbital 3D para rutas */
+.video-roadmap-section.is-roadmap-open .roadmap-routes {
+  --orbit-radius: min(31vw, 430px);
+  position: relative;
+  display: block;
+  min-height: min(78vh, 760px);
+  padding: clamp(28px, 4vw, 56px);
+  border: 1px solid rgba(0, 255, 136, .12);
+  border-radius: 34px;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(125,255,40,.28) 0 2%, rgba(0,255,136,.10) 3% 10%, transparent 11%),
+    repeating-radial-gradient(ellipse at 50% 50%, transparent 0 82px, rgba(0,255,136,.14) 84px, transparent 86px),
+    radial-gradient(circle at 18% 18%, rgba(0,255,136,.10), transparent 22%),
+    linear-gradient(180deg, rgba(0, 12, 8, .58), rgba(0, 4, 3, .94));
+  overflow: hidden;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-routes:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 128px;
+  height: 128px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 28%, #f7fff1 0 6%, #b6ff27 16%, #00ff88 42%, #006b37 70%, #00180c 100%);
+  box-shadow: 0 0 42px rgba(0,255,136,.45), 0 0 110px rgba(0,255,136,.18), inset -18px -22px 34px rgba(0,0,0,.38);
+  animation: solarPulse 4s ease-in-out infinite;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(150px, 14vw, 210px);
+  min-height: 220px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  transform: rotate(var(--orbit-angle)) translateX(var(--orbit-radius)) rotate(var(--orbit-counter)) translateY(-50%);
+  transform-origin: center;
+  animation: orbitDrift 18s linear infinite;
+  animation-delay: var(--planet-delay);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card:hover {
+  box-shadow: none;
+  transform: rotate(var(--orbit-angle)) translateX(var(--orbit-radius)) rotate(var(--orbit-counter)) translateY(-54%) scale(1.06);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card:before,
+.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card:after,
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .section-tag,
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-route-num,
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-meter {
+  display: none !important;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-planet {
+  position: relative;
+  left: auto;
+  top: auto;
+  display: block;
+  width: clamp(86px, 9vw, 132px);
+  height: clamp(86px, 9vw, 132px);
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  transform: none;
+  filter: drop-shadow(0 0 24px rgba(0,255,136,.28));
+  animation: planetSpin 12s linear infinite;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-planet i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-size: 220% 100%, 100% 100%, 100% 100%;
+  box-shadow: inset -22px -26px 34px rgba(0,0,0,.55), inset 10px 8px 18px rgba(255,255,255,.22), 0 0 34px rgba(0,255,136,.22);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card strong {
+  display: block;
+  margin: 0 auto 8px;
+  max-width: 210px;
+  color: var(--text-main);
+  font-size: clamp(1rem, 1.4vw, 1.28rem);
+  line-height: 1.04;
+  text-shadow: 0 0 16px rgba(0,0,0,.72);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card > span:not(.roadmap-planet):not(.section-tag):not(.roadmap-route-num):not(.path-folders) {
+  display: block;
+  max-width: 210px;
+  margin-inline: auto;
+  color: rgba(219,255,232,.7);
+  font-size: .9rem;
+  line-height: 1.25;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-stats-line {
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-stats-line small {
+  font-size: .62rem;
+  background: rgba(0,10,6,.7);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-1 .roadmap-planet i {
+  background:
+    radial-gradient(circle at 32% 25%, rgba(255,255,255,.96) 0 7%, transparent 8%),
+    linear-gradient(110deg, transparent 0 20%, rgba(0,120,255,.8) 22% 33%, transparent 35% 52%, rgba(0,255,136,.9) 54% 65%, transparent 66%),
+    radial-gradient(circle at 35% 30%, #6efcff 0 12%, #0ad56f 30%, #034b87 55%, #06101a 82%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-2 .roadmap-planet i {
+  background:
+    repeating-linear-gradient(8deg, rgba(255,255,255,.16) 0 7px, rgba(0,0,0,.06) 8px 16px),
+    radial-gradient(circle at 32% 26%, #fff6dc 0 10%, #ffd35a 26%, #c17926 58%, #251007 84%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-2 .roadmap-planet:after,
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-5 .roadmap-planet:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 168%;
+  height: 43%;
+  border: 3px solid rgba(210,255,130,.58);
+  border-left-color: rgba(0,255,136,.18);
+  border-right-color: rgba(255,255,255,.18);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(-16deg);
+  box-shadow: 0 0 22px rgba(0,255,136,.18);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-3 .roadmap-planet i {
+  background:
+    radial-gradient(circle at 32% 25%, rgba(255,255,255,.9) 0 8%, transparent 9%),
+    linear-gradient(140deg, transparent 0 22%, rgba(0,255,136,.6) 24% 34%, transparent 36% 54%, rgba(60,180,255,.7) 56% 64%, transparent 65%),
+    radial-gradient(circle at 38% 30%, #d7fff8 0 12%, #00d8ff 26%, #0067b7 56%, #071127 82%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-4 .roadmap-planet i {
+  background:
+    repeating-linear-gradient(18deg, rgba(255,255,255,.16) 0 6px, transparent 7px 15px),
+    radial-gradient(circle at 35% 25%, #f6fff2 0 8%, #a6ff2a 20%, #20af31 48%, #071509 80%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-5 .roadmap-planet i {
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.18) 0 9px, rgba(0,0,0,.10) 10px 20px),
+    radial-gradient(circle at 35% 26%, #fffce7 0 9%, #d7ff75 22%, #73b129 50%, #171507 82%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-6 .roadmap-planet i {
+  background:
+    radial-gradient(circle at 28% 28%, #f2fff8 0 8%, #46fff0 22%, #008d8a 48%, #052222 82%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-7 .roadmap-planet i {
+  background:
+    radial-gradient(circle at 30% 28%, #fffef2 0 8%, #c6ff35 22%, #4eb800 48%, #122006 82%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-8 .roadmap-planet i {
+  background:
+    radial-gradient(circle at 32% 28%, #eef6ff 0 8%, #6a9cff 20%, #3153d6 50%, #080d29 82%);
+}
+
+@keyframes planetSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbitDrift {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+
+@keyframes solarPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); filter: brightness(1); }
+  50% { transform: translate(-50%, -50%) scale(1.04); filter: brightness(1.15); }
+}
+
+@media (max-width: 900px) {
+  .video-roadmap-section.is-roadmap-open .roadmap-routes {
+    --orbit-radius: min(34vw, 290px);
+    min-height: 680px;
+  }
+
+  .video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card {
+    width: 150px;
+  }
+}
+
+@media (max-width: 640px) {
+  .video-roadmap-section.is-roadmap-open .roadmap-routes {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: 16px;
+  }
+
+  .video-roadmap-section.is-roadmap-open .roadmap-routes:after {
+    display: none;
+  }
+
+  .video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    min-height: 210px;
+    display: grid;
+    place-items: center;
+    transform: none;
+    animation: none;
+  }
+
+  .video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card:hover {
+    transform: translateY(-3px);
+  }
+}
+
