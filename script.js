@@ -3926,10 +3926,16 @@ if (roadmapRoutesContainer) {
   });
   document.addEventListener("click", (event) => {
     const item = event.target.closest("[data-continue-route], [data-assistant-route]");
-    if (item) openRoadmapRoute(item.dataset.continueRoute || item.dataset.assistantRoute, item.dataset.continueTopic || item.dataset.assistantTopic);
+    if (item) {
+      const panels = document.getElementById("roadmap-panels");
+      panels?.classList.add("is-open");
+      openRoadmapRoute(item.dataset.continueRoute || item.dataset.assistantRoute, item.dataset.continueTopic || item.dataset.assistantTopic);
+    }
   });
   document.querySelectorAll("[data-roadmap-scroll]").forEach((button) => button.addEventListener("click", () => {
-    document.getElementById("roadmap-panels")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const panels = document.getElementById("roadmap-panels");
+    panels?.classList.add("is-open");
+    panels?.scrollIntoView({ behavior: "smooth", block: "start" });
   }));
   assistantForm?.addEventListener("submit", (event) => {
     event.preventDefault();
