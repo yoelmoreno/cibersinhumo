@@ -7691,3 +7691,256 @@ select {
   align-items: flex-start;
 }
 
+/* Cabecera animada de la sección Vídeos */
+.video-roadmap-header {
+  max-width: 900px;
+  margin: 0 auto clamp(28px, 4vw, 46px);
+  text-align: center;
+  overflow: hidden;
+}
+
+.video-roadmap-header .section-title,
+.video-roadmap-header .section-desc,
+.video-roadmap-header .section-tag {
+  animation: videoTitleReveal .8s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.video-roadmap-header .section-title {
+  animation-delay: .08s;
+}
+
+.video-roadmap-header .section-desc {
+  animation-delay: .18s;
+}
+
+@keyframes videoTitleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(8px);
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.video-roadmap-section.is-roadmap-open .video-roadmap-header {
+  display: none;
+}
+
+/* Sistema solar de rutas */
+.video-roadmap-section.is-roadmap-open .roadmap-routes-head .section-tag,
+.video-roadmap-section.is-roadmap-open .roadmap-routes-head p {
+  display: none;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-routes-head h3 {
+  margin: 0 0 18px;
+  color: var(--text-main);
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-routes {
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: clamp(22px, 3vw, 42px);
+  padding: clamp(28px, 4vw, 56px);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(0, 255, 136, .14), transparent 9%),
+    repeating-radial-gradient(circle at 50% 42%, transparent 0 84px, rgba(0,255,136,.10) 86px, transparent 88px),
+    radial-gradient(circle at 20% 16%, rgba(0,255,136,.08), transparent 24%),
+    linear-gradient(180deg, rgba(0, 12, 8, .52), rgba(0, 5, 4, .92));
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-routes:before {
+  inset: 0;
+  opacity: .28;
+  background:
+    radial-gradient(circle at 14% 24%, rgba(255,255,255,.45) 0 1px, transparent 2px),
+    radial-gradient(circle at 76% 18%, rgba(0,255,136,.55) 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 76%, rgba(255,255,255,.35) 0 1px, transparent 2px),
+    radial-gradient(circle at 34% 82%, rgba(0,255,136,.40) 0 1px, transparent 2px);
+  background-size: 180px 140px, 220px 170px, 260px 210px, 200px 180px;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card {
+  min-height: 320px;
+  align-content: end;
+  justify-items: center;
+  text-align: center;
+  padding: 28px 22px 24px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card:before,
+.video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card:after {
+  display: none;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-route-num,
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .section-tag,
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-meter {
+  display: none;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-planet {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  width: clamp(128px, 15vw, 190px);
+  height: clamp(128px, 15vw, 190px);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 28px rgba(0,255,136,.22));
+  animation: planetFloat 5.8s ease-in-out infinite;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-planet i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(238,255,243,.86), transparent 0 10%, rgba(0,255,136,.96) 18%, rgba(0,115,62,.96) 52%, rgba(0,22,12,.98) 78%),
+    #00391e;
+  box-shadow: inset -24px -30px 42px rgba(0,0,0,.48), inset 12px 8px 22px rgba(255,255,255,.16), 0 0 42px rgba(0,255,136,.26);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card strong {
+  z-index: 2;
+  max-width: 96%;
+  margin-top: clamp(164px, 18vw, 222px);
+  font-size: clamp(1.25rem, 2vw, 1.85rem);
+  line-height: 1.02;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card > span:not(.roadmap-planet):not(.section-tag):not(.roadmap-route-num):not(.path-folders) {
+  z-index: 2;
+  max-width: 270px;
+  margin-top: 8px;
+  color: rgba(219, 255, 232, .68);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-stats-line {
+  z-index: 2;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-2 .roadmap-planet i {
+  background:
+    linear-gradient(18deg, transparent 43%, rgba(232,255,235,.82) 45%, transparent 48%),
+    radial-gradient(circle at 34% 30%, #eaffed 0 7%, #80ff62 18%, #1fb44f 50%, #06150d 78%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-2 .roadmap-planet:after,
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-5 .roadmap-planet:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 142%;
+  height: 38%;
+  border: 2px solid rgba(185,255,118,.48);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(-14deg);
+  box-shadow: 0 0 20px rgba(0,255,136,.16);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-3 .roadmap-planet i {
+  background:
+    radial-gradient(circle at 32% 26%, #f5fff6 0 7%, #0cff8a 16%, #008f83 42%, #00324c 62%, #050a12 82%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-4 .roadmap-planet i {
+  background:
+    linear-gradient(160deg, rgba(255,255,255,.18), transparent 35%),
+    repeating-linear-gradient(16deg, rgba(142,255,72,.16) 0 8px, transparent 9px 18px),
+    radial-gradient(circle at 36% 26%, #eaffed 0 6%, #6fff35 16%, #007a35 52%, #071008 78%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-5 .roadmap-planet i {
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.12) 0 7px, rgba(0,0,0,.12) 8px 16px),
+    radial-gradient(circle at 35% 27%, #f3fff0 0 7%, #a8ff3e 18%, #2bbf36 47%, #071109 78%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-6 .roadmap-planet i {
+  background:
+    radial-gradient(circle at 26% 30%, #e9fff1 0 7%, #00f5ff 18%, #008c6f 45%, #00291d 72%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-7 .roadmap-planet i {
+  background:
+    radial-gradient(circle at 30% 26%, #f4ffef 0 6%, #c7ff28 16%, #58c900 44%, #0b1c05 74%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-8 .roadmap-planet i {
+  background:
+    radial-gradient(circle at 34% 28%, #f6fff2 0 8%, #36ff6f 17%, #1760ff 42%, #061634 72%);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card:hover .roadmap-planet {
+  transform: translateX(-50%) translateY(-8px) scale(1.04);
+}
+
+@keyframes planetFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-9px); }
+}
+
+@media (max-width: 980px) {
+  .video-roadmap-section.is-roadmap-open .roadmap-routes {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .video-roadmap-section.is-roadmap-open .roadmap-routes {
+    grid-template-columns: 1fr;
+  }
+
+  .video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card {
+    min-height: 300px;
+  }
+}
+
+/* Repetir animación de títulos también en Vídeos */
+#videos .channel-title-letters {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.02em;
+}
+
+#videos .channel-title-letters .title-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(18px) scale(0.96);
+  filter: blur(8px);
+}
+
+#videos.is-title-visible .channel-title-letters .title-letter {
+  animation: channelLetterReveal 0.58s cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
+  animation-delay: calc(var(--i) * 0.035s);
+}
+
+.video-roadmap-section.is-roadmap-open .roadmap-mode-topbar {
+  position: sticky;
+  top: 84px;
+  z-index: 20;
+  padding-bottom: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.roadmap-chat-back {
+  color: var(--accent);
+  font-weight: 700;
+}
+

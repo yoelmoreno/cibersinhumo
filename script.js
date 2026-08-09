@@ -3702,9 +3702,9 @@ function renderRoadmapRoutes() {
   roadmapRoutesContainer.innerHTML = roadmapRoutes.map((route, index) => {
     const stats = routeStats(route);
     return `
-      <button class="roadmap-route-card" type="button" data-roadmap-route="${route.id}">
+      <button class="roadmap-route-card roadmap-planet-card planet-${((index - 1) % 8) + 1}" type="button" data-roadmap-route="${route.id}">
         <span class="roadmap-route-num">${String(index).padStart(2, "0")}</span>
-        <span class="roadmap-route-icon" aria-hidden="true">${route.icon.slice(0, 2).toUpperCase()}</span>
+        <span class="roadmap-planet" aria-hidden="true"><i></i></span>
         <span class="section-tag">${route.level}</span>
         <strong>${route.title}</strong>
         <span>${route.description}</span>
@@ -3928,12 +3928,47 @@ function renderRoadmapSearch() {
   `).join("") : `<p>No hay resultados en el roadmap. Prueba con Linux, redes, phishing, Nmap o web.</p>`;
 }
 
-function recommendTopicFromText(text) {
+function analyzeAssistantIntent(text) {
   const normalized = normalizeRoadmapText(text);
+  const words = normalized.split(/\s+/).filter(Boolean);
+  const isGreeting = /^(hola|hey|buenas|buenos dias|buenas tardes|buenas noches|que tal|holaa)\b/.test(normalized);
+  const isThanks = /\b(gracias|perfecto|vale|ok|genial|guay|muchas gracias)\b/.test(normalized);
+  const asksHelp = /\b(ayuda|por donde empiezo|empezar|no se|perdido|perdida|recomienda|recomiendame|ruta|aprender)\b/.test(normalized);
+  const asksDefinition = /\b(que es|que son|explica|explicame|como funciona|para que sirve|diferencia|diferencias)\b/.test(normalized);
+
+  const topics = [
+    { key: "phishing", terms: ["phishing", "correo falso", "email falso", "suplantacion"], answer: "El phishing es un engaño para que entregues datos, contraseñas o dinero creyendo que hablas con una entidad real. Mira remitente, enlaces, urgencia artificial y páginas de inicio de sesión raras.", route: "fundamentos-ciber" },
+    { key: "troyanos", terms: ["troyano", "trojano", "malware", "virus", "infectado"], answer: "Un troyano es malware disfrazado de algo legítimo. Lo peligroso es que tú lo ejecutas pensando que es normal y por detrás puede robar datos, abrir puertas o descargar más amenazas.", route: "fundamentos-ciber" },
+    { key: "spyware", terms: ["spyware", "camara", "keylogger", "teclado", "espiar"], answer: "El spyware intenta vigilar lo que haces: cámara, teclado, pantalla, navegación o archivos. Se combate con permisos mínimos, descargas fiables, actualizaciones y revisando comportamientos raros.", route: "fundamentos-ciber" },
+    { key: "ransomware", terms: ["ransomware", "cifrado", "rescate", "archivos bloqueados"], answer: "El ransomware cifra archivos y pide dinero por recuperarlos. La defensa de verdad son copias de seguridad, actualizaciones y mucho cuidado con adjuntos o programas sospechosos.", route: "fundamentos-ciber" },
+    { key: "ip", terms: ["ip", "direccion ip", "publica", "privada"], answer: "Una IP es una dirección para identificar dispositivos o redes. La pública te representa en Internet; la privada funciona dentro de tu red local, como la de casa.", route: "redes-desde-cero" },
+    { key: "mac", terms: ["mac", "direccion mac", "wifi"], answer: "La dirección MAC identifica una tarjeta de red dentro de una red local. No es tu IP: la MAC trabaja más cerca del hardware y se usa para comunicarse dentro de la LAN.", route: "redes-desde-cero" },
+    { key: "puertos", terms: ["puerto", "puertos", "nmap", "escaneo"], answer: "Los puertos son puertas lógicas por donde un equipo ofrece servicios. Por ejemplo, una web suele usar 80 o 443. Escanear puertos sirve para ver qué servicios están expuestos.", route: "hacking-pentesting" },
+    { key: "vpn", terms: ["vpn", "privacidad", "tunel"], answer: "Una VPN cifra tu conexión hasta un servidor intermedio y oculta tu IP real frente a muchas webs. Ayuda en WiFi públicas y privacidad, pero no te hace anónimo ni evita un phishing.", route: "como-funciona-web" },
+    { key: "linux", terms: ["linux", "kali", "terminal", "comandos", "bash"], answer: "Linux es muy usado en ciber porque da control, herramientas y una terminal potente. Si empiezas, aprende carpetas, permisos, procesos, red y comandos básicos antes de ir a herramientas avanzadas.", route: "linux-sistemas" },
+    { key: "web", terms: ["web", "internet", "http", "https", "dns", "cookie", "deep web"], answer: "La web funciona por capas: el navegador pregunta DNS, conecta con un servidor, usa HTTP/HTTPS y recibe HTML, CSS y JavaScript. Entender eso ayuda muchísimo para ciber web.", route: "como-funciona-web" },
+    { key: "osint", terms: ["osint", "metadatos", "investigar", "shodan"], answer: "OSINT es obtener información usando fuentes abiertas: buscadores, redes, metadatos, registros públicos o herramientas como Shodan. La clave es hacerlo con ética y contexto.", route: "casos-reales" },
+  ];
+  const matched = topics.filter((topic) => topic.terms.some((term) => normalized.includes(term)));
+  return { normalized, words, isGreeting, isThanks, asksHelp, asksDefinition, matched };
+}
+
+function getRouteRecommendation(routeId, preferredTopicKey = "") {
+  const route = roadmapRoutes.find((item) => item.id === routeId) || roadmapRoutes[0];
+  const topic = route.topics.find((item) => item.status === "published" && normalizeRoadmapText(item.title).includes(preferredTopicKey))
+    || route.topics.find((item) => item.status === "published")
+    || route.topics[0];
+  return { route, topic };
+}
+
+function recommendTopicFromText(text) {
+  const intent = analyzeAssistantIntent(text);
+  if (intent.matched.length) return getRouteRecommendation(intent.matched[0].route, intent.matched[0].key);
+  const normalized = intent.normalized;
   const intentGroups = [
-    { terms: ["cero", "principiante", "no se", "empezar"], route: "informatica-base" },
+    { terms: ["cero", "principiante", "no se", "empezar", "perdido"], route: "informatica-base" },
     { terms: ["linux", "terminal", "bash", "kali"], route: "linux-sistemas" },
-    { terms: ["red", "redes", "ip", "dns", "puerto", "wifi"], route: "redes-desde-cero" },
+    { terms: ["red", "redes", "ip", "dns", "puerto", "wifi", "mac"], route: "redes-desde-cero" },
     { terms: ["web", "http", "html", "api", "cookie"], route: "como-funciona-web" },
     { terms: ["phishing", "malware", "ransomware", "ataque", "ciberseguridad"], route: "fundamentos-ciber" },
     { terms: ["pentesting", "hacking", "nmap", "wireshark", "osint"], route: "hacking-pentesting" },
@@ -3942,55 +3977,41 @@ function recommendTopicFromText(text) {
     { terms: ["defensa", "blue", "soc", "siem", "edr"], route: "defensa-siguiente-paso" },
   ];
   const match = intentGroups.find((group) => group.terms.some((term) => normalized.includes(term)));
-  const route = roadmapRoutes.find((item) => item.id === (match?.route || "informatica-base"));
-  const topic = route.topics.find((item) => item.status === "published") || route.topics[0];
-  return { route, topic };
+  return getRouteRecommendation(match?.route || "informatica-base");
 }
 
-function addAssistantMessage(html, type = "bot") {
-  if (!assistantOutput) return;
-  const div = document.createElement("div");
-  div.className = `assistant-message assistant-message-${type}`;
-  assistantOutput.appendChild(div);
-
-  if (type === "bot") {
-    const temp = document.createElement("div");
-    temp.innerHTML = html;
-    const text = temp.textContent.replace(/\s+/g, " ").trim();
-    const typed = document.createElement("p");
-    div.classList.add("is-typing");
-    div.innerHTML = '<span class="assistant-name">Mantis Assistant</span>';
-    div.appendChild(typed);
-
-    let index = 0;
-    const speed = 15;
-    const write = () => {
-      typed.textContent = text.slice(0, index);
-      assistantOutput.scrollTop = assistantOutput.scrollHeight;
-      index += 1;
-      if (index <= text.length) {
-        window.setTimeout(write, speed);
-      } else {
-        div.classList.remove("is-typing");
-        div.innerHTML = html;
-        assistantOutput.scrollTop = assistantOutput.scrollHeight;
-      }
-    };
-    write();
-  } else {
-    div.innerHTML = html;
-    assistantOutput.scrollTop = assistantOutput.scrollHeight;
+function buildAssistantReply(text) {
+  const intent = analyzeAssistantIntent(text);
+  if (intent.isGreeting && intent.words.length <= 4) {
+    return `<span class="assistant-name">Mantis Assistant</span><p>¡Hola! Soy la mantis de Ciber Sin Humo. Puedes preguntarme cosas tipo <strong>qué es una IP</strong>, <strong>cómo funciona el phishing</strong>, <strong>por dónde empezar</strong> o <strong>qué vídeo ver primero</strong>.</p>`;
   }
+  if (intent.isThanks && intent.words.length <= 5) {
+    return `<span class="assistant-name">Mantis Assistant</span><p>De nada. Cuando quieras, dime un tema y te lo explico sin humo: redes, malware, web, Linux, privacidad o ataques.</p>`;
+  }
+  if (intent.matched.length) {
+    const main = intent.matched[0];
+    const { route, topic } = getRouteRecommendation(main.route, main.key);
+    const intro = intent.asksDefinition ? main.answer : `${main.answer} Si quieres verlo con ejemplos, te recomiendo esta parte del roadmap.`;
+    return `<span class="assistant-name">Mantis Assistant</span><p>${intro}</p><p>Ruta recomendada: <strong>${route.title}</strong>. Primer paso útil: <strong>${topic.title}</strong>.</p><button type="button" class="assistant-route-link" data-assistant-route="${route.id}" data-assistant-topic="${topic.id}">Abrir esta ruta</button>`;
+  }
+  if (intent.asksHelp || intent.asksDefinition) {
+    const { route, topic } = recommendTopicFromText(text);
+    return `<span class="assistant-name">Mantis Assistant</span><p>Por cómo lo planteas, te llevaría a <strong>${route.title}</strong>. Ahí puedes avanzar sin saltarte base y ver ejemplos reales cuando toque.</p><p>Empieza por <strong>${topic.title}</strong>. Si quieres, pregúntame también el concepto concreto y te lo explico aquí antes de abrir el vídeo.</p><button type="button" class="assistant-route-link" data-assistant-route="${route.id}" data-assistant-topic="${topic.id}">Abrir esta ruta</button>`;
+  }
+  return `<span class="assistant-name">Mantis Assistant</span><p>Te leo, pero necesito un poco más de contexto para no mandarte a una ruta al azar. Prueba con algo como: <strong>quiero aprender redes</strong>, <strong>explícame phishing</strong>, <strong>qué es una VPN</strong> o <strong>quiero practicar con herramientas</strong>.</p>`;
+}
+
+function replayAssistantIntro() {
+  if (!assistantOutput) return;
+  assistantOutput.innerHTML = "";
+  assistantOutput.dataset.initialized = "true";
+  addAssistantMessage(`<span class="assistant-name">Mantis Assistant</span><p>Hola, soy la mantis de Ciber Sin Humo. Cuéntame qué sabes, qué te interesa o por dónde te pierdes, y te digo por dónde empezar.</p>`, "bot");
 }
 
 function handleAssistantPrompt(text) {
-  const { route, topic } = recommendTopicFromText(text);
   addAssistantMessage(`<p>${text}</p>`, "user");
-  addAssistantMessage(`
-    <span class="assistant-name">Mantis Assistant</span>
-    <p>Te recomiendo empezar por <strong>${topic.title}</strong>, dentro de <strong>${route.title}</strong>. Es un punto real del roadmap y encaja con lo que has pedido.</p>
-    <button type="button" class="assistant-route-link" data-assistant-route="${route.id}" data-assistant-topic="${topic.id}">Abrir esta ruta</button>
-  `, "bot");
+  addAssistantMessage(buildAssistantReply(text), "bot");
+  const { route, topic } = recommendTopicFromText(text);
   const progress = getRoadmapProgress();
   progress.recommendedRouteId = route.id;
   progress.recommendedTopicId = topic.id;
@@ -4086,11 +4107,7 @@ if (roadmapRoutesContainer) {
   document.querySelectorAll("[data-assistant-prompt]").forEach((button) => button.addEventListener("click", () => handleAssistantPrompt(button.dataset.assistantPrompt)));
 
   if (assistantOutput && !assistantOutput.dataset.initialized) {
-    assistantOutput.dataset.initialized = "true";
-    window.setTimeout(() => addAssistantMessage(`
-      <span class="assistant-name">Mantis Assistant</span>
-      <p>Hola, soy la mantis de Ciber Sin Humo. Cuéntame qué sabes, qué te interesa o por dónde te pierdes, y te digo por dónde empezar.</p>
-    `, "bot"), 260);
+    window.setTimeout(replayAssistantIntro, 260);
   }
 }
 
@@ -5207,40 +5224,57 @@ async function initYoutubeChannelPanel() {
 }
 
 initYoutubeChannelPanel();
-function initChannelTitleReveal() {
-  const section = document.getElementById("canal");
+function letterizeSectionTitle(sectionId) {
+  const section = document.getElementById(sectionId);
   const title = section?.querySelector(".section-title");
-  if (!section || !title || title.dataset.letterized === "true") return;
+  if (!section || !title) return;
 
-  const text = title.textContent || "";
-  title.textContent = "";
-  title.classList.add("channel-title-letters");
-  title.dataset.letterized = "true";
-
-  Array.from(text).forEach((char, index) => {
-    const span = document.createElement("span");
-    span.className = "title-letter";
-    span.style.setProperty("--i", String(index));
-    span.textContent = char === " " ? "\u00a0" : char;
-    title.appendChild(span);
-  });
-
-  const reveal = () => section.classList.add("is-title-visible");
-  if (!("IntersectionObserver" in window)) {
-    reveal();
-    return;
+  if (title.dataset.letterized !== "true") {
+    const text = title.textContent || "";
+    title.textContent = "";
+    title.classList.add("channel-title-letters");
+    title.dataset.letterized = "true";
+    Array.from(text).forEach((char, index) => {
+      const span = document.createElement("span");
+      span.className = "title-letter";
+      span.style.setProperty("--i", String(index));
+      span.textContent = char === " " ? "\u00a0" : char;
+      title.appendChild(span);
+    });
   }
 
+  const replay = () => {
+    section.classList.remove("is-title-visible");
+    void section.offsetWidth;
+    section.classList.add("is-title-visible");
+  };
+
+  if (!("IntersectionObserver" in window)) { replay(); return; }
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        reveal();
-        observer.disconnect();
-      }
+      if (entry.isIntersecting) replay();
+      else section.classList.remove("is-title-visible");
     });
-  }, { threshold: 0.28 });
-
+  }, { threshold: 0.32 });
   observer.observe(section);
 }
 
-initChannelTitleReveal();
+function initVideoSectionReplay() {
+  const section = document.getElementById("videos");
+  if (!section || !assistantOutput || !("IntersectionObserver" in window)) return;
+  let lastReplay = 0;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting || section.classList.contains("is-roadmap-open")) return;
+      const now = Date.now();
+      if (now - lastReplay < 1200) return;
+      lastReplay = now;
+      replayAssistantIntro();
+    });
+  }, { threshold: 0.48 });
+  observer.observe(section);
+}
+
+letterizeSectionTitle("canal");
+letterizeSectionTitle("videos");
+initVideoSectionReplay();
