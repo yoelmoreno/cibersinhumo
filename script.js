@@ -4385,8 +4385,10 @@ function makeAssistantDecision(input, options = {}) {
   if (intent.isGreeting && intent.words.length <= 4) return { type: "smalltalk", profile, intent };
   if (intent.isThanks && intent.words.length <= 5) return { type: "thanks", profile, intent };
   if (/\b(eso ya me lo se|ya me lo se|esto ya lo se|ya lo entiendo)\b/.test(intent.normalized) && assistantLastDecision?.topic) {
+    const nextNode = completeAssistantTopicAndFindNext(assistantLastDecision);
     (assistantLastDecision.topic.conceptsTaught || []).forEach((concept) => setAssistantConcept(profile, concept, "known", "message"));
     saveAssistantProfile(profile);
+    if (nextNode) return buildRecommendationResult(nextNode, "progress_next", 0.9, [], nextNode);
     return makeAssistantDecision(assistantPendingGoal ? `quiero aprender ${assistantPendingGoal}` : "por donde sigo", { profile });
   }
   if (/\b(necesito empezar antes|empieza antes|mas basico|no lo entiendo)\b/.test(intent.normalized)) {
@@ -4460,14 +4462,7 @@ function assistantNameMarkup() {
   return `<span class="assistant-name">${ASSISTANT_DISPLAY_NAME}</span>`;
 }
 
-function buildAssistantReply(text) {
-  const decision = makeAssistantDecision(text);
-  assistantLastDecision = decision.type === "recommendation" ? decision : assistantLastDecision;
-  if (decision.type === "smalltalk") return `${assistantNameMarkup()}<p>¡Hola! Dime qué objetivo tienes y qué sabes ya. Si quieres algo avanzado, primero comprobaré la base para no mandarte demasiado lejos.</p>`;
-  if (decision.type === "thanks") return `${assistantNameMarkup()}<p>De nada. Cuando quieras seguimos afinando tu ruta.</p>`;
-  if (decision.type === "diagnostic") {
-    return `${assistantNameMarkup()}<p>${decision.question.text}</p>${decision.question.type === "checklist" ? renderAssistantChecklist(decision.question) : `<div class="assistant-actions"><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="known">Sí, lo controlo</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="beginner">Lo he tocado poco</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="unknown">No, empiezo ahí</button></div>`}`;
-  }
+function renderAssistantRecommendation(decision, intro = "<p>Te recomiendo empezar por:</p>") {
   const { route, topic, reason, availability, missingPrerequisites, confidence } = decision;
   const isAvailable = availability === "published" && topic?.url;
   const why = reason === "absolute_beginner"
@@ -4481,7 +4476,18 @@ function buildAssistantReply(text) {
     ? `Empieza por el vídeo <strong>${topic.title}</strong>.`
     : `El punto correcto es <strong>${topic.title}</strong>, pero está marcado como <strong>${topic.statusLabel}</strong>. Te lo abro en el roadmap para que veas dónde encaja.`;
   const debug = `<!-- assistant-debug ${escapeAssistantHtml(JSON.stringify({ recommendedNodeId: decision.recommendedNodeId, sectionId: decision.sectionId, reason, missingPrerequisites, confidence }))} -->`;
-  return `${assistantNameMarkup()}<p>Te recomiendo empezar por:</p><p><strong>${route.title}</strong><br><strong>${topic.title}</strong></p><p>${why}</p><p>${availabilityLine}</p>${assistantRouteButton(route, topic, isAvailable ? "Abrir vídeo/ruta" : "Abrir roadmap")}${assistantCorrectionButtons()}${debug}`;
+  return `${assistantNameMarkup()}${intro}<p><strong>${route.title}</strong><br><strong>${topic.title}</strong></p><p>${why}</p><p>${availabilityLine}</p>${assistantRouteButton(route, topic, isAvailable ? "Abrir vídeo/ruta" : "Abrir roadmap")}${assistantCorrectionButtons()}${debug}`;
+}
+
+function buildAssistantReply(text) {
+  const decision = makeAssistantDecision(text);
+  assistantLastDecision = decision.type === "recommendation" ? decision : assistantLastDecision;
+  if (decision.type === "smalltalk") return `${assistantNameMarkup()}<p>¡Hola! Dime qué objetivo tienes y qué sabes ya. Si quieres algo avanzado, primero comprobaré la base para no mandarte demasiado lejos.</p>`;
+  if (decision.type === "thanks") return `${assistantNameMarkup()}<p>De nada. Cuando quieras seguimos afinando tu ruta.</p>`;
+  if (decision.type === "diagnostic") {
+    return `${assistantNameMarkup()}<p>${decision.question.text}</p>${decision.question.type === "checklist" ? renderAssistantChecklist(decision.question) : `<div class="assistant-actions"><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="known">Sí, lo controlo</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="beginner">Lo he tocado poco</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="unknown">No, empiezo ahí</button></div>`}`;
+  }
+  return renderAssistantRecommendation(decision);
 }
 
 function recommendTopicFromText(text) {
@@ -4503,6 +4509,33 @@ function handleAssistantKnowledgeAction(button) {
   window.setTimeout(() => addAssistantMessage(buildAssistantReply(goalText), "bot"), 120);
 }
 
+function completeAssistantTopicAndFindNext(decision) {
+  const currentTopic = decision?.topic;
+  const route = decision?.route || roadmapRoutes.find((item) => item.id === currentTopic?.routeId);
+  if (!currentTopic?.id || !route?.topics) return null;
+
+  const progress = getRoadmapProgress();
+  if (!progress.completed.includes(currentTopic.id)) {
+    progress.completed.push(currentTopic.id);
+  }
+  progress.lastTopicId = currentTopic.id;
+  progress.lastRouteId = route.id;
+
+  const nextTopic = route.topics.find((topic) => topic.number > currentTopic.number && !progress.completed.includes(topic.id));
+  if (nextTopic) {
+    progress.recommendedRouteId = route.id;
+    progress.recommendedTopicId = nextTopic.id;
+  } else {
+    delete progress.recommendedRouteId;
+    delete progress.recommendedTopicId;
+  }
+
+  saveRoadmapProgress(progress);
+  if (activeRoadmapRoute?.id === route.id) renderRoadmapPath(route);
+  renderRoadmapRoutes();
+  return nextTopic ? getRoadmapNode(nextTopic.id) : null;
+}
+
 function handleAssistantCorrectionAction(action) {
   if (!assistantLastDecision) return;
   const profile = loadAssistantProfile();
@@ -4511,10 +4544,22 @@ function handleAssistantCorrectionAction(action) {
     return;
   }
   if (action === "known") {
-    (assistantLastDecision.topic.conceptsTaught || []).forEach((concept) => setAssistantConcept(profile, concept, "known", "message"));
+    const currentDecision = assistantLastDecision;
+    const nextNode = completeAssistantTopicAndFindNext(currentDecision);
+    (currentDecision.topic.conceptsTaught || []).forEach((concept) => setAssistantConcept(profile, concept, "known", "message"));
     saveAssistantProfile(profile);
     addAssistantMessage(`<p>Esto ya me lo sé.</p>`, "user");
-    window.setTimeout(() => addAssistantMessage(buildAssistantReply(assistantPendingGoal ? `quiero aprender ${assistantPendingGoal}` : "por donde sigo"), "bot"), 120);
+    window.setTimeout(() => {
+      if (!nextNode) {
+        assistantLastDecision = currentDecision;
+        addAssistantMessage(`${assistantNameMarkup()}<p>Perfecto, marco <strong>${escapeAssistantHtml(currentDecision.topic.title)}</strong> como completado. De momento no hay más puntos en esta ruta; puedes abrir otro planeta del roadmap o pedirme otro objetivo.</p>`, "bot");
+        return;
+      }
+
+      const nextDecision = buildRecommendationResult(nextNode, "progress_next", 0.9, [], nextNode);
+      assistantLastDecision = nextDecision;
+      addAssistantMessage(renderAssistantRecommendation(nextDecision, `<p>Perfecto, marco <strong>${escapeAssistantHtml(currentDecision.topic.title)}</strong> como completado.</p><p>El siguiente paso lógico es:</p>`), "bot");
+    }, 120);
     return;
   }
   if (action === "earlier") {
@@ -4603,18 +4648,25 @@ function handleAssistantPrompt(text) {
   if (!cleanText) return;
   addAssistantMessage(`<p>${escapeAssistantHtml(cleanText)}</p>`, "user");
   window.setTimeout(() => {
+    let decision = null;
     try {
       addAssistantMessage(buildAssistantReply(cleanText), "bot");
-      const recommendation = recommendTopicFromText(cleanText);
-      if (recommendation?.route && recommendation?.topic) {
-        const progress = getRoadmapProgress();
-        progress.recommendedRouteId = recommendation.route.id;
-        progress.recommendedTopicId = recommendation.topic.id;
-        saveRoadmapProgress(progress);
-      }
+      decision = assistantLastDecision;
     } catch (error) {
       console.warn("Roadmap assistant fallback", error);
       addAssistantMessage(`${assistantNameMarkup()}<p>Te leo, pero ahora mismo necesito que me lo digas con una palabra clave: redes, phishing, Linux, web, privacidad o herramientas.</p>`, "bot");
+      return;
+    }
+
+    try {
+      if (decision?.type === "recommendation" && decision.route && decision.topic) {
+        const progress = getRoadmapProgress();
+        progress.recommendedRouteId = decision.route.id;
+        progress.recommendedTopicId = decision.topic.id;
+        saveRoadmapProgress(progress);
+      }
+    } catch (error) {
+      console.warn("Roadmap assistant progress save skipped", error);
     }
   }, 160);
 }
