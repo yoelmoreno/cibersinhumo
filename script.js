@@ -197,11 +197,11 @@ const roadmapRoutes = [
         "id": "topic-1",
         "number": 1,
         "title": "Qu\u00e9 es hardware y software?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es hardware y software?",
+        "status": "published",
+        "statusLabel": "Publicado",
+        "url": "https://youtu.be/YfnVA5sx3pQ",
+        "thumbnail": "https://i.ytimg.com/vi/YfnVA5sx3pQ/hqdefault.jpg",
+        "summary": "Hardware y software explicados desde cero para entender la base de cualquier sistema.",
         "tags": [
           "Inform\u00e1tica base"
         ],
@@ -5087,39 +5087,24 @@ async function fetchWithTimeout(url, timeout = 6500) {
 
   const localLatestVideos = [
     {
-      url: "https://www.youtube.com/watch?v=BbOSYx6WNMs",
-      thumbnail: "https://i.ytimg.com/vi/BbOSYx6WNMs/hqdefault.jpg",
-      category: "Intro",
-      title: "Intro Ciber Sin Humo",
+      url: "https://www.youtube.com/watch?v=YfnVA5sx3pQ",
+      thumbnail: "https://i.ytimg.com/vi/YfnVA5sx3pQ/hqdefault.jpg",
+      category: "Informática base",
+      title: "Hardware y software: la base para empezar",
     },
     {
-      url: "https://www.youtube.com/watch?v=3t8Esks_Idg",
-      thumbnail: "https://i.ytimg.com/vi/3t8Esks_Idg/hqdefault.jpg",
-      category: "Linux",
-      title: "Abrí la terminal de Linux y parecía una casa abandonada",
+      url: "https://www.youtube.com/watch?v=g3WsvKOQ_GE",
+      thumbnail: "https://i.ytimg.com/vi/g3WsvKOQ_GE/hqdefault.jpg",
+      category: "Noticias",
+      title: "Red 764, qué es y por qué preocupa",
     },
     {
-      url: "https://www.youtube.com/watch?v=BLKqTM585WM",
-      thumbnail: "https://i.ytimg.com/vi/BLKqTM585WM/hqdefault.jpg",
-      category: "Redes",
-      title: "Tu móvil tiene matrícula: así funcionan las direcciones MAC",
+      url: "https://www.youtube.com/watch?v=FzjM9Imdb8Q",
+      thumbnail: "https://i.ytimg.com/vi/FzjM9Imdb8Q/hqdefault.jpg",
+      category: "Otros",
+      title: "¿Qué hacer si un virus roba todas tus contraseñas?",
     },
   ];
-
-  localLatestVideos.unshift({
-    url: "https://www.youtube.com/watch?v=g3WsvKOQ_GE",
-    thumbnail: "https://i.ytimg.com/vi/g3WsvKOQ_GE/hqdefault.jpg",
-    category: "Noticias",
-    title: "Red 764, qué es y por qué preocupa",
-  });
-
-  localLatestVideos.unshift({
-    url: "https://www.youtube.com/watch?v=xM_I3vHrprA",
-    thumbnail: "https://i.ytimg.com/vi/xM_I3vHrprA/hqdefault.jpg",
-    category: "OSINT",
-    title: "Así te investigan sin hackearte: OSINT y metadatos",
-  });
-  localLatestVideos.length = Math.min(localLatestVideos.length, 3);
 
   const renderLatestVideos = (videos) => {
     if (!latestEl || !Array.isArray(videos) || !videos.length) return;
@@ -5817,7 +5802,7 @@ async function loadSubscriberHistory(liveSubscribers) {
   }
 }
 
-const MIN_VISIBLE_SUBSCRIBERS = 97;
+const MIN_VISIBLE_SUBSCRIBERS = 98;
 
 async function initYoutubeChannelPanel() {
   const subsEl = document.getElementById("youtube-subs-count");
@@ -5829,16 +5814,22 @@ async function initYoutubeChannelPanel() {
 
   const localLatestVideos = [
     {
+      url: "https://www.youtube.com/watch?v=YfnVA5sx3pQ",
+      thumbnail: "https://i.ytimg.com/vi/YfnVA5sx3pQ/hqdefault.jpg",
+      category: "Informática base",
+      title: "Hardware y software: la base para empezar"
+    },
+    {
+      url: "https://www.youtube.com/watch?v=g3WsvKOQ_GE",
+      thumbnail: "https://i.ytimg.com/vi/g3WsvKOQ_GE/hqdefault.jpg",
+      category: "Noticias",
+      title: "Red 764, qué es y por qué preocupa"
+    },
+    {
       url: "https://www.youtube.com/watch?v=FzjM9Imdb8Q",
       thumbnail: "https://i.ytimg.com/vi/FzjM9Imdb8Q/hqdefault.jpg",
       category: "Otros",
       title: "¿Qué hacer si un virus roba todas tus contraseñas?"
-    },
-    {
-      url: "https://www.youtube.com/watch?v=xM_I3vHrprA",
-      thumbnail: "https://i.ytimg.com/vi/xM_I3vHrprA/hqdefault.jpg",
-      category: "OSINT",
-      title: "Así te investigan sin hackearte: OSINT y metadatos"
     },
     {
       url: "https://www.youtube.com/watch?v=3t8Esks_Idg",
