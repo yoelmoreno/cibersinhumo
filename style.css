@@ -9684,3 +9684,206 @@ body.roadmap-fullscreen-mode > * {
     radial-gradient(circle at 63% 45%, rgba(255,255,255,.24) 0 6%, transparent 7%),
     radial-gradient(circle at 40% 32%, #f1d5c9 0 10%, #ad7466 31%, #72463e 61%, #211211 90%) !important;
 }
+
+/* Ajuste móvil final de Vídeos y asistente: legible, sin palabras cortadas */
+#videos,
+#videos * {
+  hyphens: none;
+}
+
+#videos .section-title,
+#videos .section-desc,
+#videos h2,
+#videos h3,
+#videos p,
+#videos strong,
+#videos span,
+#videos button,
+#videos input {
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.assistant-bubble,
+.assistant-bubble p,
+.assistant-bubble strong,
+.assistant-form input {
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  hyphens: none !important;
+}
+
+@media (max-width: 760px) {
+  #videos {
+    overflow-x: hidden;
+  }
+
+  #videos .section-inner {
+    width: min(100%, calc(100vw - 22px)) !important;
+    padding-inline: 0 !important;
+  }
+
+  .video-roadmap-header {
+    display: block !important;
+    max-width: 100% !important;
+    margin: 0 auto 20px !important;
+    padding-inline: 2px !important;
+    text-align: center !important;
+  }
+
+  .video-roadmap-header .section-title {
+    display: block !important;
+    max-width: 100% !important;
+    margin-inline: auto !important;
+    font-size: clamp(1.55rem, 7.3vw, 2.22rem) !important;
+    line-height: 1.14 !important;
+    letter-spacing: 0 !important;
+    text-wrap: balance;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .video-roadmap-header .section-desc {
+    max-width: 30rem !important;
+    margin-inline: auto !important;
+    font-size: 1.02rem !important;
+    line-height: 1.42 !important;
+    text-wrap: pretty;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .roadmap-assistant {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto 16px !important;
+    border-radius: 18px !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-chat {
+    width: 100% !important;
+    min-height: auto !important;
+    padding: 14px 10px 12px !important;
+    border-radius: 18px !important;
+    gap: 12px !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-output {
+    min-height: 320px !important;
+    max-height: min(58dvh, 470px) !important;
+    gap: 12px !important;
+    padding: 2px 2px 6px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 255, 136, .85) rgba(0, 18, 10, .5);
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-output::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-output::-webkit-scrollbar-track {
+    background: rgba(0, 18, 10, .45);
+    border-radius: 999px;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-output::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(0,255,136,.95), rgba(0,155,88,.72));
+    border-radius: 999px;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-message-bot,
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-message-user {
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 8px !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-message-bot {
+    grid-template-columns: 30px minmax(0, 1fr) !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-message-user {
+    grid-template-columns: minmax(0, 1fr) 30px !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-avatar,
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-avatar-user,
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-avatar-bot {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    font-size: .54rem !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-bubble {
+    min-width: 0 !important;
+    padding: 12px 12px !important;
+    font-size: .98rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-name {
+    font-size: .66rem !important;
+    letter-spacing: .06em !important;
+  }
+
+  .assistant-quick-actions {
+    gap: 7px !important;
+  }
+
+  .assistant-quick-actions button,
+  .assistant-route-link {
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.2;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-form {
+    position: sticky;
+    bottom: 8px;
+    z-index: 5;
+    width: 100% !important;
+    min-height: 56px !important;
+    grid-template-columns: minmax(0, 1fr) 44px !important;
+    gap: 8px !important;
+    padding: 6px 7px 6px 14px !important;
+    border-radius: 999px !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-form input {
+    min-width: 0 !important;
+    min-height: 42px !important;
+    padding: 0 4px !important;
+    font-size: 16px !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-form button {
+    width: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-skip {
+    min-height: 42px !important;
+    max-width: 100%;
+    margin-inline: auto;
+    padding: 0 18px !important;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 380px) {
+  .video-roadmap-header .section-title {
+    font-size: clamp(1.42rem, 7vw, 1.82rem) !important;
+  }
+
+  .video-roadmap-header .section-desc {
+    font-size: .98rem !important;
+  }
+
+  .video-roadmap-section:not(.is-roadmap-open) .assistant-bubble {
+    font-size: .94rem !important;
+  }
+}
