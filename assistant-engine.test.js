@@ -80,6 +80,27 @@ assert.ok(
 const phishing = decide("quiero aprender phishing");
 assert.strictEqual(phishing.recommendedNodeId, "topic-122", "phishing nunca debe caer a hardware por defecto");
 
+const noNmapEngine = loadAssistantEngine().engine;
+const noNmapIntent = noNmapEngine.parseAssistantIntent("No quiero Nmap todavia, quiero aprender redes");
+const noNmapYet = noNmapEngine.makeAssistantDecision("No quiero Nmap todavia, quiero aprender redes");
+assert.notStrictEqual(noNmapIntent.goal, "pentesting", "negación de Nmap no debe activar pentesting");
+assert.ok(["topic-1", "topic-53"].includes(noNmapYet.recommendedNodeId), "redes sin base clara cae en base o redes, no en herramienta");
+
+const linuxIntent = decide("He usado Kali pero quiero aprender Linux");
+assert.strictEqual(linuxIntent.recommendedNodeId, "topic-26", "Kali con objetivo Linux va a Linux, no a redes o hardware");
+
+const httpEngine = loadAssistantEngine().engine;
+const httpIntent = httpEngine.parseAssistantIntent("Quiero hacking web, pero antes necesito aprender HTTP");
+const httpBeforeWeb = httpEngine.makeAssistantDecision("Quiero hacking web, pero antes necesito aprender HTTP");
+assert.strictEqual(httpBeforeWeb.recommendedNodeId, "topic-92", "objetivo inmediato HTTP antes de hacking web");
+assert.strictEqual(httpIntent.finalGoal, "web_hacking", "mantiene hacking web como objetivo final");
+
+const typoPentesting = loadAssistantEngine().engine.parseAssistantIntent("quiero aprnder pentestin y de linuz se poco");
+assert.strictEqual(typoPentesting.goal, "pentesting", "corrige typos de aprender/pentesting/linux");
+
+const defenseInstead = loadAssistantEngine().engine.parseAssistantIntent("Realmente no quiero hacking web, prefiero defensa");
+assert.strictEqual(defenseInstead.goal, "defense", "contraste y negación priorizan defensa");
+
 {
   const { engine, progress } = loadAssistantEngine();
   progress.recommendedTopicId = "topic-1";
@@ -96,6 +117,24 @@ assert.strictEqual(phishing.recommendedNodeId, "topic-122", "phishing nunca debe
   const migrated = engine.loadAssistantProfile();
   const next = engine.makeAssistantDecision("por donde sigo", { profile: migrated });
   assert.notStrictEqual(next.recommendedNodeId, "topic-1", "un tema completado no se recomienda otra vez al continuar");
+}
+
+{
+  const { engine } = loadAssistantEngine();
+  const profile = {};
+  engine.updateProfileFromText(profile, "Sé IP y DNS pero no puertos");
+  assert.ok(engine.getAssistantConceptMastery(profile, "ip") >= 62, "IP queda como conocida");
+  assert.ok(engine.getAssistantConceptMastery(profile, "dns") >= 62, "DNS queda como conocida");
+  assert.strictEqual(engine.getAssistantConceptState(profile, "ports"), "unknown", "puertos queda como desconocido");
+}
+
+{
+  const { engine } = loadAssistantEngine();
+  const profile = engine.applyAssistantChecklistSelection("networking", { ip: "known", dns: "uncertain", ports: "unknown", tcp_udp: "confident" });
+  assert.strictEqual(engine.getAssistantConceptState(profile, "ip"), "known", "checklist por nivel marca conocido");
+  assert.strictEqual(engine.getAssistantConceptState(profile, "dns"), "uncertain", "checklist por nivel marca me suena");
+  assert.strictEqual(engine.getAssistantConceptState(profile, "ports"), "unknown", "checklist por nivel marca no");
+  assert.strictEqual(engine.getAssistantConceptState(profile, "tcp_udp"), "confident", "checklist por nivel marca lo uso");
 }
 
 const graph = loadAssistantEngine().engine.validateAssistantKnowledgeGraph();

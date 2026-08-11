@@ -4112,13 +4112,17 @@ const assistantGoalTargets = {
   ddos: ["topic-128"],
   mitm: ["topic-129"],
   deep_web: ["topic-192"],
+  defense: ["topic-211"],
 };
 
 const assistantDiagnosticBlocks = {
+  general: ["computer_basics", "operating_systems", "networking", "cybersecurity"],
   networking: ["ip", "router", "ports", "tcp_udp", "dns"],
   web: ["web_basics", "dns", "http", "http_requests", "get_post", "cookies", "sessions", "sql"],
   pentesting: ["linux", "terminal", "ip", "router", "ports", "tcp_udp", "dns"],
   linux: ["linux", "terminal", "virtual_machines"],
+  cybersecurity: ["cybersecurity", "phishing", "malware", "privacy"],
+  osint: ["osint", "metadata", "shodan", "privacy"],
 };
 
 const assistantSpecificGoals = new Set([
@@ -4509,8 +4513,7 @@ function renderAssistantRecommendation(decision, intro = "<p>Te recomiendo empez
   const availabilityLine = isAvailable
     ? `Empieza por el vídeo <strong>${topic.title}</strong>.`
     : `El punto correcto es <strong>${topic.title}</strong>, pero está marcado como <strong>${topic.statusLabel}</strong>. Te lo abro en el roadmap para que veas dónde encaja.`;
-  const debug = `<!-- assistant-debug ${escapeAssistantHtml(JSON.stringify({ recommendedNodeId: decision.recommendedNodeId, sectionId: decision.sectionId, reason, missingPrerequisites, confidence }))} -->`;
-  return `${assistantNameMarkup()}${intro}<p><strong>${route.title}</strong><br><strong>${topic.title}</strong></p><p>${why}</p><p>${availabilityLine}</p>${assistantRouteButton(route, topic, isAvailable ? "Abrir vídeo/ruta" : "Abrir roadmap")}${assistantCorrectionButtons()}${debug}`;
+  return `${assistantNameMarkup()}${intro}<p><strong>${route.title}</strong><br><strong>${topic.title}</strong></p><p>${why}</p><p>${availabilityLine}</p>${assistantRouteButton(route, topic, isAvailable ? "Abrir vídeo/ruta" : "Abrir roadmap")}${assistantCorrectionButtons()}`;
 }
 
 function buildAssistantReply(text) {
@@ -4606,10 +4609,19 @@ function completeAssistantTopicAndFindNext(decision) {
   return nextTopic ? getRoadmapNode(nextTopic.id) : null;
 }
 
-function handleAssistantCorrectionAction(action) {
+function handleAssistantCorrectionAction(action, button = null) {
+  if (button?.dataset.assistantBusy === "true") return;
+  if (button) {
+    button.dataset.assistantBusy = "true";
+    button.disabled = true;
+  }
   if (!assistantLastDecision) assistantLastDecision = decisionFromSavedRecommendation();
   if (!assistantLastDecision) {
     addAssistantMessage(`${assistantNameMarkup()}<p>No tengo una recomendación activa que marcar. Dime el tema que quieres aprender y te coloco en el punto correcto.</p>`, "bot");
+    if (button) {
+      button.dataset.assistantBusy = "false";
+      button.disabled = false;
+    }
     return;
   }
   const profile = loadAssistantProfile();
@@ -4633,6 +4645,10 @@ function handleAssistantCorrectionAction(action) {
       const nextDecision = buildRecommendationResult(nextNode, "progress_next", 0.9, [], nextNode);
       assistantLastDecision = nextDecision;
       addAssistantMessage(renderAssistantRecommendation(nextDecision, `<p>Perfecto, marco <strong>${escapeAssistantHtml(currentDecision.topic.title)}</strong> como completado.</p><p>El siguiente paso lógico es:</p>`), "bot");
+      if (button) {
+        button.dataset.assistantBusy = "false";
+        button.disabled = false;
+      }
     }, 120);
     return;
   }
@@ -4779,6 +4795,16 @@ function assistantConceptKnown(profile, concept) {
 
 function normalizeAssistantInput(input) {
   const corrections = [
+    [/aprnder/g, "aprender"],
+    [/aprenderr/g, "aprender"],
+    [/pentestin\b/g, "pentesting"],
+    [/pentestig\b/g, "pentesting"],
+    [/linuz/g, "linux"],
+    [/netwroking/g, "networking"],
+    [/ciberseguridadd/g, "ciberseguridad"],
+    [/sql inyection/g, "sql injection"],
+    [/sql inyecion/g, "sql injection"],
+    [/virutalbox/g, "virtualbox"],
     [/phising/g, "phishing"],
     [/phisihng/g, "phishing"],
     [/qrisihng/g, "qrishing"],
@@ -4797,11 +4823,151 @@ function normalizeAssistantInput(input) {
   return normalized;
 }
 
+function tokenizeAssistantText(input) {
+  return normalizeAssistantInput(input).split(/\s+/).filter(Boolean);
+}
+
+function assistantEscapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function assistantTextHasAlias(text, alias) {
+  const normalized = normalizeAssistantInput(text);
+  const cleanAlias = normalizeAssistantInput(alias);
+  if (!cleanAlias) return false;
+  const parts = cleanAlias.split(/\s+/).filter(Boolean);
+  if (parts.length === 1 && parts[0].length <= 3) {
+    return new RegExp(`(^|\\s)${assistantEscapeRegExp(parts[0])}(\\s|$)`).test(normalized);
+  }
+  return new RegExp(`(^|\\s)${parts.map(assistantEscapeRegExp).join("\\s+")}(\\s|$)`).test(normalized);
+}
+
+function splitAssistantClauses(normalized) {
+  const marked = normalizeAssistantInput(normalized)
+    .replace(/\b(sin embargo|en cambio|mas bien|realmente|prefiero|pero|aunque|antes|primero|todavia|despues|luego)\b/g, "|$1 ");
+  return marked.split("|").map((part, index) => {
+    const text = part.trim();
+    const contrast = /^(pero|aunque|sin embargo|en cambio|mas bien|realmente|prefiero)\b/.test(text);
+    const immediate = /^(antes|primero|todavia)\b/.test(text);
+    const later = /^(despues|luego)\b/.test(text);
+    return { text, index, contrast, immediate, later, weight: (contrast || immediate ? 1.45 : 1) * (later ? 0.72 : 1) };
+  }).filter((part) => part.text);
+}
+
+function assistantClauseNegatesGoal(clause) {
+  return /\b(no quiero|no me interesa|no busco|no necesito|todavia no quiero|no quiero aprender|no quiero meterme)\b/.test(clause);
+}
+
+function assistantAliasNegatedInClause(clause, aliases) {
+  const text = normalizeAssistantInput(clause);
+  return aliases.some((alias) => {
+    const cleanAlias = normalizeAssistantInput(alias);
+    const index = text.indexOf(cleanAlias);
+    if (index < 0) return false;
+    const before = text.slice(Math.max(0, index - 36), index);
+    return /\b(no quiero|no me interesa|no busco|no necesito|todavia no quiero|no quiero aprender|no quiero meterme)\b/.test(before);
+  });
+}
+
+function assistantClauseStatesUnknown(clause) {
+  return /\b(no se|no entiendo|ni idea|nunca he usado|no conozco|no controlo|no tengo claro|se me dan fatal|me cuesta|me cuestan|se poco|llevo poco)\b/.test(clause);
+}
+
+function assistantClauseStatesKnown(clause) {
+  return /\b(se bastante|se bien|lo entiendo|entiendo|controlo|domino|manejo|conozco|he usado|he utilizado|he probado|llevo bien|se usar|lo uso)\b/.test(clause)
+    || /\bse\s+(ip|router|puertos|tcp|udp|dns|redes|linux|phishing|vpn|http|cookies|web)\b/.test(clause);
+}
+
+function assistantConceptStateInClause(clause, concept, fallback = {}) {
+  const aliases = assistantConceptAliases[concept] || [concept];
+  const text = normalizeAssistantInput(clause);
+  const alias = aliases.find((item) => assistantTextHasAlias(text, item));
+  if (!alias) return null;
+  const cleanAlias = normalizeAssistantInput(alias);
+  const index = text.indexOf(cleanAlias);
+  const before = text.slice(Math.max(0, index - 44), index);
+  const after = text.slice(index + cleanAlias.length, Math.min(text.length, index + cleanAlias.length + 52));
+  const local = `${before} ${cleanAlias} ${after}`;
+  if (/\b(no|ni|nunca|fatal|mal|no entiendo|no se|no controlo|no conozco)\b.{0,24}$/.test(before) || /^\s*.{0,18}\b(no entiendo|no se|fatal|mal)\b/.test(after)) return "unknown";
+  if (/\b(me suena|me suenan|algo de|un poco|regular|se poco)\b/.test(local)) return "uncertain";
+  if (/\b(se bastante|se bien|lo entiendo|entiendo|controlo|domino|manejo|conozco|he usado|he utilizado|he probado|se usar|lo uso)\b/.test(local) || /\bse\s+.{0,30}\b/.test(before + cleanAlias)) return "known";
+  if (fallback.unknown) return "unknown";
+  if (fallback.uncertain) return "uncertain";
+  if (fallback.known) return "known";
+  return null;
+}
+
+const assistantGoalEvidence = {
+  sql_injection: ["sql injection", "sqli", "inyeccion sql"],
+  web_hacking: ["hacking web", "burp", "xss", "csrf", "owasp"],
+  pentesting: ["pentesting", "hacking etico", "nmap", "wireshark", "john", "laboratorio", "pruebas practicas"],
+  networking: ["redes", "networking", "internet", "sistema osi"],
+  linux: ["linux", "terminal", "bash", "shell", "comandos", "kali"],
+  virtual_machines: ["maquina virtual", "virtualbox", "vmware", "virtualizacion"],
+  web: ["web", "navegador", "servidor", "api", "pagina web"],
+  cybersecurity: ["ciberseguridad", "seguridad informatica"],
+  phishing: ["phishing", "qrishing", "qr phishing", "correo falso", "suplantacion"],
+  malware: ["malware", "virus"],
+  trojan: ["troyano", "trojan"],
+  spyware: ["spyware", "camara", "camaras"],
+  keylogger: ["keylogger"],
+  ransomware: ["ransomware"],
+  ddos: ["ddos", "denegacion de servicio"],
+  mitm: ["mitm", "man in the middle", "intermediario"],
+  osint: ["osint", "metadatos", "shodan", "investigar informacion"],
+  vpn: ["vpn", "red privada virtual"],
+  mac: ["direccion mac", "mac address"],
+  ports: ["puerto", "puertos"],
+  dns: ["dns", "dominio", "dominios"],
+  http: ["http", "https"],
+  cookies: ["cookie", "cookies"],
+  deep_web: ["deep web", "dark web", "onion"],
+  defense: ["defensa", "blue team", "seguridad defensiva", "proteger", "proteccion"],
+};
+
+function scoreAssistantGoals(normalized) {
+  const clauses = splitAssistantClauses(normalized);
+  const scores = new Map();
+  const evidence = [];
+  const negatedGoals = new Set();
+  clauses.forEach((clause) => {
+    Object.entries(assistantGoalEvidence).forEach(([goal, aliases]) => {
+      const hits = aliases.filter((alias) => assistantTextHasAlias(clause.text, alias));
+      if (!hits.length) return;
+      const wants = /\b(quiero|aprender|empezar|practicar|estudiar|prefiero|necesito|me interesa|busco|gustaria)\b/.test(clause.text);
+      const explicitGoal = hits.some((alias) => {
+        const cleanAlias = assistantEscapeRegExp(normalizeAssistantInput(alias));
+        return new RegExp(`\\b(quiero|prefiero|necesito|busco|me interesa|me gustaria|aprender|practicar)(?:\\s+\\w+){0,4}\\s+${cleanAlias}\\b`).test(clause.text);
+      });
+      const negated = assistantAliasNegatedInClause(clause.text, hits);
+      const unknown = assistantClauseStatesUnknown(clause.text);
+      const known = assistantClauseStatesKnown(clause.text);
+      let score = hits.length * 0.32 * clause.weight;
+      if (wants) score += 0.16 * clause.weight;
+      if (explicitGoal) score += 0.5 * clause.weight;
+      if (clause.immediate) score += 0.28;
+      if (known && !explicitGoal) score -= 0.3 * clause.weight;
+      if (unknown && wants) score += 0.12;
+      if (negated) {
+        score = -0.75 * clause.weight;
+        negatedGoals.add(goal);
+      }
+      scores.set(goal, (scores.get(goal) || 0) + score);
+      evidence.push({ goal, score, hits, clause: clause.text, negated, immediate: clause.immediate, later: clause.later });
+    });
+  });
+  const candidates = [...scores.entries()]
+    .filter(([, score]) => score > 0.12)
+    .sort((a, b) => b[1] - a[1])
+    .map(([intent, score]) => ({ intent, score: Math.min(1, Number(score.toFixed(2))), evidence: evidence.filter((item) => item.goal === intent) }));
+  return { candidates, evidence, negatedGoals: [...negatedGoals] };
+}
+
 function conceptsInText(normalized) {
   const text = normalizeAssistantInput(normalized);
   const found = new Set();
   Object.entries(assistantConceptAliases).forEach(([concept, aliases]) => {
-    if (aliases.some((alias) => text.includes(normalizeAssistantInput(alias)))) found.add(concept);
+    if (aliases.some((alias) => assistantTextHasAlias(text, alias))) found.add(concept);
   });
   if (/\bsistema osi\b/.test(text)) found.add("networking");
   if (found.has("ports") || found.has("tcp_udp") || found.has("dns") || found.has("ip") || found.has("mac")) found.add("networking");
@@ -4811,38 +4977,14 @@ function conceptsInText(normalized) {
 }
 
 function matchAssistantGoal(normalized) {
-  const text = normalizeAssistantInput(normalized);
-  const goalChecks = [
-    ["sql_injection", ["sql injection", "sqli", "inyeccion sql"]],
-    ["virtual_machines", ["maquina virtual", "virtualbox", "vmware", "virtualizacion"]],
-    ["web_hacking", ["hacking web", "burp", "xss", "csrf", "owasp"]],
-    ["pentesting", ["pentesting", "hacking etico", "nmap", "wireshark", "john", "kali", "pruebas practicas", "laboratorio"]],
-    ["phishing", ["phishing", "qrishing", "qr phishing", "correo falso", "suplantacion"]],
-    ["trojan", ["troyano", "trojan"]],
-    ["spyware", ["spyware", "camara", "camaras"]],
-    ["keylogger", ["keylogger", "teclado"]],
-    ["ransomware", ["ransomware"]],
-    ["ddos", ["ddos", "denegacion de servicio"]],
-    ["mitm", ["mitm", "man in the middle", "intermediario"]],
-    ["deep_web", ["deep web", "dark web", "onion"]],
-    ["osint", ["osint", "metadatos", "shodan", "investigar"]],
-    ["vpn", ["vpn", "red privada virtual"]],
-    ["mac", ["direccion mac", "mac address"]],
-    ["ports", ["puerto", "puertos"]],
-    ["dns", ["dns", "dominio", "dominios"]],
-    ["cookies", ["cookie", "cookies"]],
-    ["http", ["http", "https"]],
-    ["web", ["web", "navegador", "servidor", "api", "pagina web"]],
-    ["linux", ["linux", "terminal", "bash", "shell", "comandos", "kali"]],
-    ["networking", ["redes", "networking", "internet", "ip", "tcp", "udp", "router", "sistema osi"]],
-    ["malware", ["malware", "virus"]],
-  ];
-  return goalChecks.find(([, aliases]) => aliases.some((alias) => text.includes(normalizeAssistantInput(alias))))?.[0] || "general_learning";
+  return scoreAssistantGoals(normalized).candidates[0]?.intent || "general_learning";
 }
 
 function parseAssistantIntent(input) {
   const normalized = normalizeAssistantInput(input);
   const words = normalized.split(/\s+/).filter(Boolean);
+  const goalScoring = scoreAssistantGoals(normalized);
+  const intentCandidates = goalScoring.candidates;
   const absoluteBeginner = /\b(no se nada|no tengo ni idea|desde cero|desde 0|empiezo de cero|empiezo desde cero|completamente nuevo|principiante absoluto|nunca he estudiado|no se absolutamente nada)\b/.test(normalized);
   const asksDefinition = /\b(que es|que son|explicame|explica|como funciona|para que sirve|dime que es)\b/.test(normalized);
   const learningRequest = /\b(quiero aprender|quiero empezar|aprender|estudiar|meterme|practicar|me gustaria aprender|por donde empiezo|donde deberia empezar)\b/.test(normalized);
@@ -4851,23 +4993,53 @@ function parseAssistantIntent(input) {
   const easier = /\b(necesito empezar antes|empieza antes|mas basico|mas facil|no lo entiendo|me pierdo)\b/.test(normalized);
   const isGreeting = /^(hola|buenas|hey|ey|que tal|holaa)\b/.test(normalized);
   const isThanks = /\b(gracias|perfecto|vale gracias|genial gracias)\b/.test(normalized);
+  const knowledgeEvidence = [];
   const knownConcepts = [];
   const unknownConcepts = [];
-  normalized.split(/\bpero\b|\baunque\b|[.]/).forEach((part) => {
+  const uncertainConcepts = [];
+  splitAssistantClauses(normalized).forEach((partInfo) => {
+    const part = partInfo.text;
     const concepts = conceptsInText(part);
     if (!concepts.length) return;
-    if (/\b(no se|no entiendo|ni idea|nunca he usado|no conozco|no controlo|no tengo claro)\b/.test(part)) unknownConcepts.push(...concepts);
-    if (/\b(se|controlo|entiendo|tengo claro|domino|manejo|conozco|he usado|he probado)\b/.test(part)) knownConcepts.push(...concepts);
+    const unknown = assistantClauseStatesUnknown(part);
+    const known = assistantClauseStatesKnown(part);
+    const uncertain = /\b(me suena|me suenan|mas o menos|regular|algo de|un poco|se poco)\b/.test(part);
+    concepts.forEach((concept) => {
+      const conceptState = assistantConceptStateInClause(part, concept, { unknown, known, uncertain });
+      if (conceptState === "unknown") {
+        unknownConcepts.push(concept);
+        knowledgeEvidence.push({ concept, state: "unknown", mastery: 8, clause: part, source: "message", weight: partInfo.weight });
+      } else if (conceptState === "uncertain") {
+        uncertainConcepts.push(concept);
+        knowledgeEvidence.push({ concept, state: "uncertain", mastery: 32, clause: part, source: "message", weight: partInfo.weight });
+      } else if (conceptState === "known") {
+        knownConcepts.push(concept);
+        knowledgeEvidence.push({ concept, state: "known", mastery: /\b(uso|utilizo|manejo|domino|controlo)\b/.test(part) ? 82 : 68, clause: part, source: "message", weight: partInfo.weight });
+      }
+    });
   });
-  let goal = matchAssistantGoal(normalized);
+  let goal = intentCandidates[0]?.intent || "general_learning";
+  if (goal === "general_learning" && unknownConcepts.length) {
+    goal = unknownConcepts.find((concept) => assistantGoalTargets[concept]) || "general_learning";
+  }
   if (continueLearning) goal = "continue_learning";
+  const immediateGoal = intentCandidates.find((candidate) => candidate.evidence.some((item) => item.immediate))?.intent || goal;
+  const deferredGoal = intentCandidates.find((candidate) => candidate.intent !== immediateGoal && candidate.evidence.some((item) => !item.immediate && !item.negated))?.intent;
+  const finalGoal = intentCandidates.find((candidate) => candidate.evidence.some((item) => item.later))?.intent || deferredGoal || (goal !== immediateGoal ? goal : null);
   const preferences = {
     practice: /\b(practicar|practica|laboratorio|herramienta|herramientas|real|reto)\b/.test(normalized),
     theory: /\b(teoria|concepto|explicame|entender|base)\b/.test(normalized),
+    stepByStep: /\b(paso a paso|no quiero saltarme nada|sin saltarme nada|con calma)\b/.test(normalized),
+    fast: /\b(rapido|ir rapido|directo)\b/.test(normalized),
   };
   return {
     normalized,
     words,
+    primaryIntent: goal,
+    intentCandidates,
+    goals: intentCandidates.map((candidate) => candidate.intent),
+    finalGoal,
+    immediateGoal,
     absoluteBeginner,
     asksDefinition,
     learningRequest,
@@ -4878,10 +5050,13 @@ function parseAssistantIntent(input) {
     isThanks,
     knownConcepts: [...new Set(knownConcepts)],
     unknownConcepts: [...new Set(unknownConcepts)],
+    uncertainConcepts: [...new Set(uncertainConcepts)],
+    knowledgeEvidence,
+    negatedConcepts: [...new Set([...goalScoring.negatedGoals, ...unknownConcepts])],
     mentionedConcepts: conceptsInText(normalized),
     preferences,
     goal,
-    confidence: goal === "general_learning" && !absoluteBeginner ? 0.42 : 0.82,
+    confidence: intentCandidates[0]?.score || (goal === "general_learning" && !absoluteBeginner ? 0.36 : 0.82),
   };
 }
 
@@ -4894,8 +5069,16 @@ function updateProfileFromText(profile, input) {
     profile.primaryGoal = intent.goal;
     profile.goals = [...new Set([intent.goal, ...(profile.goals || [])])].slice(0, 8);
   }
-  intent.knownConcepts.forEach((concept) => setAssistantConcept(profile, concept, "known", "message", input));
-  intent.unknownConcepts.forEach((concept) => setAssistantConcept(profile, concept, "unknown", "message", input));
+  if (intent.finalGoal) profile.conversation.finalGoal = intent.finalGoal;
+  if (intent.immediateGoal && intent.immediateGoal !== intent.goal) profile.conversation.immediateGoal = intent.immediateGoal;
+  intent.knowledgeEvidence.forEach((item) => setAssistantConcept(profile, item.concept, item.mastery, "message", item.clause));
+  if (!intent.absoluteBeginner && (intent.knownConcepts.includes("linux") || intent.knownConcepts.includes("terminal") || intent.knownConcepts.includes("virtual_machines"))) {
+    setAssistantConcept(profile, "computer_basics", "known", "inference", "usa entorno técnico");
+    setAssistantConcept(profile, "operating_systems", "known", "inference", "usa entorno técnico");
+  }
+  if (!intent.absoluteBeginner && (intent.knownConcepts.includes("networking") || intent.knownConcepts.includes("ip") || intent.knownConcepts.includes("router"))) {
+    setAssistantConcept(profile, "computer_basics", "known", "inference", "conoce base de redes");
+  }
   if (intent.absoluteBeginner) {
     profile.experienceLevel = "beginner";
     ["computer_basics", "networking", "linux", "web_basics", "cybersecurity"].forEach((concept) => setAssistantConcept(profile, concept, "unknown", "message", input));
@@ -4921,27 +5104,36 @@ function applyProgressToProfile(profile) {
 }
 
 function goalDiagnosticBlock(goal) {
-  if (goal === "web_hacking" || goal === "sql_injection" || goal === "web" || goal === "cookies" || goal === "http") return "web";
-  if (goal === "pentesting" || goal === "ports" || goal === "mac" || goal === "ip" || goal === "dns" || goal === "networking" || goal === "ddos" || goal === "mitm") return "networking";
+  if (goal === "general_learning" || goal === "continue_learning") return "general";
+  if (goal === "web_hacking" || goal === "sql_injection" || goal === "web" || goal === "cookies" || goal === "http" || goal === "deep_web") return "web";
+  if (goal === "pentesting") return "pentesting";
+  if (goal === "ports" || goal === "mac" || goal === "ip" || goal === "dns" || goal === "networking" || goal === "ddos" || goal === "mitm") return "networking";
   if (goal === "linux" || goal === "linux_tools" || goal === "virtual_machines") return "linux";
+  if (goal === "osint") return "osint";
   if (goal === "phishing" || goal === "malware" || goal === "trojan" || goal === "spyware" || goal === "keylogger" || goal === "ransomware") return "cybersecurity";
-  return "networking";
+  if (goal === "defense") return "cybersecurity";
+  return "general";
 }
 
-assistantDiagnosticBlocks.cybersecurity = ["cybersecurity", "phishing", "malware"];
+assistantDiagnosticBlocks.general = ["computer_basics", "operating_systems", "networking", "cybersecurity"];
+assistantDiagnosticBlocks.cybersecurity = ["cybersecurity", "phishing", "malware", "privacy"];
+assistantDiagnosticBlocks.osint = ["osint", "metadata", "shodan", "privacy"];
 
 function chooseDiagnosticQuestion(goal, profile) {
   const block = goalDiagnosticBlock(goal);
   const concepts = assistantDiagnosticBlocks[block] || [];
   const unknown = concepts.filter((concept) => !assistantConceptKnown(profile, concept));
   if (unknown.length >= Math.min(3, concepts.length)) {
-    const text = block === "web"
-      ? "Antes de enviarte a hacking web, marca qué base de Web tienes clara."
-      : block === "linux"
-        ? "Para orientarte bien, marca qué controlas sobre Linux y entornos."
-        : block === "cybersecurity"
-          ? "Antes de elegir ataque concreto, marca qué conceptos de ciber ya entiendes."
-          : "Para no mandarte demasiado adelante, marca lo que tengas claro de redes.";
+    const textByBlock = {
+      general: "Vamos a ubicar tu punto de partida real. Marca tu nivel en estas bases.",
+      web: "Antes de enviarte a hacking web, marca qué base de Web tienes clara.",
+      linux: "Para orientarte bien, marca qué controlas sobre Linux y entornos.",
+      pentesting: "Para práctica y pentesting, necesito saber qué base técnica tienes.",
+      osint: "Para OSINT, dime qué conceptos y herramientas te suenan ya.",
+      cybersecurity: "Antes de elegir ataque concreto, marca qué conceptos de ciber ya entiendes.",
+      networking: "Para no mandarte demasiado adelante, marca lo que tengas claro de redes.",
+    };
+    const text = textByBlock[block] || textByBlock.general;
     return { type: "checklist", block, text };
   }
   return null;
@@ -4969,6 +5161,13 @@ function continueRecommendation(profile) {
   if (last) {
     const next = firstOpenTopicAfter(last, profile);
     if (next) return buildRecommendationResult(next, "progress_next", 0.84, missingPrerequisitesForNode(next, profile), next);
+  }
+  if (profile.conversation?.finalGoal) {
+    const target = pickBestTargetForGoal(profile.conversation.finalGoal, profile);
+    const missing = missingPrerequisitesForNode(target, profile);
+    const missingConcept = firstMeaningfulMissingPrerequisite(target, profile);
+    const node = missingConcept ? findTopicTeachingConcept(missingConcept, false) : target;
+    if (node) return buildRecommendationResult(node, "final_goal_path", 0.82, missing, target);
   }
   return buildRecommendationResult(firstOpenTopicInRoute(roadmapRoutes[0]?.id, profile), "progress_empty", 0.64, []);
 }
@@ -5050,14 +5249,16 @@ function makeAssistantDecision(input, options = {}) {
     return continueRecommendation(profile);
   }
 
-  if (intent.absoluteBeginner && intent.goal === "general_learning") {
+  if (intent.absoluteBeginner) {
     assistantPendingGoal = "general_learning";
     profile.conversation.pendingGoal = assistantPendingGoal;
     saveAssistantProfile(profile);
     return buildRecommendationResult(firstOpenTopicInRoute(roadmapRoutes[0]?.id, profile), "absolute_beginner", 0.96, [], getRoadmapNode("topic-1"));
   }
 
-  assistantPendingGoal = intent.goal === "general_learning" ? (profile.primaryGoal || "general_learning") : intent.goal;
+  const currentGoal = intent.immediateGoal && intent.immediateGoal !== "general_learning" ? intent.immediateGoal : intent.goal;
+  if (intent.finalGoal && intent.finalGoal !== currentGoal) profile.conversation.finalGoal = intent.finalGoal;
+  assistantPendingGoal = currentGoal === "general_learning" ? (profile.primaryGoal || profile.conversation.finalGoal || "general_learning") : currentGoal;
   profile.conversation.pendingGoal = assistantPendingGoal;
 
   if (intent.goal === "general_learning" && !intent.learningRequest && !intent.asksDefinition && !options.forceRecommend) {
@@ -5089,7 +5290,7 @@ function makeAssistantDecision(input, options = {}) {
   }
 
   const diagnostic = chooseDiagnosticQuestion(assistantPendingGoal, profile);
-  if (diagnostic && !options.forceRecommend && missing.length >= 3 && !assistantSpecificGoals.has(assistantPendingGoal)) {
+  if (diagnostic && !options.forceRecommend && missing.length >= 3 && assistantPendingGoal !== "pentesting" && !assistantSpecificGoals.has(assistantPendingGoal)) {
     assistantPendingQuestion = diagnostic;
     profile.conversation.pendingQuestion = diagnostic;
     saveAssistantProfile(profile);
@@ -5114,13 +5315,37 @@ function makeAssistantDecision(input, options = {}) {
 
 function applyAssistantChecklistSelection(block, selectedConcepts, profile = loadAssistantProfile()) {
   const concepts = assistantDiagnosticBlocks[block] || [];
-  const selected = new Set(selectedConcepts || []);
+  const selected = selectedConcepts && typeof selectedConcepts === "object" && !Array.isArray(selectedConcepts)
+    ? null
+    : new Set(selectedConcepts || []);
   concepts.forEach((concept) => {
-    setAssistantConcept(profile, concept, selected.has(concept) ? "known" : "unknown", "diagnostic", block);
+    const level = selected ? (selected.has(concept) ? "known" : "unknown") : (selectedConcepts[concept] || "unknown");
+    setAssistantConcept(profile, concept, level, "diagnostic", block);
   });
   profile.conversation.pendingQuestion = null;
   saveAssistantProfile(profile);
   return profile;
+}
+
+function handleAssistantCheckToggle(button) {
+  const row = button.closest("[data-assistant-check-row]");
+  if (!row) return;
+  row.querySelectorAll("[data-assistant-check]").forEach((item) => {
+    item.setAttribute("aria-pressed", "false");
+    item.classList.remove("is-selected");
+  });
+  button.setAttribute("aria-pressed", "true");
+  button.classList.add("is-selected");
+}
+
+function handleAssistantCheckPreset(button) {
+  const checklist = button.closest("[data-assistant-checklist]");
+  const level = button.dataset.assistantPresetLevel || "unknown";
+  if (!checklist) return;
+  checklist.querySelectorAll("[data-assistant-check-row]").forEach((row) => {
+    const target = row.querySelector(`[data-assistant-level="${level}"]`);
+    if (target) handleAssistantCheckToggle(target);
+  });
 }
 
 function handleAssistantKnowledgeAction(button) {
@@ -5142,20 +5367,32 @@ function handleAssistantKnowledgeAction(button) {
 function handleAssistantCheckConfirm(button) {
   if (button.dataset.assistantBusy === "true") return;
   button.dataset.assistantBusy = "true";
+  button.disabled = true;
+  const originalText = button.textContent;
+  button.textContent = "Analizando...";
   const block = button.dataset.assistantCheckConfirm;
   const checklist = button.closest("[data-assistant-checklist]");
   if (!block || !checklist) return;
-  const selected = [...checklist.querySelectorAll("[data-assistant-check][aria-pressed='true']")]
-    .map((item) => item.dataset.assistantCheck)
-    .filter(Boolean);
-  applyAssistantChecklistSelection(block, selected);
+  const levels = {};
+  checklist.querySelectorAll("[data-assistant-check-row]").forEach((row) => {
+    const concept = row.dataset.assistantCheckRow;
+    const selected = row.querySelector("[data-assistant-check][aria-pressed='true']");
+    if (concept) levels[concept] = selected?.dataset.assistantLevel || "unknown";
+  });
+  applyAssistantChecklistSelection(block, levels);
   assistantPendingQuestion = null;
-  const response = selected.length
-    ? `Controlo: ${selected.map((concept) => checklist.querySelector(`[data-assistant-check="${concept}"]`)?.textContent.trim() || concept).join(", ")}.`
-    : "No controlo todavía esos conceptos.";
+  const levelLabels = { unknown: "No", uncertain: "Me suena", known: "Lo entiendo", confident: "Lo uso" };
+  const response = Object.entries(levels)
+    .map(([concept, level]) => `${assistantConceptLabel(concept)}: ${levelLabels[level] || level}`)
+    .join(", ");
   const goalText = assistantPendingGoal ? `quiero aprender ${assistantPendingGoal}` : "por donde sigo";
-  addAssistantMessage(`<p>${escapeAssistantHtml(response)}</p>`, "user");
-  window.setTimeout(() => addAssistantMessage(buildAssistantReply(goalText), "bot"), 120);
+  addAssistantMessage(`<p>Nivel marcado: ${escapeAssistantHtml(response || "sin selección")}.</p>`, "user");
+  window.setTimeout(() => {
+    button.dataset.assistantBusy = "false";
+    button.disabled = false;
+    button.textContent = originalText;
+    addAssistantMessage(buildAssistantReply(goalText), "bot");
+  }, 120);
 }
 
 function completeAssistantTopicAndFindNext(decision) {
@@ -5220,6 +5457,10 @@ function handleAssistantCorrectionAction(action) {
     window.setTimeout(() => {
       if (!nextNode) {
         addAssistantMessage(`${assistantNameMarkup()}<p>Perfecto, marco <strong>${escapeAssistantHtml(currentDecision.topic.title)}</strong> como completado. No veo más pasos pendientes en esta ruta; puedes abrir otro planeta del roadmap o pedirme otro objetivo.</p>`, "bot");
+        if (button) {
+          button.dataset.assistantBusy = "false";
+          button.disabled = false;
+        }
         return;
       }
       const nextDecision = buildRecommendationResult(nextNode, "progress_next", 0.92, missingPrerequisitesForNode(nextNode, loadAssistantProfile()), nextNode);
@@ -5236,14 +5477,26 @@ function handleAssistantCorrectionAction(action) {
     const nextDecision = buildRecommendationResult(node, "earlier_prerequisite", 0.88, missingPrerequisitesForNode(node, profile), assistantLastDecision.topic);
     assistantLastDecision = nextDecision;
     addAssistantMessage(`<p>Necesito empezar antes.</p>`, "user");
-    window.setTimeout(() => addAssistantMessage(renderAssistantRecommendation(nextDecision, "<p>Bien visto. Bajamos un escalón y reforzamos antes esto:</p>"), "bot"), 120);
+    window.setTimeout(() => {
+      addAssistantMessage(renderAssistantRecommendation(nextDecision, "<p>Bien visto. Bajamos un escalón y reforzamos antes esto:</p>"), "bot");
+      if (button) {
+        button.dataset.assistantBusy = "false";
+        button.disabled = false;
+      }
+    }, 120);
     return;
   }
   if (action === "diagnose") {
     const block = goalDiagnosticBlock(assistantPendingGoal || assistantLastDecision.targetGoal || "networking");
     assistantPendingQuestion = { type: "checklist", block, text: (chooseDiagnosticQuestion(assistantPendingGoal || assistantLastDecision.targetGoal || "networking", profile)?.text || "Vamos a ubicar tu base. Marca lo que controles.") };
     addAssistantMessage(`<p>Evaluar mejor mi nivel.</p>`, "user");
-    window.setTimeout(() => addAssistantMessage(`${assistantNameMarkup()}<p>${assistantPendingQuestion.text}</p>${renderAssistantChecklist(assistantPendingQuestion)}`, "bot"), 120);
+    window.setTimeout(() => {
+      addAssistantMessage(`${assistantNameMarkup()}<p>${assistantPendingQuestion.text}</p>${renderAssistantChecklist(assistantPendingQuestion)}`, "bot");
+      if (button) {
+        button.dataset.assistantBusy = "false";
+        button.disabled = false;
+      }
+    }, 120);
   }
 }
 
@@ -5292,8 +5545,30 @@ function assistantConceptLabel(concept) {
     pentesting: "pentesting",
     osint: "OSINT",
     web_hacking: "hacking web",
+    privacy: "privacidad",
+    metadata: "metadatos",
+    shodan: "Shodan",
   };
   return labels[concept] || String(concept || "").replace(/_/g, " ");
+}
+
+function renderAssistantChecklist(question) {
+  const concepts = assistantDiagnosticBlocks[question.block] || [];
+  const levels = [
+    ["unknown", "No"],
+    ["uncertain", "Me suena"],
+    ["known", "Lo entiendo"],
+    ["confident", "Lo uso"],
+  ];
+  const rows = concepts.map((concept) => {
+    const label = assistantConceptLabel(concept);
+    const buttons = levels.map(([level, text]) => {
+      const selected = level === "unknown";
+      return `<button type="button" class="assistant-check-level${selected ? " is-selected" : ""}" data-assistant-check="${concept}" data-assistant-level="${level}" aria-pressed="${selected ? "true" : "false"}">${text}</button>`;
+    }).join("");
+    return `<div class="assistant-check-row" data-assistant-check-row="${concept}"><span class="assistant-check-label">${escapeAssistantHtml(label)}</span><div class="assistant-check-levels" role="group" aria-label="${escapeAssistantHtml(label)}">${buttons}</div></div>`;
+  }).join("");
+  return `<div class="assistant-checklist assistant-checklist-levels" data-assistant-checklist="${question.block}">${rows}<div class="assistant-check-presets"><button type="button" class="assistant-route-link" data-assistant-check-preset="${question.block}" data-assistant-preset-level="unknown">No conozco ninguno</button><button type="button" class="assistant-route-link" data-assistant-check-preset="${question.block}" data-assistant-preset-level="known">Conozco casi todos</button></div><button type="button" class="assistant-route-link assistant-check-confirm" data-assistant-check-confirm="${question.block}">Confirmar nivel</button></div>`;
 }
 
 function buildAssistantReply(text) {
@@ -5326,6 +5601,8 @@ if (typeof globalThis !== "undefined") {
     getAssistantConceptMastery,
     applyAssistantChecklistSelection,
     migrateAssistantProfile,
+    scoreAssistantGoals,
+    goalDiagnosticBlock,
   };
 }
 function escapeAssistantHtml(value) {
@@ -5478,6 +5755,11 @@ if (roadmapRoutesContainer) {
       handleAssistantCheckConfirm(checklistConfirm);
       return;
     }
+    const checklistPreset = event.target.closest("[data-assistant-check-preset]");
+    if (checklistPreset) {
+      handleAssistantCheckPreset(checklistPreset);
+      return;
+    }
     const checklistToggle = event.target.closest("[data-assistant-check]");
     if (checklistToggle) {
       handleAssistantCheckToggle(checklistToggle);
@@ -5490,11 +5772,14 @@ if (roadmapRoutesContainer) {
     }
     const actionButton = event.target.closest("[data-assistant-action]");
     if (actionButton) {
-      handleAssistantCorrectionAction(actionButton.dataset.assistantAction);
+      handleAssistantCorrectionAction(actionButton.dataset.assistantAction, actionButton);
       return;
     }
     const item = event.target.closest("[data-continue-route], [data-assistant-route]");
     if (item) {
+      if (item.dataset.assistantBusy === "true") return;
+      item.dataset.assistantBusy = "true";
+      if ("disabled" in item) item.disabled = true;
       const panels = document.getElementById("roadmap-panels");
       const videosSection = document.getElementById("videos");
       panels?.classList.add("is-open");

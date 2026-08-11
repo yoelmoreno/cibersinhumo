@@ -6653,6 +6653,71 @@ select {
   background: rgba(0,255,136,.14);
   border-color: rgba(0,255,136,.55);
 }
+
+.assistant-checklist-levels {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.assistant-check-row {
+  display: grid;
+  grid-template-columns: minmax(120px, .9fr) minmax(0, 2fr);
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid rgba(0,255,136,.12);
+  border-radius: 12px;
+  background: rgba(0, 12, 7, .45);
+}
+
+.assistant-check-label {
+  color: var(--text-main);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .82rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.assistant-check-levels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.assistant-check-level {
+  min-height: 34px;
+  border: 1px solid rgba(0,255,136,.22);
+  border-radius: 999px;
+  color: var(--text-muted);
+  background: rgba(0,255,136,.035);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  cursor: pointer;
+}
+
+.assistant-check-level[aria-pressed="true"],
+.assistant-check-level.is-selected {
+  color: #00150b;
+  background: linear-gradient(135deg, rgba(0,255,136,.95), rgba(119,255,0,.78));
+  border-color: rgba(0,255,136,.9);
+  box-shadow: 0 0 18px rgba(0,255,136,.28);
+}
+
+.assistant-check-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.assistant-route-link[disabled],
+.assistant-check-level[disabled] {
+  cursor: wait;
+  opacity: .65;
+}
 .assistant-quick-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .assistant-quick-actions button { border: 1px solid rgba(0,255,136,.24); color: var(--accent); background: rgba(0,255,136,.05); border-radius: 999px; padding: 9px 12px; font-family: 'Share Tech Mono', monospace; text-transform: uppercase; font-size: .72rem; cursor: pointer; transition: transform .2s ease, border-color .2s ease; }
 .assistant-quick-actions button:hover, .roadmap-route-card:hover, .roadmap-video-card:hover { transform: translateY(-3px); border-color: rgba(0,255,136,.45); }
