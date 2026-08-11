@@ -4191,6 +4191,35 @@ function findTopicTeachingConcept(concept, preferPublished = false) {
   return nodes[0] || null;
 }
 
+function matchAssistantGoal(normalized) {
+  const goalChecks = [
+    ["sql_injection", ["sql injection", "sqli", "inyeccion sql"]],
+    ["virtual_machines", ["maquina virtual", "maquinas virtuales", "virtualbox", "vmware", "virtualizacion"]],
+    ["web_hacking", ["hacking web", "burp", "xss", "csrf", "owasp"]],
+    ["pentesting", ["pentesting", "hacking etico", "nmap", "wireshark", "john", "kali"]],
+    ["mac", ["direccion mac", "mac address", "mac"]],
+    ["ports", ["puerto", "puertos"]],
+    ["dns", ["dns", "dominio", "dominios"]],
+    ["phishing", ["phishing", "qrishing", "qr phishing", "correo falso", "suplantacion"]],
+    ["trojan", ["troyano", "trojan"]],
+    ["spyware", ["spyware", "camara", "camaras"]],
+    ["keylogger", ["keylogger", "teclado"]],
+    ["ransomware", ["ransomware"]],
+    ["ddos", ["ddos", "denegacion de servicio"]],
+    ["mitm", ["mitm", "man in the middle", "intermediario"]],
+    ["deep_web", ["deep web", "dark web", "onion"]],
+    ["osint", ["osint", "metadatos", "shodan", "investigar"]],
+    ["vpn", ["vpn"]],
+    ["linux", ["linux", "terminal", "bash", "comandos", "kali"]],
+    ["cookies", ["cookie", "cookies"]],
+    ["http", ["http", "https"]],
+    ["web", ["web", "navegador", "servidor", "api", "pagina web"]],
+    ["networking", ["redes", "networking", "internet", "ip", "tcp", "udp", "router"]],
+    ["malware", ["malware", "virus"]],
+  ];
+  return goalChecks.find(([, aliases]) => aliases.some((alias) => normalized.includes(normalizeRoadmapText(alias))))?.[0] || "general_learning";
+}
+
 function topicIsAvailable(node) {
   return node?.status === "published" && !!node.url;
 }
@@ -4232,35 +4261,7 @@ function parseAssistantIntent(input) {
   const continueLearning = /\b(por donde sigo|continuar|seguir|siguiente|que veo ahora)\b/.test(normalized);
   const isGreeting = /^(hola|buenas|hey|ey|que tal)/.test(normalized);
   const isThanks = /\b(gracias|perfecto|vale gracias)\b/.test(normalized);
-  let goal = "general_learning";
-  const goalChecks = [
-    ["sql_injection", ["sql injection", "sqli", "inyeccion sql"]],
-    ["virtual_machines", ["maquina virtual", "maquinas virtuales", "virtualbox", "vmware", "virtualizacion"]],
-    ["web_hacking", ["hacking web", "burp", "xss", "csrf", "owasp"]],
-    ["pentesting", ["pentesting", "hacking etico", "nmap", "wireshark", "john", "kali"]],
-    ["mac", ["direccion mac", "mac"]],
-    ["ports", ["puerto", "puertos"]],
-    ["dns", ["dns", "dominio"]],
-    ["networking", ["redes", "networking", "ip", "tcp", "udp", "router"]],
-    ["linux", ["linux", "terminal", "bash", "comandos", "kali"]],
-    ["cookies", ["cookie", "cookies"]],
-    ["http", ["http", "https"]],
-    ["web", ["web", "navegador", "servidor", "api"]],
-    ["phishing", ["phishing", "qrishing"]],
-    ["trojan", ["troyano", "trojan"]],
-    ["spyware", ["spyware"]],
-    ["keylogger", ["keylogger"]],
-    ["ransomware", ["ransomware"]],
-    ["ddos", ["ddos", "denegacion de servicio"]],
-    ["mitm", ["mitm", "man in the middle", "intermediario"]],
-    ["deep_web", ["deep web", "dark web", "onion"]],
-    ["malware", ["malware", "virus"]],
-    ["osint", ["osint", "metadatos", "shodan"]],
-    ["vpn", ["vpn"]],
-  ];
-  for (const [candidate, aliases] of goalChecks) {
-    if (aliases.some((alias) => normalized.includes(normalizeRoadmapText(alias)))) { goal = candidate; break; }
-  }
+  let goal = matchAssistantGoal(normalized);
   if (continueLearning) goal = "continue_learning";
   return { normalized, words, absoluteBeginner, asksDefinition, learningRequest, continueLearning, isGreeting, isThanks, goal };
 }
@@ -4319,6 +4320,39 @@ function firstPublishedOrPrepared(node) {
   return node || null;
 }
 
+function firstOpenTopicInRoute(routeId, profile = loadAssistantProfile()) {
+  const progress = getRoadmapProgress();
+  const route = roadmapRoutes.find((item) => item.id === routeId) || roadmapRoutes[0];
+  if (!route?.topics?.length) return getRoadmapNode("topic-1");
+  const completed = new Set(progress.completed || []);
+  const firstPending = route.topics.find((topic) => {
+    const node = getRoadmapNode(topic.id);
+    const taught = node?.conceptsTaught || [];
+    return !completed.has(topic.id) && !taught.every((concept) => assistantConceptKnown(profile, concept));
+  });
+  return getRoadmapNode((firstPending || route.topics[0]).id);
+}
+
+function firstOpenTopicAfter(node, profile = loadAssistantProfile()) {
+  const progress = getRoadmapProgress();
+  const route = roadmapRoutes.find((item) => item.id === node?.routeId) || node?.route;
+  if (!route?.topics?.length || !node) return firstOpenTopicInRoute(roadmapRoutes[0]?.id, profile);
+  const completed = new Set(progress.completed || []);
+  const next = route.topics.find((topic) => {
+    if (topic.number <= node.number || completed.has(topic.id)) return false;
+    const nextNode = getRoadmapNode(topic.id);
+    return !(nextNode?.conceptsTaught || []).every((concept) => assistantConceptKnown(profile, concept));
+  });
+  return next ? getRoadmapNode(next.id) : null;
+}
+
+function decisionFromSavedRecommendation() {
+  const progress = getRoadmapProgress();
+  const topicId = progress.recommendedTopicId || progress.lastTopicId;
+  const node = getRoadmapNode(topicId);
+  return node ? buildRecommendationResult(node, "saved_recommendation", 0.7, [], node) : null;
+}
+
 function targetNodesForGoal(goal) {
   const ids = assistantGoalTargets[goal] || assistantGoalTargets.general_learning;
   return ids.map(getRoadmapNode).filter(Boolean);
@@ -4351,11 +4385,10 @@ function continueRecommendation(profile) {
   const progress = getRoadmapProgress();
   if (progress.recommendedTopicId) {
     const current = getRoadmapNode(progress.recommendedTopicId);
-    const route = roadmapRoutes.find((item) => item.id === current?.routeId);
-    const next = route?.topics.find((topic) => topic.number > current.number && topic.status === "published");
-    if (next) return buildRecommendationResult(getRoadmapNode(next.id), "progress_next", 0.82, []);
+    const next = firstOpenTopicAfter(current, profile);
+    if (next) return buildRecommendationResult(next, "progress_next", 0.82, [], next);
   }
-  return buildRecommendationResult(getRoadmapNode("topic-1"), "progress_empty", 0.55, []);
+  return buildRecommendationResult(firstOpenTopicInRoute(roadmapRoutes[0]?.id, profile), "progress_empty", 0.55, []);
 }
 
 function buildRecommendationResult(node, reason, confidence, missing = [], targetNode = null) {
@@ -4395,10 +4428,11 @@ function makeAssistantDecision(input, options = {}) {
     const previousConcept = assistantLastDecision?.missingPrerequisites?.[0] || "computer_basics";
     setAssistantConcept(profile, previousConcept, "unknown", "message");
   }
-  if (intent.absoluteBeginner) {
+  if (intent.absoluteBeginner && intent.goal === "general_learning") {
     assistantPendingGoal = intent.goal;
     saveAssistantProfile(profile);
-    return buildRecommendationResult(getRoadmapNode("topic-1"), "absolute_beginner", 0.96, [], getRoadmapNode("topic-1"));
+    const startNode = firstOpenTopicInRoute(roadmapRoutes[0]?.id, profile);
+    return buildRecommendationResult(startNode, "absolute_beginner", 0.96, [], startNode);
   }
   if (intent.continueLearning) {
     saveAssistantProfile(profile);
@@ -4406,7 +4440,7 @@ function makeAssistantDecision(input, options = {}) {
   }
   assistantPendingGoal = intent.goal;
   const targets = targetNodesForGoal(intent.goal);
-  const target = targets[0] || getRoadmapNode("topic-1");
+  const target = targets[0] || firstOpenTopicInRoute(roadmapRoutes[0]?.id, profile);
   const missing = missingPrerequisitesForNode(target, profile);
   const diagnostic = chooseDiagnosticQuestion(intent.goal, profile);
   if (diagnostic && !intent.asksDefinition && missing.length >= 3 && !options.forceRecommend) {
@@ -4443,8 +4477,8 @@ function renderAssistantChecklist(question) {
     terminal: "Terminal",
     virtual_machines: "Máquinas virtuales",
   };
-  const buttons = concepts.map((concept) => `<button type="button" class="assistant-route-link" data-assistant-knowledge="${concept}" data-knowledge-state="known">${labels[concept] || concept}</button>`).join("");
-  return `<div class="assistant-actions">${buttons}<button type="button" class="assistant-route-link" data-assistant-block="${question.block}" data-knowledge-state="unknown">No conozco ninguno</button><button type="button" class="assistant-route-link" data-assistant-block="${question.block}" data-knowledge-state="known">Conozco casi todos</button></div>`;
+  const buttons = concepts.map((concept) => `<button type="button" class="assistant-route-link assistant-check-option" data-assistant-check="${concept}" aria-pressed="false">${labels[concept] || concept}</button>`).join("");
+  return `<div class="assistant-actions assistant-checklist" data-assistant-checklist="${question.block}">${buttons}<button type="button" class="assistant-route-link" data-assistant-block="${question.block}" data-knowledge-state="unknown">No conozco ninguno</button><button type="button" class="assistant-route-link" data-assistant-block="${question.block}" data-knowledge-state="known">Conozco casi todos</button><button type="button" class="assistant-route-link assistant-check-confirm" data-assistant-check-confirm="${question.block}">Confirmar selección</button></div>`;
 }
 
 function assistantRouteButton(route, topic, label = "Abrir recomendación") {
@@ -4509,6 +4543,34 @@ function handleAssistantKnowledgeAction(button) {
   window.setTimeout(() => addAssistantMessage(buildAssistantReply(goalText), "bot"), 120);
 }
 
+function handleAssistantCheckToggle(button) {
+  const isSelected = button.getAttribute("aria-pressed") === "true";
+  button.setAttribute("aria-pressed", isSelected ? "false" : "true");
+  button.classList.toggle("is-selected", !isSelected);
+}
+
+function handleAssistantCheckConfirm(button) {
+  const block = button.dataset.assistantCheckConfirm;
+  const checklist = button.closest("[data-assistant-checklist]");
+  if (!block || !checklist) return;
+  const selected = [...checklist.querySelectorAll("[data-assistant-check][aria-pressed='true']")]
+    .map((item) => item.dataset.assistantCheck)
+    .filter(Boolean);
+  const concepts = assistantDiagnosticBlocks[block] || [];
+  const profile = loadAssistantProfile();
+  concepts.forEach((concept) => {
+    setAssistantConcept(profile, concept, selected.includes(concept) ? "known" : "unknown", "diagnostic");
+  });
+  saveAssistantProfile(profile);
+  assistantPendingQuestion = null;
+  const response = selected.length
+    ? `Controlo: ${selected.map((concept) => checklist.querySelector(`[data-assistant-check="${concept}"]`)?.textContent.trim() || concept).join(", ")}.`
+    : "No controlo todavía esos conceptos.";
+  const goalText = assistantPendingGoal ? `quiero aprender ${assistantPendingGoal}` : "por donde sigo";
+  addAssistantMessage(`<p>${escapeAssistantHtml(response)}</p>`, "user");
+  window.setTimeout(() => addAssistantMessage(buildAssistantReply(goalText), "bot"), 120);
+}
+
 function completeAssistantTopicAndFindNext(decision) {
   const currentTopic = decision?.topic;
   const route = decision?.route || roadmapRoutes.find((item) => item.id === currentTopic?.routeId);
@@ -4521,7 +4583,15 @@ function completeAssistantTopicAndFindNext(decision) {
   progress.lastTopicId = currentTopic.id;
   progress.lastRouteId = route.id;
 
-  const nextTopic = route.topics.find((topic) => topic.number > currentTopic.number && !progress.completed.includes(topic.id));
+  const profile = loadAssistantProfile();
+  (currentTopic.conceptsTaught || []).forEach((concept) => setAssistantConcept(profile, concept, "known", "progress"));
+  saveAssistantProfile(profile);
+
+  const nextTopic = route.topics.find((topic) => {
+    if (topic.number <= currentTopic.number || progress.completed.includes(topic.id)) return false;
+    const nextNode = getRoadmapNode(topic.id);
+    return !(nextNode?.conceptsTaught || []).every((concept) => assistantConceptKnown(profile, concept));
+  });
   if (nextTopic) {
     progress.recommendedRouteId = route.id;
     progress.recommendedTopicId = nextTopic.id;
@@ -4537,7 +4607,11 @@ function completeAssistantTopicAndFindNext(decision) {
 }
 
 function handleAssistantCorrectionAction(action) {
-  if (!assistantLastDecision) return;
+  if (!assistantLastDecision) assistantLastDecision = decisionFromSavedRecommendation();
+  if (!assistantLastDecision) {
+    addAssistantMessage(`${assistantNameMarkup()}<p>No tengo una recomendación activa que marcar. Dime el tema que quieres aprender y te coloco en el punto correcto.</p>`, "bot");
+    return;
+  }
   const profile = loadAssistantProfile();
   if (action === "start") {
     openRoadmapRoute(assistantLastDecision.route.id, assistantLastDecision.topic.id);
@@ -4576,8 +4650,683 @@ function handleAssistantCorrectionAction(action) {
   }
 }
 
+var assistantProfileVersion = 2;
+var assistantMasteryByState = {
+  unknown: 0,
+  uncertain: 25,
+  beginner: 42,
+  known: 76,
+  confident: 92,
+};
+
+function assistantStateFromMastery(mastery) {
+  const value = Number(mastery) || 0;
+  if (value >= 88) return "confident";
+  if (value >= 65) return "known";
+  if (value >= 35) return "beginner";
+  if (value >= 15) return "uncertain";
+  return "unknown";
+}
+
+function assistantMasteryFromState(state) {
+  return assistantMasteryByState[state] ?? Number(state) ?? 0;
+}
+
+function assistantDefaultProfile() {
+  return {
+    version: assistantProfileVersion,
+    goals: [],
+    primaryGoal: null,
+    experienceLevel: null,
+    concepts: {},
+    completedTopics: [],
+    currentRoute: null,
+    currentTopic: null,
+    recommendedRoute: null,
+    recommendedTopic: null,
+    preferences: { practice: false, theory: false, videos: true, careful: true },
+    conversation: { pendingGoal: null, pendingQuestion: null, lastDecision: null, diagnosticAnswers: [] },
+    metrics: { messages: 0, updatedAt: Date.now() },
+  };
+}
+
+function migrateAssistantProfile(rawProfile = {}) {
+  const base = assistantDefaultProfile();
+  const raw = rawProfile && typeof rawProfile === "object" ? rawProfile : {};
+  const next = {
+    ...base,
+    ...raw,
+    preferences: { ...base.preferences, ...(raw.preferences || {}) },
+    conversation: { ...base.conversation, ...(raw.conversation || {}) },
+    metrics: { ...base.metrics, ...(raw.metrics || {}) },
+    concepts: {},
+    completedTopics: Array.isArray(raw.completedTopics) ? [...new Set(raw.completedTopics)] : [],
+    goals: Array.isArray(raw.goals) ? [...new Set(raw.goals)] : [],
+    version: assistantProfileVersion,
+  };
+
+  Object.entries(raw.concepts || {}).forEach(([concept, value]) => {
+    if (!value || typeof value !== "object") return;
+    const mastery = Number.isFinite(Number(value.mastery)) ? Number(value.mastery) : assistantMasteryFromState(value.state || "unknown");
+    next.concepts[concept] = {
+      mastery: Math.max(0, Math.min(100, mastery)),
+      confidence: Number.isFinite(Number(value.confidence)) ? Number(value.confidence) : 0.55,
+      state: assistantStateFromMastery(mastery),
+      source: value.source || "migration",
+      evidence: Array.isArray(value.evidence) ? value.evidence.slice(-5) : [],
+      updatedAt: value.updatedAt || Date.now(),
+    };
+  });
+
+  if (raw.currentTopic && !next.recommendedTopic) next.recommendedTopic = raw.currentTopic;
+  if (raw.recommendedTopicId && !next.recommendedTopic) next.recommendedTopic = raw.recommendedTopicId;
+  return next;
+}
+
+function loadAssistantProfile() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(assistantProfileStorageKey) || "{}");
+    const migrated = migrateAssistantProfile(raw);
+    if (raw.version !== assistantProfileVersion) saveAssistantProfile(migrated);
+    return migrated;
+  } catch (error) {
+    return assistantDefaultProfile();
+  }
+}
+
+function saveAssistantProfile(profile) {
+  try {
+    localStorage.setItem(assistantProfileStorageKey, JSON.stringify(migrateAssistantProfile(profile)));
+  } catch (error) {}
+}
+
+function setAssistantConcept(profile, concept, stateOrMastery, source = "message", evidenceValue = "") {
+  if (!concept) return;
+  const migrated = migrateAssistantProfile(profile);
+  Object.assign(profile, migrated);
+  const current = profile.concepts[concept] || { mastery: 0, confidence: 0.25, evidence: [] };
+  const incomingMastery = typeof stateOrMastery === "string" ? assistantMasteryFromState(stateOrMastery) : Number(stateOrMastery) || 0;
+  const sourceWeight = source === "diagnostic" ? 0.8 : source === "progress" ? 0.9 : source === "correction" ? 0.85 : 0.55;
+  const shouldReplaceDown = source === "diagnostic" || source === "correction";
+  const weighted = shouldReplaceDown
+    ? incomingMastery
+    : Math.max(incomingMastery, Math.round((current.mastery * (1 - sourceWeight)) + (incomingMastery * sourceWeight)));
+  const mastery = Math.max(0, Math.min(100, weighted));
+  const evidence = [...(current.evidence || [])];
+  if (evidenceValue) evidence.push({ source, text: evidenceValue, at: Date.now() });
+  profile.concepts[concept] = {
+    mastery,
+    confidence: Math.max(current.confidence || 0, sourceWeight),
+    state: assistantStateFromMastery(mastery),
+    source,
+    evidence: evidence.slice(-6),
+    updatedAt: Date.now(),
+  };
+}
+
+function getAssistantConceptMastery(profile, concept) {
+  const migrated = migrateAssistantProfile(profile);
+  return Number(migrated.concepts?.[concept]?.mastery) || 0;
+}
+
+function getAssistantConceptState(profile, concept) {
+  return assistantStateFromMastery(getAssistantConceptMastery(profile, concept));
+}
+
+function assistantConceptKnown(profile, concept) {
+  return getAssistantConceptMastery(profile, concept) >= 62;
+}
+
+function normalizeAssistantInput(input) {
+  const corrections = [
+    [/phising/g, "phishing"],
+    [/phisihng/g, "phishing"],
+    [/qrisihng/g, "qrishing"],
+    [/maquinas virtuales/g, "maquina virtual"],
+    [/m[aá]quina/g, "maquina"],
+    [/direcciones mac/g, "direccion mac"],
+    [/puertoss/g, "puertos"],
+    [/wiresharck/g, "wireshark"],
+    [/wire shark/g, "wireshark"],
+    [/linus/g, "linux"],
+    [/kalli/g, "kali"],
+    [/sistema os i/g, "sistema osi"],
+  ];
+  let normalized = normalizeRoadmapText(input || "").replace(/[¿?¡!,.:;]/g, " ").replace(/\s+/g, " ").trim();
+  corrections.forEach(([pattern, replacement]) => { normalized = normalized.replace(pattern, replacement); });
+  return normalized;
+}
+
+function conceptsInText(normalized) {
+  const text = normalizeAssistantInput(normalized);
+  const found = new Set();
+  Object.entries(assistantConceptAliases).forEach(([concept, aliases]) => {
+    if (aliases.some((alias) => text.includes(normalizeAssistantInput(alias)))) found.add(concept);
+  });
+  if (/\bsistema osi\b/.test(text)) found.add("networking");
+  if (found.has("ports") || found.has("tcp_udp") || found.has("dns") || found.has("ip") || found.has("mac")) found.add("networking");
+  if (found.has("http") || found.has("cookies") || found.has("sessions") || found.has("sql")) found.add("web_basics");
+  if (found.has("trojan") || found.has("spyware") || found.has("keylogger") || found.has("ransomware")) found.add("malware");
+  return [...found];
+}
+
+function matchAssistantGoal(normalized) {
+  const text = normalizeAssistantInput(normalized);
+  const goalChecks = [
+    ["sql_injection", ["sql injection", "sqli", "inyeccion sql"]],
+    ["virtual_machines", ["maquina virtual", "virtualbox", "vmware", "virtualizacion"]],
+    ["web_hacking", ["hacking web", "burp", "xss", "csrf", "owasp"]],
+    ["pentesting", ["pentesting", "hacking etico", "nmap", "wireshark", "john", "kali", "pruebas practicas", "laboratorio"]],
+    ["phishing", ["phishing", "qrishing", "qr phishing", "correo falso", "suplantacion"]],
+    ["trojan", ["troyano", "trojan"]],
+    ["spyware", ["spyware", "camara", "camaras"]],
+    ["keylogger", ["keylogger", "teclado"]],
+    ["ransomware", ["ransomware"]],
+    ["ddos", ["ddos", "denegacion de servicio"]],
+    ["mitm", ["mitm", "man in the middle", "intermediario"]],
+    ["deep_web", ["deep web", "dark web", "onion"]],
+    ["osint", ["osint", "metadatos", "shodan", "investigar"]],
+    ["vpn", ["vpn", "red privada virtual"]],
+    ["mac", ["direccion mac", "mac address"]],
+    ["ports", ["puerto", "puertos"]],
+    ["dns", ["dns", "dominio", "dominios"]],
+    ["cookies", ["cookie", "cookies"]],
+    ["http", ["http", "https"]],
+    ["web", ["web", "navegador", "servidor", "api", "pagina web"]],
+    ["linux", ["linux", "terminal", "bash", "shell", "comandos", "kali"]],
+    ["networking", ["redes", "networking", "internet", "ip", "tcp", "udp", "router", "sistema osi"]],
+    ["malware", ["malware", "virus"]],
+  ];
+  return goalChecks.find(([, aliases]) => aliases.some((alias) => text.includes(normalizeAssistantInput(alias))))?.[0] || "general_learning";
+}
+
+function parseAssistantIntent(input) {
+  const normalized = normalizeAssistantInput(input);
+  const words = normalized.split(/\s+/).filter(Boolean);
+  const absoluteBeginner = /\b(no se nada|no tengo ni idea|desde cero|desde 0|empiezo de cero|empiezo desde cero|completamente nuevo|principiante absoluto|nunca he estudiado|no se absolutamente nada)\b/.test(normalized);
+  const asksDefinition = /\b(que es|que son|explicame|explica|como funciona|para que sirve|dime que es)\b/.test(normalized);
+  const learningRequest = /\b(quiero aprender|quiero empezar|aprender|estudiar|meterme|practicar|me gustaria aprender|por donde empiezo|donde deberia empezar)\b/.test(normalized);
+  const continueLearning = /\b(por donde sigo|continuar|seguir|siguiente|que veo ahora|que toca ahora)\b/.test(normalized);
+  const correctionKnown = /\b(eso ya me lo se|ya me lo se|esto ya lo se|ya lo entiendo|eso ya lo entiendo|ya controle eso)\b/.test(normalized);
+  const easier = /\b(necesito empezar antes|empieza antes|mas basico|mas facil|no lo entiendo|me pierdo)\b/.test(normalized);
+  const isGreeting = /^(hola|buenas|hey|ey|que tal|holaa)\b/.test(normalized);
+  const isThanks = /\b(gracias|perfecto|vale gracias|genial gracias)\b/.test(normalized);
+  const knownConcepts = [];
+  const unknownConcepts = [];
+  normalized.split(/\bpero\b|\baunque\b|[.]/).forEach((part) => {
+    const concepts = conceptsInText(part);
+    if (!concepts.length) return;
+    if (/\b(no se|no entiendo|ni idea|nunca he usado|no conozco|no controlo|no tengo claro)\b/.test(part)) unknownConcepts.push(...concepts);
+    if (/\b(se|controlo|entiendo|tengo claro|domino|manejo|conozco|he usado|he probado)\b/.test(part)) knownConcepts.push(...concepts);
+  });
+  let goal = matchAssistantGoal(normalized);
+  if (continueLearning) goal = "continue_learning";
+  const preferences = {
+    practice: /\b(practicar|practica|laboratorio|herramienta|herramientas|real|reto)\b/.test(normalized),
+    theory: /\b(teoria|concepto|explicame|entender|base)\b/.test(normalized),
+  };
+  return {
+    normalized,
+    words,
+    absoluteBeginner,
+    asksDefinition,
+    learningRequest,
+    continueLearning,
+    correctionKnown,
+    easier,
+    isGreeting,
+    isThanks,
+    knownConcepts: [...new Set(knownConcepts)],
+    unknownConcepts: [...new Set(unknownConcepts)],
+    mentionedConcepts: conceptsInText(normalized),
+    preferences,
+    goal,
+    confidence: goal === "general_learning" && !absoluteBeginner ? 0.42 : 0.82,
+  };
+}
+
+function updateProfileFromText(profile, input) {
+  const intent = parseAssistantIntent(input);
+  Object.assign(profile, migrateAssistantProfile(profile));
+  profile.metrics.messages = (profile.metrics.messages || 0) + 1;
+  profile.metrics.updatedAt = Date.now();
+  if (intent.goal && intent.goal !== "continue_learning" && intent.goal !== "general_learning") {
+    profile.primaryGoal = intent.goal;
+    profile.goals = [...new Set([intent.goal, ...(profile.goals || [])])].slice(0, 8);
+  }
+  intent.knownConcepts.forEach((concept) => setAssistantConcept(profile, concept, "known", "message", input));
+  intent.unknownConcepts.forEach((concept) => setAssistantConcept(profile, concept, "unknown", "message", input));
+  if (intent.absoluteBeginner) {
+    profile.experienceLevel = "beginner";
+    ["computer_basics", "networking", "linux", "web_basics", "cybersecurity"].forEach((concept) => setAssistantConcept(profile, concept, "unknown", "message", input));
+  }
+  if (intent.preferences.practice) profile.preferences.practice = true;
+  if (intent.preferences.theory) profile.preferences.theory = true;
+  return profile;
+}
+
+function applyProgressToProfile(profile) {
+  Object.assign(profile, migrateAssistantProfile(profile));
+  const progress = getRoadmapProgress();
+  profile.completedTopics = [...new Set([...(profile.completedTopics || []), ...(progress.completed || [])])];
+  profile.currentTopic = progress.lastTopicId || profile.currentTopic || null;
+  profile.currentRoute = progress.lastRouteId || profile.currentRoute || null;
+  profile.recommendedTopic = progress.recommendedTopicId || profile.recommendedTopic || null;
+  profile.recommendedRoute = progress.recommendedRouteId || profile.recommendedRoute || null;
+  profile.completedTopics.forEach((topicId) => {
+    const node = getRoadmapNode(topicId);
+    (node?.conceptsTaught || []).forEach((concept) => setAssistantConcept(profile, concept, "confident", "progress", topicId));
+  });
+  return profile;
+}
+
+function goalDiagnosticBlock(goal) {
+  if (goal === "web_hacking" || goal === "sql_injection" || goal === "web" || goal === "cookies" || goal === "http") return "web";
+  if (goal === "pentesting" || goal === "ports" || goal === "mac" || goal === "ip" || goal === "dns" || goal === "networking" || goal === "ddos" || goal === "mitm") return "networking";
+  if (goal === "linux" || goal === "linux_tools" || goal === "virtual_machines") return "linux";
+  if (goal === "phishing" || goal === "malware" || goal === "trojan" || goal === "spyware" || goal === "keylogger" || goal === "ransomware") return "cybersecurity";
+  return "networking";
+}
+
+assistantDiagnosticBlocks.cybersecurity = ["cybersecurity", "phishing", "malware"];
+
+function chooseDiagnosticQuestion(goal, profile) {
+  const block = goalDiagnosticBlock(goal);
+  const concepts = assistantDiagnosticBlocks[block] || [];
+  const unknown = concepts.filter((concept) => !assistantConceptKnown(profile, concept));
+  if (unknown.length >= Math.min(3, concepts.length)) {
+    const text = block === "web"
+      ? "Antes de enviarte a hacking web, marca qué base de Web tienes clara."
+      : block === "linux"
+        ? "Para orientarte bien, marca qué controlas sobre Linux y entornos."
+        : block === "cybersecurity"
+          ? "Antes de elegir ataque concreto, marca qué conceptos de ciber ya entiendes."
+          : "Para no mandarte demasiado adelante, marca lo que tengas claro de redes.";
+    return { type: "checklist", block, text };
+  }
+  return null;
+}
+
+function missingPrerequisitesForNode(node, profile) {
+  return transitivePrerequisitesForNode(node).filter((concept) => !assistantConceptKnown(profile, concept));
+}
+
+function firstMeaningfulMissingPrerequisite(node, profile) {
+  const missing = missingPrerequisitesForNode(node, profile);
+  return missing.find((concept) => findTopicTeachingConcept(concept, false)) || missing[0] || null;
+}
+
+function continueRecommendation(profile) {
+  const progress = getRoadmapProgress();
+  const recommendedId = progress.recommendedTopicId || profile.recommendedTopic;
+  if (recommendedId) {
+    const current = getRoadmapNode(recommendedId);
+    if (current && !(progress.completed || []).includes(current.id)) {
+      return buildRecommendationResult(current, "saved_recommendation", 0.9, missingPrerequisitesForNode(current, profile), current);
+    }
+  }
+  const last = getRoadmapNode(progress.lastTopicId || profile.currentTopic);
+  if (last) {
+    const next = firstOpenTopicAfter(last, profile);
+    if (next) return buildRecommendationResult(next, "progress_next", 0.84, missingPrerequisitesForNode(next, profile), next);
+  }
+  return buildRecommendationResult(firstOpenTopicInRoute(roadmapRoutes[0]?.id, profile), "progress_empty", 0.64, []);
+}
+
+function targetNodesForGoal(goal) {
+  const ids = assistantGoalTargets[goal] || assistantGoalTargets.general_learning;
+  return ids.map(getRoadmapNode).filter(Boolean);
+}
+
+function pickBestTargetForGoal(goal, profile) {
+  const targets = targetNodesForGoal(goal);
+  if (!targets.length) return firstOpenTopicInRoute(roadmapRoutes[0]?.id, profile);
+  return targets
+    .map((node) => {
+      const missing = missingPrerequisitesForNode(node, profile);
+      const availableBonus = topicIsAvailable(node) ? 8 : 0;
+      const progressPenalty = (getRoadmapProgress().completed || []).includes(node.id) ? 18 : 0;
+      return { node, score: 100 - (missing.length * 10) + availableBonus - progressPenalty };
+    })
+    .sort((a, b) => b.score - a.score)[0].node;
+}
+
+function buildRecommendationResult(node, reason, confidence, missing = [], targetNode = null) {
+  const safeNode = firstPublishedOrPrepared(node) || getRoadmapNode("topic-1");
+  const route = roadmapRoutes.find((item) => item.id === safeNode.routeId) || safeNode.route;
+  const progress = getRoadmapProgress();
+  progress.recommendedRouteId = route.id;
+  progress.recommendedTopicId = safeNode.id;
+  try { saveRoadmapProgress(progress); } catch (error) {}
+  const nextNodeIds = route.topics.filter((topic) => topic.number > safeNode.number).slice(0, 2).map((topic) => topic.id);
+  return {
+    type: "recommendation",
+    recommendedNodeId: safeNode.id,
+    originalNodeId: node?.id || safeNode.id,
+    sectionId: route.id,
+    reason,
+    nextNodeIds,
+    confidence,
+    missingPrerequisites: missing,
+    targetNodeId: targetNode?.id || safeNode.id,
+    targetGoal: assistantPendingGoal,
+    topic: safeNode,
+    route,
+    availability: topicIsAvailable(safeNode) ? "published" : safeNode.status,
+  };
+}
+
+function assistantConceptAnswer(goal) {
+  const answers = {
+    vpn: "Una VPN crea un túnel cifrado entre tu dispositivo e Internet. Sirve para mejorar privacidad en redes públicas y ocultar tu IP real frente a webs, pero no te vuelve invisible ni evita phishing o malware.",
+    phishing: "El phishing es un engaño para que entregues datos, contraseñas o dinero haciéndose pasar por una entidad fiable. La clave es revisar remitente, enlace, urgencia y contexto antes de tocar nada.",
+    ports: "Un puerto es una puerta lógica por la que un servicio escucha conexiones. Por ejemplo, una web suele usar 80 o 443; entender puertos ayuda a leer escaneos y servicios abiertos.",
+    mac: "La dirección MAC identifica una tarjeta de red dentro de una red local. No es lo mismo que la IP: la IP sirve para enrutar; la MAC funciona más cerca del dispositivo físico.",
+    dns: "DNS traduce nombres como cibersinhumo.es a direcciones IP. Es como la agenda que permite que el navegador encuentre el servidor correcto.",
+    http: "HTTP es el protocolo que usa el navegador para pedir recursos a una web. HTTPS añade cifrado para proteger la comunicación.",
+    cookies: "Las cookies son pequeños datos que una web guarda en el navegador para recordar sesiones, preferencias o medición.",
+    sql_injection: "SQL Injection ocurre cuando una web mete datos del usuario en una consulta SQL sin validarlos bien, permitiendo manipular la base de datos.",
+  };
+  return answers[goal] || "";
+}
+
+function makeAssistantDecision(input, options = {}) {
+  const profile = applyProgressToProfile(options.profile || loadAssistantProfile());
+  const intent = parseAssistantIntent(input);
+  updateProfileFromText(profile, input);
+
+  if (intent.isGreeting && intent.words.length <= 4) return { type: "smalltalk", profile, intent };
+  if (intent.isThanks && intent.words.length <= 5) return { type: "thanks", profile, intent };
+
+  if (intent.correctionKnown && assistantLastDecision?.topic) {
+    const completed = completeAssistantTopicAndFindNext(assistantLastDecision);
+    saveAssistantProfile(profile);
+    if (completed) return buildRecommendationResult(completed, "progress_next", 0.92, missingPrerequisitesForNode(completed, profile), completed);
+    return { type: "progress_done", profile, intent, topic: assistantLastDecision.topic, route: assistantLastDecision.route };
+  }
+
+  if (intent.continueLearning) {
+    saveAssistantProfile(profile);
+    return continueRecommendation(profile);
+  }
+
+  if (intent.absoluteBeginner && intent.goal === "general_learning") {
+    assistantPendingGoal = "general_learning";
+    profile.conversation.pendingGoal = assistantPendingGoal;
+    saveAssistantProfile(profile);
+    return buildRecommendationResult(firstOpenTopicInRoute(roadmapRoutes[0]?.id, profile), "absolute_beginner", 0.96, [], getRoadmapNode("topic-1"));
+  }
+
+  assistantPendingGoal = intent.goal === "general_learning" ? (profile.primaryGoal || "general_learning") : intent.goal;
+  profile.conversation.pendingGoal = assistantPendingGoal;
+
+  if (intent.goal === "general_learning" && !intent.learningRequest && !intent.asksDefinition && !options.forceRecommend) {
+    saveAssistantProfile(profile);
+    return {
+      type: "clarify",
+      profile,
+      intent,
+      question: "Cuéntame qué te interesa: redes, phishing, Linux, web, privacidad o herramientas. También puedes decirme si empiezas desde cero.",
+    };
+  }
+
+  const target = pickBestTargetForGoal(assistantPendingGoal, profile);
+  const missing = missingPrerequisitesForNode(target, profile);
+  const directAnswer = intent.asksDefinition && !intent.learningRequest && !intent.unknownConcepts.length && assistantConceptAnswer(assistantPendingGoal);
+  if (directAnswer) {
+    saveAssistantProfile(profile);
+    return {
+      type: "concept_answer",
+      answer: directAnswer,
+      profile,
+      intent,
+      topic: target,
+      route: target.route,
+      recommendedNodeId: target.id,
+      sectionId: target.route.id,
+      availability: topicIsAvailable(target) ? "published" : target.status,
+    };
+  }
+
+  const diagnostic = chooseDiagnosticQuestion(assistantPendingGoal, profile);
+  if (diagnostic && !options.forceRecommend && missing.length >= 3 && !assistantSpecificGoals.has(assistantPendingGoal)) {
+    assistantPendingQuestion = diagnostic;
+    profile.conversation.pendingQuestion = diagnostic;
+    saveAssistantProfile(profile);
+    return { type: "diagnostic", question: diagnostic, profile, intent, confidence: 0.58 };
+  }
+
+  const explicitMissingConcept = intent.unknownConcepts.find((concept) => missing.includes(concept) && findTopicTeachingConcept(concept, false));
+  const missingConcept = explicitMissingConcept || firstMeaningfulMissingPrerequisite(target, profile);
+  const advancedGoalNeedsBase = ["sql_injection", "web_hacking", "pentesting", "mitm", "ddos"].includes(assistantPendingGoal);
+  const shouldStartAtMissing = !!missingConcept && (!!explicitMissingConcept || (!intent.asksDefinition && (!assistantSpecificGoals.has(assistantPendingGoal) || advancedGoalNeedsBase)));
+  const startNode = shouldStartAtMissing
+    ? findTopicTeachingConcept(missingConcept, false)
+    : target;
+  const reason = shouldStartAtMissing ? "first_unsatisfied_prerequisite" : "target_ready";
+  const result = buildRecommendationResult(startNode, reason, reason === "target_ready" ? 0.9 : 0.78, missing, target);
+  profile.recommendedTopic = result.recommendedNodeId;
+  profile.recommendedRoute = result.sectionId;
+  profile.conversation.lastDecision = { topicId: result.recommendedNodeId, routeId: result.sectionId, reason: result.reason };
+  saveAssistantProfile(profile);
+  return result;
+}
+
+function applyAssistantChecklistSelection(block, selectedConcepts, profile = loadAssistantProfile()) {
+  const concepts = assistantDiagnosticBlocks[block] || [];
+  const selected = new Set(selectedConcepts || []);
+  concepts.forEach((concept) => {
+    setAssistantConcept(profile, concept, selected.has(concept) ? "known" : "unknown", "diagnostic", block);
+  });
+  profile.conversation.pendingQuestion = null;
+  saveAssistantProfile(profile);
+  return profile;
+}
+
+function handleAssistantKnowledgeAction(button) {
+  if (button.dataset.assistantBusy === "true") return;
+  button.dataset.assistantBusy = "true";
+  const profile = loadAssistantProfile();
+  const state = button.dataset.knowledgeState || "known";
+  const concept = button.dataset.assistantKnowledge;
+  const block = button.dataset.assistantBlock;
+  if (concept) setAssistantConcept(profile, concept, state, "diagnostic", button.textContent.trim());
+  if (block) (assistantDiagnosticBlocks[block] || []).forEach((item) => setAssistantConcept(profile, item, state, "diagnostic", button.textContent.trim()));
+  assistantPendingQuestion = null;
+  saveAssistantProfile(profile);
+  const goalText = assistantPendingGoal ? `quiero aprender ${assistantPendingGoal}` : "por donde sigo";
+  addAssistantMessage(`<p>${escapeAssistantHtml(button.textContent.trim())}</p>`, "user");
+  window.setTimeout(() => addAssistantMessage(buildAssistantReply(goalText), "bot"), 120);
+}
+
+function handleAssistantCheckConfirm(button) {
+  if (button.dataset.assistantBusy === "true") return;
+  button.dataset.assistantBusy = "true";
+  const block = button.dataset.assistantCheckConfirm;
+  const checklist = button.closest("[data-assistant-checklist]");
+  if (!block || !checklist) return;
+  const selected = [...checklist.querySelectorAll("[data-assistant-check][aria-pressed='true']")]
+    .map((item) => item.dataset.assistantCheck)
+    .filter(Boolean);
+  applyAssistantChecklistSelection(block, selected);
+  assistantPendingQuestion = null;
+  const response = selected.length
+    ? `Controlo: ${selected.map((concept) => checklist.querySelector(`[data-assistant-check="${concept}"]`)?.textContent.trim() || concept).join(", ")}.`
+    : "No controlo todavía esos conceptos.";
+  const goalText = assistantPendingGoal ? `quiero aprender ${assistantPendingGoal}` : "por donde sigo";
+  addAssistantMessage(`<p>${escapeAssistantHtml(response)}</p>`, "user");
+  window.setTimeout(() => addAssistantMessage(buildAssistantReply(goalText), "bot"), 120);
+}
+
+function completeAssistantTopicAndFindNext(decision) {
+  const currentTopic = decision?.topic || getRoadmapNode(decision?.recommendedNodeId);
+  const route = decision?.route || roadmapRoutes.find((item) => item.id === currentTopic?.routeId);
+  if (!currentTopic?.id || !route?.topics) return null;
+
+  const progress = getRoadmapProgress();
+  progress.completed = Array.isArray(progress.completed) ? progress.completed : [];
+  if (!progress.completed.includes(currentTopic.id)) progress.completed.push(currentTopic.id);
+  progress.lastTopicId = currentTopic.id;
+  progress.lastRouteId = route.id;
+
+  const profile = loadAssistantProfile();
+  profile.completedTopics = [...new Set([...(profile.completedTopics || []), currentTopic.id])];
+  (currentTopic.conceptsTaught || []).forEach((concept) => setAssistantConcept(profile, concept, "confident", "progress", currentTopic.id));
+
+  const nextTopic = route.topics.find((topic) => {
+    if (topic.number <= currentTopic.number || progress.completed.includes(topic.id)) return false;
+    const nextNode = getRoadmapNode(topic.id);
+    return !(nextNode?.conceptsTaught || []).every((concept) => assistantConceptKnown(profile, concept));
+  });
+  if (nextTopic) {
+    progress.recommendedRouteId = route.id;
+    progress.recommendedTopicId = nextTopic.id;
+    profile.recommendedRoute = route.id;
+    profile.recommendedTopic = nextTopic.id;
+  } else {
+    delete progress.recommendedRouteId;
+    delete progress.recommendedTopicId;
+    profile.recommendedTopic = null;
+    profile.recommendedRoute = null;
+  }
+  saveAssistantProfile(profile);
+  saveRoadmapProgress(progress);
+  if (typeof activeRoadmapRoute !== "undefined" && activeRoadmapRoute?.id === route.id) renderRoadmapPath(route);
+  if (typeof renderRoadmapRoutes === "function") renderRoadmapRoutes();
+  return nextTopic ? getRoadmapNode(nextTopic.id) : null;
+}
+
+function handleAssistantCorrectionAction(action) {
+  if (!assistantLastDecision) assistantLastDecision = decisionFromSavedRecommendation();
+  if (!assistantLastDecision) {
+    addAssistantMessage(`${assistantNameMarkup()}<p>No tengo una recomendación activa que marcar. Dime el tema que quieres aprender y te coloco en el punto correcto.</p>`, "bot");
+    return;
+  }
+  const profile = loadAssistantProfile();
+  if (action === "start") {
+    const progress = getRoadmapProgress();
+    progress.recommendedRouteId = assistantLastDecision.route.id;
+    progress.recommendedTopicId = assistantLastDecision.topic.id;
+    progress.lastRouteId = assistantLastDecision.route.id;
+    progress.lastTopicId = assistantLastDecision.topic.id;
+    saveRoadmapProgress(progress);
+    openRoadmapRoute(assistantLastDecision.route.id, assistantLastDecision.topic.id);
+    return;
+  }
+  if (action === "known") {
+    const currentDecision = assistantLastDecision;
+    const nextNode = completeAssistantTopicAndFindNext(currentDecision);
+    addAssistantMessage(`<p>Esto ya me lo sé.</p>`, "user");
+    window.setTimeout(() => {
+      if (!nextNode) {
+        addAssistantMessage(`${assistantNameMarkup()}<p>Perfecto, marco <strong>${escapeAssistantHtml(currentDecision.topic.title)}</strong> como completado. No veo más pasos pendientes en esta ruta; puedes abrir otro planeta del roadmap o pedirme otro objetivo.</p>`, "bot");
+        return;
+      }
+      const nextDecision = buildRecommendationResult(nextNode, "progress_next", 0.92, missingPrerequisitesForNode(nextNode, loadAssistantProfile()), nextNode);
+      assistantLastDecision = nextDecision;
+      addAssistantMessage(renderAssistantRecommendation(nextDecision, `<p>Perfecto, marco <strong>${escapeAssistantHtml(currentDecision.topic.title)}</strong> como completado.</p><p>El siguiente paso lógico es:</p>`), "bot");
+    }, 120);
+    return;
+  }
+  if (action === "earlier") {
+    const missingConcept = firstMeaningfulMissingPrerequisite(assistantLastDecision.topic, profile) || assistantLastDecision.topic.prerequisites?.[0] || "computer_basics";
+    setAssistantConcept(profile, missingConcept, "unknown", "correction", "Necesito empezar antes");
+    saveAssistantProfile(profile);
+    const node = findTopicTeachingConcept(missingConcept, false) || getRoadmapNode("topic-1");
+    const nextDecision = buildRecommendationResult(node, "earlier_prerequisite", 0.88, missingPrerequisitesForNode(node, profile), assistantLastDecision.topic);
+    assistantLastDecision = nextDecision;
+    addAssistantMessage(`<p>Necesito empezar antes.</p>`, "user");
+    window.setTimeout(() => addAssistantMessage(renderAssistantRecommendation(nextDecision, "<p>Bien visto. Bajamos un escalón y reforzamos antes esto:</p>"), "bot"), 120);
+    return;
+  }
+  if (action === "diagnose") {
+    const block = goalDiagnosticBlock(assistantPendingGoal || assistantLastDecision.targetGoal || "networking");
+    assistantPendingQuestion = { type: "checklist", block, text: (chooseDiagnosticQuestion(assistantPendingGoal || assistantLastDecision.targetGoal || "networking", profile)?.text || "Vamos a ubicar tu base. Marca lo que controles.") };
+    addAssistantMessage(`<p>Evaluar mejor mi nivel.</p>`, "user");
+    window.setTimeout(() => addAssistantMessage(`${assistantNameMarkup()}<p>${assistantPendingQuestion.text}</p>${renderAssistantChecklist(assistantPendingQuestion)}`, "bot"), 120);
+  }
+}
+
+function renderAssistantRecommendation(decision, intro = "<p>Te recomiendo empezar por:</p>") {
+  const { route, topic, reason, availability, missingPrerequisites } = decision;
+  const isAvailable = availability === "published" && topic?.url;
+  const prereqLabel = missingPrerequisites?.[0] ? assistantConceptLabel(missingPrerequisites[0]) : "";
+  const why = reason === "absolute_beginner"
+    ? "Si empiezas desde cero, lo mejor es construir base antes de tocar herramientas. Así entiendes qué haces y por qué."
+    : reason === "first_unsatisfied_prerequisite" || reason === "earlier_prerequisite"
+      ? `Tu objetivo tiene sentido, pero antes conviene reforzar <strong>${escapeAssistantHtml(prereqLabel)}</strong> para que no vayas a ciegas.`
+      : reason === "saved_recommendation"
+        ? "Mantengo el punto que tenías recomendado para que no saltes de tema sin querer."
+        : "Es el punto que mejor encaja con lo que has pedido ahora.";
+  const availabilityLine = isAvailable
+    ? `Empieza por el vídeo <strong>${escapeAssistantHtml(topic.title)}</strong>.`
+    : `El punto correcto es <strong>${escapeAssistantHtml(topic.title)}</strong>. Todavía está como <strong>${escapeAssistantHtml(topic.statusLabel || "pendiente")}</strong>, así que te lo enseño en el roadmap y puedes avanzar con el paso anterior disponible.`;
+  return `${assistantNameMarkup()}${intro}<p><strong>${escapeAssistantHtml(route.title)}</strong><br><strong>${escapeAssistantHtml(topic.title)}</strong></p><p>${why}</p><p>${availabilityLine}</p>${assistantRouteButton(route, topic, isAvailable ? "Abrir vídeo/ruta" : "Abrir roadmap")}${assistantCorrectionButtons()}`;
+}
+
+function assistantConceptLabel(concept) {
+  const labels = {
+    computer_basics: "informática base",
+    operating_systems: "sistemas operativos",
+    linux: "Linux",
+    terminal: "terminal",
+    virtual_machines: "máquinas virtuales",
+    networking: "redes",
+    ip: "dirección IP",
+    router: "router",
+    mac: "dirección MAC",
+    ports: "puertos",
+    tcp_udp: "TCP y UDP",
+    dns: "DNS",
+    vpn: "VPN",
+    http: "HTTP",
+    web_basics: "web básica",
+    http_requests: "peticiones HTTP",
+    get_post: "GET y POST",
+    cookies: "cookies",
+    sessions: "sesiones",
+    sql: "SQL",
+    cybersecurity: "ciberseguridad básica",
+    phishing: "phishing",
+    malware: "malware",
+    pentesting: "pentesting",
+    osint: "OSINT",
+    web_hacking: "hacking web",
+  };
+  return labels[concept] || String(concept || "").replace(/_/g, " ");
+}
+
+function buildAssistantReply(text) {
+  const decision = makeAssistantDecision(text);
+  if (decision.type === "recommendation") assistantLastDecision = decision;
+  if (decision.type === "concept_answer") {
+    assistantLastDecision = buildRecommendationResult(decision.topic, "concept_answer", 0.86, missingPrerequisitesForNode(decision.topic, decision.profile), decision.topic);
+    return `${assistantNameMarkup()}<p>${escapeAssistantHtml(decision.answer)}</p><p>Si quieres verlo dentro del recorrido, te dejo el punto exacto del roadmap.</p>${assistantRouteButton(decision.route, decision.topic, "Ver en roadmap")}${assistantCorrectionButtons()}`;
+  }
+  if (decision.type === "smalltalk") return `${assistantNameMarkup()}<p>¡Hola! Soy el asistente de Ciber Sin Humo. Dime qué quieres aprender o qué se te atraganta y te coloco en el punto adecuado.</p>`;
+  if (decision.type === "thanks") return `${assistantNameMarkup()}<p>De nada. Cuando quieras seguimos afinando tu ruta.</p>`;
+  if (decision.type === "clarify") return `${assistantNameMarkup()}<p>${escapeAssistantHtml(decision.question)}</p>`;
+  if (decision.type === "progress_done") return `${assistantNameMarkup()}<p>Perfecto, marco ese punto como dominado. Puedes pedirme otro objetivo o abrir el roadmap para elegir el siguiente planeta.</p>`;
+  if (decision.type === "diagnostic") {
+    return `${assistantNameMarkup()}<p>${escapeAssistantHtml(decision.question.text)}</p>${decision.question.type === "checklist" ? renderAssistantChecklist(decision.question) : `<div class="assistant-actions"><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="known">Sí, lo controlo</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="beginner">Lo he tocado poco</button><button type="button" class="assistant-route-link" data-assistant-knowledge="${decision.question.concept}" data-knowledge-state="unknown">No, empiezo ahí</button></div>`}`;
+  }
+  return renderAssistantRecommendation(decision);
+}
+
 if (typeof globalThis !== "undefined") {
-  globalThis.__cshAssistantEngine = { makeAssistantDecision, parseAssistantIntent, updateProfileFromText, validateAssistantKnowledgeGraph, loadAssistantProfile, saveAssistantProfile };
+  globalThis.__cshAssistantEngine = {
+    makeAssistantDecision,
+    parseAssistantIntent,
+    updateProfileFromText,
+    validateAssistantKnowledgeGraph,
+    loadAssistantProfile,
+    saveAssistantProfile,
+    setAssistantConcept,
+    getAssistantConceptState,
+    getAssistantConceptMastery,
+    applyAssistantChecklistSelection,
+    migrateAssistantProfile,
+  };
 }
 function escapeAssistantHtml(value) {
   return String(value || "").replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[char]));
@@ -4649,14 +5398,17 @@ function handleAssistantPrompt(text) {
   addAssistantMessage(`<p>${escapeAssistantHtml(cleanText)}</p>`, "user");
   window.setTimeout(() => {
     let decision = null;
+    let reply = "";
     try {
-      addAssistantMessage(buildAssistantReply(cleanText), "bot");
+      reply = buildAssistantReply(cleanText);
       decision = assistantLastDecision;
     } catch (error) {
       console.warn("Roadmap assistant fallback", error);
       addAssistantMessage(`${assistantNameMarkup()}<p>Te leo, pero ahora mismo necesito que me lo digas con una palabra clave: redes, phishing, Linux, web, privacidad o herramientas.</p>`, "bot");
       return;
     }
+
+    addAssistantMessage(reply, "bot");
 
     try {
       if (decision?.type === "recommendation" && decision.route && decision.topic) {
@@ -4721,6 +5473,16 @@ if (roadmapRoutesContainer) {
     if (item) openRoadmapRoute(item.dataset.searchRoute, item.dataset.searchTopic);
   });
   document.addEventListener("click", (event) => {
+    const checklistConfirm = event.target.closest("[data-assistant-check-confirm]");
+    if (checklistConfirm) {
+      handleAssistantCheckConfirm(checklistConfirm);
+      return;
+    }
+    const checklistToggle = event.target.closest("[data-assistant-check]");
+    if (checklistToggle) {
+      handleAssistantCheckToggle(checklistToggle);
+      return;
+    }
     const knowledgeButton = event.target.closest("[data-assistant-knowledge], [data-assistant-block]");
     if (knowledgeButton) {
       handleAssistantKnowledgeAction(knowledgeButton);

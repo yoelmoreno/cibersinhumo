@@ -14,6 +14,7 @@ function loadAssistantEngine() {
   }
 
   const storage = new Map();
+  const progress = { completed: [] };
   const context = {
     console,
     Date,
@@ -23,8 +24,8 @@ function loadAssistantEngine() {
       removeItem: (key) => storage.delete(key),
       clear: () => storage.clear(),
     },
-    getRoadmapProgress: () => ({ completed: [] }),
-    saveRoadmapProgress: () => {},
+    getRoadmapProgress: () => ({ ...progress, completed: [...(progress.completed || [])] }),
+    saveRoadmapProgress: (next) => Object.assign(progress, next, { completed: [...(next.completed || [])] }),
     openRoadmapRoute: () => {},
     addAssistantMessage: () => {},
   };
@@ -37,7 +38,7 @@ function loadAssistantEngine() {
       src.slice(assistantStart, assistantEnd),
     context
   );
-  return { engine: context.__cshAssistantEngine, storage };
+  return { engine: context.__cshAssistantEngine, storage, progress };
 }
 
 function decide(input, profile = {}) {
@@ -59,8 +60,12 @@ assertRecommendation("quiero aprender phishing", "topic-122", "phishing directo"
 assertRecommendation("Quiero aprender puertos", "topic-69", "puertos directo");
 assertRecommendation("quiero aprender sobre maquinas virtuales", "topic-41", "maquinas virtuales directo");
 
-const sqlInjection = assertRecommendation("quiero SQL Injection pero no se que es HTTP", "topic-176", "SQL Injection concreto");
-assert.strictEqual(sqlInjection.availability, "pending", "SQL Injection pendiente pero respetado");
+const sqlInjection = assertRecommendation("quiero SQL Injection pero no se que es HTTP", "topic-92", "SQL Injection exige base HTTP");
+assert.strictEqual(sqlInjection.reason, "first_unsatisfied_prerequisite", "SQL Injection respeta prerequisitos explícitos");
+
+const vpnAnswer = decide("explícame qué es una VPN");
+assert.strictEqual(vpnAnswer.type, "concept_answer", "VPN responde concepto antes de mandar a ruta");
+assert.strictEqual(vpnAnswer.recommendedNodeId, "topic-80", "VPN mantiene enlace al punto correcto");
 
 const pentesting = decide("Se IP, router, puertos, TCP y UDP. Quiero pentesting.");
 assert.notStrictEqual(pentesting.recommendedNodeId, "topic-69", "si ya sabe puertos, no repetir puertos");
@@ -71,6 +76,27 @@ assert.ok(
   kaliNoNetworks.type === "diagnostic" || kaliNoNetworks.recommendedNodeId === "topic-53",
   "Kali sin redes no debe saltar a hacking avanzado"
 );
+
+const phishing = decide("quiero aprender phishing");
+assert.strictEqual(phishing.recommendedNodeId, "topic-122", "phishing nunca debe caer a hardware por defecto");
+
+{
+  const { engine, progress } = loadAssistantEngine();
+  progress.recommendedTopicId = "topic-1";
+  const same = engine.makeAssistantDecision("por donde sigo");
+  assert.strictEqual(same.recommendedNodeId, "topic-1", "continuar mantiene recomendación pendiente");
+}
+
+{
+  const { engine, progress } = loadAssistantEngine();
+  const profile = engine.applyAssistantChecklistSelection("networking", ["ip", "router", "ports"]);
+  assert.strictEqual(engine.getAssistantConceptState(profile, "ip"), "known", "checklist marca múltiples conocidos");
+  assert.strictEqual(engine.getAssistantConceptState(profile, "dns"), "unknown", "checklist deja como desconocidos los no seleccionados");
+  progress.completed = ["topic-1"];
+  const migrated = engine.loadAssistantProfile();
+  const next = engine.makeAssistantDecision("por donde sigo", { profile: migrated });
+  assert.notStrictEqual(next.recommendedNodeId, "topic-1", "un tema completado no se recomienda otra vez al continuar");
+}
 
 const graph = loadAssistantEngine().engine.validateAssistantKnowledgeGraph();
 assert.deepStrictEqual(Array.from(graph.duplicateIds), [], "sin ids duplicados en roadmap");

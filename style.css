@@ -6642,6 +6642,17 @@ select {
 .assistant-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
 .assistant-form input, .roadmap-search-panel input { min-height: 52px; border-radius: 12px; border: 1px solid rgba(0,255,136,.22); background: rgba(0, 8, 5, .82); color: var(--text-main); padding: 0 16px; font: inherit; }
 .assistant-form button, .assistant-route-link, .assistant-skip { border: 1px solid rgba(0,255,136,.35); color: var(--accent); background: rgba(0,255,136,.07); border-radius: 12px; padding: 0 18px; font-family: 'Share Tech Mono', monospace; text-transform: uppercase; letter-spacing: .08em; cursor: pointer; }
+.assistant-check-option[aria-pressed="true"],
+.assistant-check-option.is-selected {
+  color: #00150b;
+  background: linear-gradient(135deg, rgba(0,255,136,.95), rgba(119,255,0,.78));
+  border-color: rgba(0,255,136,.9);
+  box-shadow: 0 0 18px rgba(0,255,136,.28);
+}
+.assistant-check-confirm {
+  background: rgba(0,255,136,.14);
+  border-color: rgba(0,255,136,.55);
+}
 .assistant-quick-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .assistant-quick-actions button { border: 1px solid rgba(0,255,136,.24); color: var(--accent); background: rgba(0,255,136,.05); border-radius: 999px; padding: 9px 12px; font-family: 'Share Tech Mono', monospace; text-transform: uppercase; font-size: .72rem; cursor: pointer; transition: transform .2s ease, border-color .2s ease; }
 .assistant-quick-actions button:hover, .roadmap-route-card:hover, .roadmap-video-card:hover { transform: translateY(-3px); border-color: rgba(0,255,136,.45); }
