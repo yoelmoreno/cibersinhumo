@@ -18,6 +18,10 @@ function loadAssistantEngine() {
   const context = {
     console,
     Date,
+    window: {
+      setTimeout: (fn) => fn(),
+    },
+    escapeAssistantHtml: (value) => String(value || "").replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[char])),
     localStorage: {
       getItem: (key) => storage.get(key) || null,
       setItem: (key, value) => storage.set(key, String(value)),
@@ -27,7 +31,8 @@ function loadAssistantEngine() {
     getRoadmapProgress: () => ({ ...progress, completed: [...(progress.completed || [])] }),
     saveRoadmapProgress: (next) => Object.assign(progress, next, { completed: [...(next.completed || [])] }),
     openRoadmapRoute: () => {},
-    addAssistantMessage: () => {},
+    addAssistantMessage: (content, type = "bot") => context.__messages.push({ content, type }),
+    __messages: [],
   };
   context.globalThis = context;
   vm.createContext(context);
@@ -39,6 +44,21 @@ function loadAssistantEngine() {
     context
   );
   return { engine: context.__cshAssistantEngine, storage, progress };
+}
+
+function assistantFunctionDuplicates() {
+  const src = fs.readFileSync("script.js", "utf8");
+  const assistantStart = src.indexOf("const assistantKnowledgeState");
+  const assistantEnd = src.indexOf("function escapeAssistantHtml");
+  const assistantSrc = src.slice(assistantStart, assistantEnd);
+  const re = /^\s*(?:async\s+)?function\s+([A-Za-z_$][\w$]*)\s*\(/gm;
+  const seen = new Map();
+  let match;
+  while ((match = re.exec(assistantSrc))) {
+    if (!seen.has(match[1])) seen.set(match[1], 0);
+    seen.set(match[1], seen.get(match[1]) + 1);
+  }
+  return [...seen.entries()].filter(([, count]) => count > 1).map(([name]) => name);
 }
 
 function decide(input, profile = {}) {
@@ -140,6 +160,53 @@ assert.strictEqual(defenseInstead.goal, "defense", "contraste y negación priori
 const graph = loadAssistantEngine().engine.validateAssistantKnowledgeGraph();
 assert.deepStrictEqual(Array.from(graph.duplicateIds), [], "sin ids duplicados en roadmap");
 assert.deepStrictEqual(Array.from(graph.missingPrerequisites), [], "sin prerequisitos imposibles");
+assert.deepStrictEqual(assistantFunctionDuplicates(), [], "sin funciones duplicadas dentro del asistente");
+
+{
+  const { engine, progress } = loadAssistantEngine();
+  const first = engine.makeAssistantDecision("No se absolutamente nada de ciber");
+  const button = {
+    textContent: "Esto ya me lo sé",
+    disabled: false,
+    dataset: { assistantAction: "known" },
+    setAttribute(name, value) { this[name] = value; },
+  };
+  engine.handleAssistantCorrectionAction("known", button);
+  assert.strictEqual(button.disabled, false, "el botón se recupera tras marcar conocido");
+  assert.strictEqual(progress.completed.filter((id) => id === first.recommendedNodeId).length, 1, "topic completado una sola vez");
+  assert.notStrictEqual(progress.recommendedTopicId, first.recommendedNodeId, "no recomienda el mismo topic tras marcar conocido");
+  const profile = engine.loadAssistantProfile();
+  assert.ok(engine.getAssistantConceptMastery(profile, "computer_basics") >= 88, "mastery actualizado por progreso");
+}
+
+{
+  const { engine, progress } = loadAssistantEngine();
+  engine.makeAssistantDecision("No se absolutamente nada de ciber");
+  const button = {
+    textContent: "Esto ya me lo sé",
+    disabled: false,
+    dataset: { assistantAction: "known" },
+    setAttribute(name, value) { this[name] = value; },
+  };
+  engine.handleAssistantCorrectionAction("known", button);
+  engine.handleAssistantCorrectionAction("known", button);
+  assert.strictEqual(progress.completed.filter((id) => id === "topic-1").length, 1, "doble click no duplica completed");
+}
+
+{
+  const { engine, progress } = loadAssistantEngine();
+  progress.recommendedTopicId = "topic-1";
+  progress.recommendedRouteId = "route-zero";
+  const button = {
+    textContent: "Esto ya me lo sé",
+    disabled: false,
+    dataset: { assistantAction: "known" },
+    setAttribute(name, value) { this[name] = value; },
+  };
+  engine.handleAssistantCorrectionAction("known", button);
+  assert.strictEqual(progress.completed.filter((id) => id === "topic-1").length, 1, "tras refresh reconstruye y completa la recomendación");
+  assert.notStrictEqual(progress.recommendedTopicId, "topic-1", "tras refresh avanza a un siguiente paso válido");
+}
 
 console.log("Assistant engine tests passed");
 

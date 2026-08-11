@@ -30,6 +30,7 @@
     <a href="#inicio" class="nav-link">Inicio</a>
     <a href="#canal" class="nav-link">Actividad</a>
     <a href="#videos" class="nav-link">Vídeos</a>
+    <a href="#laboratorios" class="nav-link">Laboratorios</a>
     <a href="#recursos" class="nav-link">Recursos</a>
     <a href="#blog" class="nav-link">Blog</a>
     <a href="amenazas.html" class="nav-link">Amenazas</a>
@@ -425,6 +426,44 @@
         <h3>Publicados y casos destacados</h3>
       </div>
       <div class="roadmap-explore-grid" id="roadmap-explore-grid"></div>
+    </div>
+  </div>
+</section>
+<section class="section labs-section" id="laboratorios">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-tag">prácticas guiadas</span>
+      <h2 class="section-title">Laboratorios</h2>
+      <p class="section-desc">Aprender está bien. Probarlo tú mismo está mejor.</p>
+    </div>
+
+    <div class="labs-shell">
+      <div class="labs-topbar">
+        <div class="lab-filter-group" aria-label="Filtrar por nivel">
+          <button type="button" class="lab-filter is-active" data-lab-filter="all">Todos</button>
+          <button type="button" class="lab-filter" data-lab-filter="Inicial">Inicial</button>
+          <button type="button" class="lab-filter" data-lab-filter="Intermedio">Intermedio</button>
+          <button type="button" class="lab-filter" data-lab-filter="Avanzado">Avanzado</button>
+        </div>
+        <div class="lab-filter-group lab-topic-filters" aria-label="Filtrar por temática">
+          <button type="button" class="lab-filter" data-lab-topic="Redes">Redes</button>
+          <button type="button" class="lab-filter" data-lab-topic="Linux">Linux</button>
+          <button type="button" class="lab-filter" data-lab-topic="Web">Web</button>
+          <button type="button" class="lab-filter" data-lab-topic="OSINT">OSINT</button>
+          <button type="button" class="lab-filter" data-lab-topic="Seguridad">Seguridad</button>
+        </div>
+      </div>
+
+      <div class="lab-continue" id="lab-continue" hidden></div>
+      <div class="labs-grid" id="labs-grid"></div>
+
+      <article class="lab-panel" id="lab-panel" hidden aria-live="polite">
+        <div class="lab-panel-empty">
+          <span class="section-tag">selecciona un laboratorio</span>
+          <h3>Elige una práctica para empezar</h3>
+          <p>Los pasos se guardan solo en este navegador, sin login ni base de datos.</p>
+        </div>
+      </article>
     </div>
   </div>
 </section>
