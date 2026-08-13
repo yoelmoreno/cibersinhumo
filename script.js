@@ -3719,8 +3719,75 @@ const roadmapExpansionRows = `
 272|defensa-siguiente-paso|Timeline, disco y memoria RAM en forense|Primer mapa de lo que se puede analizar en un equipo comprometido.|Forense,Sistemas|forensics,memory_forensics,disk_forensics|forensics,operating_systems|5|
 273|defensa-siguiente-paso|Cloud Security: servidores, buckets, IAM y responsabilidad compartida|Conceptos minimos para entender seguridad en nube sin perderse en proveedores.|Cloud,Defensa|cloud_security,iam,shared_responsibility|networking,web_basics|4|
 274|defensa-siguiente-paso|Profesiones en ciber: pentester, SOC, DFIR, AppSec, GRC y mas|Un mapa realista de salidas laborales para elegir camino sin humo.|Profesiones,Ciberseguridad|cyber_careers,cyber_roles|cybersecurity|2|
-275|defensa-siguiente-paso|Elegir tu siguiente camino despues de las bases|Como decidir entre redes, web, pentesting, defensa, forense, cloud u OSINT segun lo que te guste.|Roadmap,Profesiones|career_path,cyber_careers|cybersecurity,networking,web_basics|3|
-`.trim().split("`n").map((row) => {
+276|programacion-hacking|Por que los hackers necesitan saber programar?|Programar ayuda a automatizar, entender herramientas, leer exploits y crear pruebas propias en laboratorio.|Programacion,Hacking|programming,automation,pentesting|computer_basics|2|
+277|programacion-hacking|Que lenguaje de programacion aprender para ciberseguridad?|Mapa rapido de Python, Bash, C, JavaScript y SQL segun el area de ciberseguridad.|Programacion,Roadmap|programming,python,bash,c_language,javascript,sql|computer_basics|2|
+278|programacion-hacking|Python para hacking: por que se usa tanto?|Python como lenguaje practico para scripts, automatizacion, APIs y pequenas herramientas de seguridad.|Python,Programacion|python,automation,pentesting|programming|2|
+279|programacion-hacking|Bash: automatizando Linux desde la terminal|Bash para unir comandos, automatizar tareas y trabajar mas rapido en sistemas Linux.|Bash,Linux|bash,terminal,automation|terminal,linux|3|
+280|programacion-hacking|Por que C es tan importante en ciberseguridad?|C como base para entender memoria, binarios, sistemas y vulnerabilidades clasicas.|C,Programacion|c_language,memory,exploit|programming,computer_basics|3|
+281|programacion-hacking|JavaScript para hackers: el lenguaje que ejecuta tu navegador|JavaScript explicado desde el punto de vista de la web, el navegador y la seguridad web.|JavaScript,Web|javascript,web_basics,web_hacking|web_basics|3|
+282|programacion-hacking|SQL: el lenguaje detras de las bases de datos|SQL para entender como se consultan datos antes de hablar de SQL Injection.|SQL,Web|sql,databases|web_basics|3|
+283|programacion-hacking|Tu primer script de ciberseguridad con Python|Crear un script sencillo para empezar a automatizar tareas sin complicarse.|Python,Labs|python,automation,labs|programming|3|Crear un script que lea una lista y muestre resultados ordenados.
+284|programacion-hacking|Como crear un escaner de puertos sencillo con Python|Escaneo basico de puertos para entender sockets, tiempos de espera y servicios abiertos.|Python,Redes|python,ports,sockets,network_scanning|ports,python|4|Crear un escaner local contra un entorno propio.
+285|programacion-hacking|Como hacer peticiones HTTP con Python|Usar Python para pedir una pagina, leer una respuesta y entender codigo de estado y headers.|Python,HTTP|python,http_requests,api|http_requests,python|3|
+286|programacion-hacking|Sockets: como se comunican dos programas por Internet|Sockets explicados como la pieza base de muchas comunicaciones de red.|Redes,Programacion|sockets,networking,python|tcp_udp,programming|3|
+287|programacion-hacking|Como automatizar tareas de ciberseguridad con Python|Automatizacion de tareas repetitivas como leer archivos, consultar APIs o procesar resultados.|Python,Automatizacion|python,automation,api|python|3|
+288|programacion-hacking|Como leer y modificar un exploit escrito en Python|Entender un exploit publico a nivel educativo y adaptarlo solo a laboratorios autorizados.|Python,Exploits|python,exploit,pentesting|python,vulnerabilities|4|
+289|programacion-hacking|Como analizar logs automaticamente con Python|Leer registros, filtrar patrones y detectar eventos interesantes con scripts sencillos.|Python,Blue Team|python,logs,blue_team|python,logs|4|Parsear un log de ejemplo y contar eventos por tipo.
+290|programacion-hacking|Como crear una herramienta de linea de comandos|Argumentos, salida, errores y estructura basica de una herramienta propia.|Programacion,Terminal|programming,terminal,automation|python,terminal|3|
+291|programacion-hacking|Que es una API y como interactuar con ella desde Python?|APIs vistas desde la practica: endpoint, respuesta JSON y automatizacion con Python.|Python,APIs|api,python,json,http_requests|http_requests,python|3|
+292|programacion-hacking|Como funcionan los argumentos de un programa|Que son los parametros de entrada y por que importan al crear herramientas o explotar fallos.|Programacion,Terminal|programming,terminal|programming|2|
+293|programacion-hacking|Compilado vs interpretado: C vs Python|Diferencia entre compilar y ejecutar scripts para entender binarios y lenguajes.|Programacion,C|c_language,python,programming|programming|3|
+294|programacion-hacking|Que es realmente un puntero y por que importa en hacking?|Punteros explicados como direcciones de memoria antes de hablar de bugs de memoria.|C,Memoria|c_language,memory,exploit|c_language,memory|4|
+295|programacion-hacking|Stack vs Heap explicado facil|Dos zonas de memoria clave para entender vulnerabilidades y ejecucion de programas.|C,Memoria|memory,c_language,exploit|c_language,memory|4|
+296|programacion-hacking|Que es un Buffer Overflow?|Desbordamiento de buffer explicado de forma introductoria y segura.|C,Exploits|buffer_overflow,c_language,exploit|c_language,memory|5|
+297|programacion-hacking|Por que C puede provocar vulnerabilidades de memoria?|Errores tipicos de memoria en C y por que lenguajes de bajo nivel requieren cuidado.|C,Memoria|c_language,memory,exploit|c_language,memory|4|
+298|programacion-hacking|Variables no inicializadas: como pueden convertirse en una vulnerabilidad|Como un valor sin inicializar puede provocar comportamientos inesperados.|C,Memoria|c_language,memory,vulnerabilities|c_language|4|
+299|programacion-hacking|Que es un segmentation fault?|Por que un programa puede fallar al acceder mal a memoria.|C,Memoria|c_language,memory|c_language,memory|4|
+300|programacion-hacking|Que es la corrupcion de memoria?|Concepto base para entender fallos de memoria, crashes y explotacion avanzada.|C,Memoria|memory,c_language,exploit|c_language,memory|4|
+301|programacion-hacking|Que es Assembly y por que aparece en hacking?|Introduccion a Assembly para saber por que aparece en reversing y explotacion.|Assembly,Reversing|assembly,reverse_engineering,c_language|c_language,memory|5|
+302|programacion-hacking|Como encontrar informacion interesante leyendo codigo fuente|Leer codigo para descubrir rutas, claves mal guardadas, comentarios o logica sensible.|Programacion,OSINT|source_code,programming,osint|programming|3|
+303|programacion-hacking|Que es un PoC de una vulnerabilidad?|Prueba de concepto explicada como demostracion controlada de un fallo.|Exploits,Programacion|poc,exploit,vulnerabilities|vulnerabilities|3|
+304|programacion-hacking|De CVE a codigo: como funciona un exploit publico|Leer una vulnerabilidad publicada y entender como se traduce en una prueba tecnica.|Exploits,CVE|cve,exploit,poc|cve,programming|4|
+305|criptografia|Que es la criptografia?|Base de la criptografia: proteger informacion usando matematicas, claves y protocolos.|Criptografia|cryptography|computer_basics|2|
+306|criptografia|Cifrado vs hashing vs codificacion: no son lo mismo|Diferenciar cifrar, hashear y codificar con ejemplos simples.|Criptografia|cryptography,hashing,encoding,encryption|computer_basics|2|
+307|criptografia|Que es Base64 y por que no es cifrado?|Base64 explicado como codificacion, no como proteccion real de datos.|Criptografia|encoding|computer_basics|2|
+308|criptografia|El cifrado Cesar: asi empezo la criptografia|Un ejemplo historico sencillo para entender sustitucion y claves.|Criptografia|cryptography,encryption|cryptography|2|
+309|criptografia|Que es una clave criptografica?|Que papel tiene una clave y por que protegerla es tan importante.|Criptografia|cryptography,encryption|cryptography|2|
+310|criptografia|Cifrado simetrico explicado facil|Una misma clave para cifrar y descifrar, con ejemplos cotidianos.|Criptografia|cryptography,encryption|cryptography|2|
+311|criptografia|Cifrado asimetrico explicado facil|Clave publica y privada explicadas sin matematicas imposibles.|Criptografia|cryptography,encryption|cryptography|3|
+312|criptografia|Que diferencia hay entre clave publica y privada?|Como se usan las claves en HTTPS, SSH y firmas digitales.|Criptografia|cryptography,certificates|cryptography|3|
+313|criptografia|AES: el cifrado que esta por todas partes|AES explicado como cifrado simetrico moderno usado en muchos sistemas.|Criptografia|cryptography,encryption|cryptography|3|
+314|criptografia|RSA explicado sin matematicas imposibles|RSA como idea de clave publica y privada aplicada a comunicaciones seguras.|Criptografia|cryptography,certificates|cryptography|3|
+315|criptografia|Que es un hash?|Huella digital de datos para verificar integridad y comparar informacion.|Criptografia|hashing|computer_basics|2|
+316|criptografia|SHA-256: como crear una huella digital de un archivo|Usar SHA-256 para comprobar que un archivo no ha cambiado.|Criptografia,Labs|hashing|hashing|3|Calcular el hash de un archivo de prueba y comprobar cambios.
+317|criptografia|Por que un hash no se puede descifrar?|Por que un hash no funciona como un cifrado reversible.|Criptografia|hashing,encryption|hashing|3|
+318|criptografia|MD5: el algoritmo que ya no deberias usar|Por que algunos algoritmos se quedan obsoletos y que riesgos tienen.|Criptografia|hashing,vulnerabilities|hashing|3|
+319|criptografia|Como guardan realmente las webs tus contrasenas?|Hashing de contrasenas, sal y buenas practicas a nivel conceptual.|Criptografia,Web|hashing,authentication,databases|hashing,web_basics|3|
+320|criptografia|Que es un salt y por que protege las contrasenas?|El papel de la sal para dificultar ataques contra hashes de contrasenas.|Criptografia|hashing,authentication|hashing|3|
+321|criptografia|Que son las Rainbow Tables?|Tablas precalculadas y por que el salt ayuda a frenarlas.|Criptografia|hashing,vulnerabilities|hashing|3|
+322|criptografia|Fuerza bruta vs ataque de diccionario|Diferenciar dos ataques contra contrasenas y hashes.|Criptografia,Ataques|hashing,authentication|hashing|3|
+323|criptografia|Como funciona HTTPS realmente?|HTTPS explicado como HTTP protegido por TLS y certificados.|Criptografia,Web|tls,certificates,http|http,cryptography|3|
+324|criptografia|Que ocurre cuando aparece el candado del navegador?|El candado del navegador explicado: identidad, cifrado y limites reales.|Criptografia,Web|tls,certificates,web_basics|http,cryptography|3|
+325|criptografia|Que es TLS?|TLS como protocolo que protege comunicaciones en Internet.|Criptografia,Web|tls,certificates|http,cryptography|3|
+326|criptografia|Que es un certificado digital?|Certificados como forma de demostrar identidad en la web.|Criptografia,Web|certificates,tls|tls|3|
+327|criptografia|Quien decide si un certificado es de confianza?|Cadena de confianza y autoridades reconocidas por el navegador.|Criptografia,Web|certificates,tls|certificates|3|
+328|criptografia|Que es una Autoridad Certificadora?|El papel de las CA en HTTPS y certificados digitales.|Criptografia,Web|certificates,tls|certificates|3|
+329|criptografia|Que es una firma digital?|Firmas digitales para verificar autoria e integridad.|Criptografia|cryptography,certificates|cryptography|3|
+330|criptografia|Firma digital vs firma electronica|Diferencias practicas entre concepto tecnico y uso legal/cotidiano.|Criptografia|cryptography,certificates|cryptography|3|
+331|criptografia|Como sabe tu ordenador que una actualizacion es legitima?|Firmas, certificados y confianza en actualizaciones de software.|Criptografia,Sistemas|cryptography,certificates,operating_systems|cryptography,operating_systems|4|
+332|criptografia|Como funcionan las claves SSH?|Claves SSH, autenticacion y acceso seguro a servidores.|Criptografia,Linux|cryptography,ssh,authentication|linux,cryptography|3|
+333|criptografia|Como funciona el cifrado de extremo a extremo?|E2EE explicado como proteccion entre emisor y receptor.|Criptografia,Privacidad|cryptography,privacy|cryptography|3|
+334|criptografia|Puede WhatsApp leer tus mensajes? Cifrado de extremo a extremo|Que protege el cifrado de extremo a extremo y que metadatos pueden seguir existiendo.|Criptografia,Privacidad|cryptography,privacy|cryptography|3|
+335|criptografia|Como se cifra un disco duro?|Cifrado de disco para proteger datos si pierdes el equipo.|Criptografia,Sistemas|cryptography,encryption,operating_systems|cryptography,operating_systems|3|
+336|criptografia|Que hace BitLocker realmente?|BitLocker explicado como cifrado de disco integrado en Windows.|Criptografia,Sistemas|cryptography,encryption,operating_systems|cryptography,operating_systems|3|
+337|criptografia|Como protege una VPN tus datos?|La parte criptografica de una VPN y que limites sigue teniendo.|Criptografia,Privacidad|cryptography,vpn,privacy|vpn,cryptography|3|
+338|criptografia|Puede romperse un cifrado?|Ataques, implementaciones debiles, claves robadas y algoritmos obsoletos.|Criptografia|cryptography,vulnerabilities|cryptography|4|
+339|criptografia|Que pasa si alguien roba tu clave privada?|Riesgos de robo de clave privada y por que se revocan certificados o accesos.|Criptografia|cryptography,certificates|cryptography|3|
+340|criptografia|Por que reutilizar claves criptograficas puede ser peligroso?|Buenas practicas para no usar la misma clave donde no toca.|Criptografia|cryptography,encryption|cryptography|3|
+341|criptografia|Que es un ataque Man-in-the-Middle y que papel juega la criptografia?|MITM visto desde certificados, TLS y confianza.|Criptografia,Ataques|mitm,cryptography,tls|mitm,cryptography|3|
+342|criptografia|Podran los ordenadores cuanticos romper nuestras contrasenas?|Introduccion realista a computacion cuantica y criptografia actual.|Criptografia|cryptography,quantum|cryptography|4|
+343|criptografia|Que es la criptografia post-cuantica?|Por que se preparan algoritmos resistentes a futuros ordenadores cuanticos.|Criptografia|cryptography,post_quantum|cryptography|4|
+344|criptografia|Como comprobar que un archivo descargado no ha sido modificado|Verificacion de hashes para descargar archivos con mas seguridad.|Criptografia,Labs|hashing,security_habits|hashing|3|Comparar el hash publicado de un archivo con el hash local.`.trim().split("`n").map((row) => {
   const [number, routeId, title, summary, tags, concepts, prerequisites, difficulty, lab] = row.split("|");
   return { id: `topic-${number}`, number: Number(number), routeId, title, summary, tags: tags.split(","), concepts: concepts.split(","), prerequisites: prerequisites ? prerequisites.split(",").filter(Boolean) : [], difficulty: Number(difficulty), lab };
 });
@@ -4653,7 +4720,17 @@ function applyAssistantRoadmapExpansionKnowledge() {
     metasploit: ["metasploit"],
     incident_response: ["respuesta a incidentes", "contencion", "erradicacion", "recuperacion"],
     web_hacking: [...assistantConceptAliases.web_hacking, "idor", "ssrf", "xxe", "ssti", "jwt", "api security", "path traversal"],
-    cyber_careers: ["profesiones", "salidas laborales", "pentester", "dfir", "appsec", "grc", "soc"]
+    cyber_careers: ["profesiones", "salidas laborales", "pentester", "dfir", "appsec", "grc", "soc"],
+    sockets: ["socket", "sockets"],
+    buffer_overflow: ["buffer overflow", "desbordamiento de buffer"],
+    assembly: ["assembly", "ensamblador"],
+    reverse_engineering: ["reversing", "ingenieria inversa", "ingeniería inversa"],
+    source_code: ["codigo fuente", "leer codigo"],
+    poc: ["poc", "prueba de concepto"],
+    security_habits: ["comprobar archivo", "verificar descarga", "integridad"],
+    ssh: ["ssh", "claves ssh"],
+    quantum: ["cuantico", "cuantica", "cuántico", "cuántica"],
+    post_quantum: ["post cuantica", "post-cuántica", "post cuantica"]
   });
 
   roadmapExpansionRows.forEach((topic) => {
@@ -4665,8 +4742,8 @@ function applyAssistantRoadmapExpansionKnowledge() {
   });
 
   Object.assign(assistantGoalTargets, {
-    programming: ["topic-229"], python: ["topic-229"], bash: ["topic-229"], c_language: ["topic-229"],
-    privacy: ["topic-248"], cryptography: ["topic-246"], ai_security: ["topic-249"],
+    programming: ["topic-276"], python: ["topic-278"], bash: ["topic-279"], c_language: ["topic-280"], javascript: ["topic-281"], sql: ["topic-282"],
+    privacy: ["topic-248"], cryptography: ["topic-305"], hashing: ["topic-315"], tls: ["topic-325"], certificates: ["topic-326"], ssh: ["topic-332"], cryptography: ["topic-305"], ai_security: ["topic-249"],
     blue_team: ["topic-266"], defense: ["topic-266"], forensics: ["topic-271"], cloud_security: ["topic-273"],
     iot: ["topic-265"], mobile_security: ["topic-264"], malware_analysis: ["topic-261"],
     idor: ["topic-254"], ssrf: ["topic-256"], jwt: ["topic-257"], api_security: ["topic-257"],
