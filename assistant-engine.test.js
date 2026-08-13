@@ -43,7 +43,7 @@ function loadAssistantEngine() {
       src.slice(assistantStart, assistantEnd),
     context
   );
-  return { engine: context.__cshAssistantEngine, storage, progress };
+  return { engine: context.__cshAssistantEngine, storage, progress, messages: context.__messages };
 }
 
 function assistantFunctionDuplicates() {
@@ -122,14 +122,14 @@ const defenseInstead = loadAssistantEngine().engine.parseAssistantIntent("Realme
 assert.strictEqual(defenseInstead.goal, "defense", "contraste y negación priorizan defensa");
 
 {
-  const { engine, progress } = loadAssistantEngine();
+  const { engine, progress, messages } = loadAssistantEngine();
   progress.recommendedTopicId = "topic-1";
   const same = engine.makeAssistantDecision("por donde sigo");
   assert.strictEqual(same.recommendedNodeId, "topic-1", "continuar mantiene recomendación pendiente");
 }
 
 {
-  const { engine, progress } = loadAssistantEngine();
+  const { engine, progress, messages } = loadAssistantEngine();
   const profile = engine.applyAssistantChecklistSelection("networking", ["ip", "router", "ports"]);
   assert.strictEqual(engine.getAssistantConceptState(profile, "ip"), "known", "checklist marca múltiples conocidos");
   assert.strictEqual(engine.getAssistantConceptState(profile, "dns"), "unknown", "checklist deja como desconocidos los no seleccionados");
@@ -194,7 +194,7 @@ assert.deepStrictEqual(assistantFunctionDuplicates(), [], "sin funciones duplica
 }
 
 {
-  const { engine, progress } = loadAssistantEngine();
+  const { engine, progress, messages } = loadAssistantEngine();
   progress.recommendedTopicId = "topic-1";
   progress.recommendedRouteId = "route-zero";
   const button = {
@@ -206,6 +206,10 @@ assert.deepStrictEqual(assistantFunctionDuplicates(), [], "sin funciones duplica
   engine.handleAssistantCorrectionAction("known", button);
   assert.strictEqual(progress.completed.filter((id) => id === "topic-1").length, 1, "tras refresh reconstruye y completa la recomendación");
   assert.notStrictEqual(progress.recommendedTopicId, "topic-1", "tras refresh avanza a un siguiente paso válido");
+  assert.ok(
+    !messages.some((message) => /No he podido procesar esa accion|No he podido procesar esa acción|No he podido actualizar/.test(message.content)),
+    "known no debe mostrar error generico al avanzar"
+  );
 }
 
 console.log("Assistant engine tests passed");

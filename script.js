@@ -5518,24 +5518,44 @@ function handleAssistantCorrectionAction(action, button = null) {
 
     if (action === "known") {
       const currentDecision = assistantLastDecision;
-      const nextNode = completeAssistantTopicAndFindNext(currentDecision);
       addAssistantMessage(`<p>Esto ya me lo sé.</p>`, "user");
       window.setTimeout(() => {
+        let nextNode = null;
         try {
+          nextNode = completeAssistantTopicAndFindNext(currentDecision);
           if (!nextNode) {
             addAssistantMessage(`${assistantNameMarkup()}<p>Perfecto, entonces no te hago perder tiempo con esto. Marco <strong>${escapeAssistantHtml(currentDecision.topic.title)}</strong> como completado. No veo más gaps claros hacia tu objetivo; dime otro tema o abre el roadmap para elegir el siguiente planeta.</p>`, "bot");
             return;
           }
           const nextProfile = loadAssistantProfile();
           const finalGoal = nextProfile.conversation?.finalGoal || currentDecision.targetGoal || assistantPendingGoal || nextProfile.primaryGoal;
-          const nextStep = getNextLearningStep(nextProfile, getRoadmapProgress(), finalGoal);
-          const recommended = nextStep?.node || nextNode;
+          let nextStep = null;
+          try {
+            nextStep = getNextLearningStep(nextProfile, getRoadmapProgress(), finalGoal);
+          } catch (stepError) {
+            console.warn("[CSH Assistant] No se pudo recalcular el siguiente paso, uso fallback", stepError);
+          }
+          const recommended = (nextStep?.node && nextStep.node.id !== currentDecision.topic.id)
+            ? nextStep.node
+            : nextNode || firstOpenTopicAfter(currentDecision.topic, nextProfile) || firstOpenTopicInRoute(currentDecision.route?.id, nextProfile);
+          if (!recommended || recommended.id === currentDecision.topic.id) {
+            addAssistantMessage(`${assistantNameMarkup()}<p>Perfecto, marco <strong>${escapeAssistantHtml(currentDecision.topic.title)}</strong> como completado. No veo un paso posterior claro en esa ruta ahora mismo; puedes abrir el roadmap o decirme otro tema y te llevo a algo más avanzado.</p>`, "bot");
+            return;
+          }
           const nextDecision = buildRecommendationResult(recommended, nextStep?.reason || "progress_next", nextStep?.confidence || 0.9, nextStep?.missing || missingPrerequisitesForNode(recommended, nextProfile), nextStep?.target || recommended);
           assistantLastDecision = nextDecision;
           addAssistantMessage(renderAssistantRecommendation(nextDecision, `<p>Perfecto, entonces no te hago perder tiempo con esto. Marco <strong>${escapeAssistantHtml(currentDecision.topic.title)}</strong> como completado.</p><p>El siguiente paso que te conviene es:</p>`), "bot");
         } catch (error) {
           console.error("[CSH Assistant] Error en 'Esto ya me lo sé'", error);
-          addAssistantMessage(`${assistantNameMarkup()}<p>No he podido actualizar tu progreso. Inténtalo de nuevo.</p>`, "bot");
+          const nextProfile = loadAssistantProfile();
+          const fallback = nextNode || firstOpenTopicAfter(currentDecision.topic, nextProfile) || firstOpenTopicInRoute(currentDecision.route?.id, nextProfile);
+          if (fallback && fallback.id !== currentDecision.topic.id) {
+            const fallbackDecision = buildRecommendationResult(fallback, "progress_next", 0.74, missingPrerequisitesForNode(fallback, nextProfile), fallback);
+            assistantLastDecision = fallbackDecision;
+            addAssistantMessage(renderAssistantRecommendation(fallbackDecision, `<p>Perfecto, marco <strong>${escapeAssistantHtml(currentDecision.topic.title)}</strong> como dominado. Si quieres algo más avanzado, el siguiente paso razonable es:</p>`), "bot");
+          } else {
+            addAssistantMessage(`${assistantNameMarkup()}<p>Perfecto, lo tomo como completado. Dime ahora qué quieres aprender y te llevo a un punto más avanzado.</p>`, "bot");
+          }
         } finally {
           setAssistantControlBusy(button, false, action === "known" ? "" : null);
         }
