@@ -8555,6 +8555,9 @@ body.roadmap-fullscreen-mode { overflow: hidden; }
 .video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-7 .roadmap-planet i { background: radial-gradient(circle at 30% 28%, #fffef2 0 8%, #c6ff35 22%, #4eb800 48%, #122006 82%); }
 .video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-8 .roadmap-planet i { background: radial-gradient(circle at 32% 28%, #eef6ff 0 8%, #6a9cff 20%, #3153d6 50%, #080d29 82%); }
 .video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-9 .roadmap-planet i { background: radial-gradient(circle at 30% 24%, #fff 0 7%, transparent 8%), linear-gradient(135deg, rgba(255,255,255,.16), transparent 28%), radial-gradient(circle at 48% 48%, #e9b7ff 0 12%, #7945ff 38%, #12092e 82%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-10 .roadmap-planet i { background: radial-gradient(circle at 32% 26%, #f6fff8 0 8%, transparent 9%), repeating-linear-gradient(90deg, rgba(0,255,136,.25) 0 5px, transparent 6px 13px), radial-gradient(circle at 48% 48%, #00f0ff 0 12%, #0a8cff 34%, #041332 82%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-11 .roadmap-planet i { background: radial-gradient(circle at 30% 25%, #fffbd8 0 8%, transparent 9%), linear-gradient(135deg, rgba(255,255,255,.18), transparent 30%), repeating-linear-gradient(32deg, rgba(255,255,255,.16) 0 4px, transparent 5px 16px), radial-gradient(circle at 48% 48%, #f6ff54 0 14%, #00d66f 38%, #061b0e 82%); }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-11 .roadmap-planet::after { content: ""; position: absolute; left: 50%; top: 50%; width: 154%; height: 38%; border: 2px solid rgba(214,255,118,.5); border-left-color: rgba(0,255,136,.16); border-right-color: rgba(255,255,255,.18); border-radius: 50%; transform: translate(-50%, -50%) rotate(18deg); box-shadow: 0 0 18px rgba(200,255,70,.18); }
 .video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-2 .roadmap-planet::after,
 .video-roadmap-section.is-roadmap-open .roadmap-planet-card.planet-5 .roadmap-planet::after { content: ""; position: absolute; left: 50%; top: 50%; width: 168%; height: 43%; border: 3px solid rgba(210,255,130,.58); border-left-color: rgba(0,255,136,.18); border-right-color: rgba(255,255,255,.18); border-radius: 50%; transform: translate(-50%, -50%) rotate(-16deg); box-shadow: 0 0 22px rgba(0,255,136,.18); }
 @keyframes starDrift { from { transform: translate3d(0,0,0); } to { transform: translate3d(-80px,40px,0); } }
@@ -10747,8 +10750,8 @@ body.roadmap-fullscreen-mode > * {
   width: 100% !important;
   height: 112% !important;
   object-fit: cover !important;
-  object-position: center 44% !important;
-  transform: translateY(32px) scale(1.03) !important;
+  object-position: center 38% !important;
+  transform: translateY(10px) scale(1.03) !important;
 }
 
 #canal .activity-project-card .about-project-mark img {
@@ -10756,7 +10759,7 @@ body.roadmap-fullscreen-mode > * {
   height: 82% !important;
   object-fit: contain !important;
   object-position: center center !important;
-  transform: translateY(12px) scale(1.08) !important;
+  transform: translateY(-8px) scale(1.08) !important;
 }
 
 #videos.video-roadmap-section:not(.is-roadmap-open) .roadmap-assistant {

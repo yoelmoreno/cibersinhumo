@@ -212,11 +212,11 @@ const roadmapRoutes = [
         "id": "topic-2",
         "number": 2,
         "title": "Qu\u00e9 es un sistema operativo?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es un sistema operativo?",
+        "status": "published",
+        "statusLabel": "Publicado",
+        "url": "https://youtu.be/plaRNTudKPA",
+        "thumbnail": "https://i.ytimg.com/vi/plaRNTudKPA/hqdefault.jpg",
+        "summary": "Sistemas operativos explicados desde cero: qu\u00e9 hacen, por qu\u00e9 existen y c\u00f3mo conectan el hardware con los programas.",
         "tags": [
           "Inform\u00e1tica base"
         ],
@@ -3649,6 +3649,23 @@ const roadmapRoutes = [
       }
     ]
   }
+,
+  {
+    "id": "programacion-hacking",
+    "level": "Nivel 9",
+    "title": "Programacion orientada al hacking",
+    "description": "Scripting, automatizacion y lenguajes utiles para entender herramientas, crear pruebas y leer codigo.",
+    "icon": "code",
+    "topics": []
+  },
+  {
+    "id": "criptografia",
+    "level": "Nivel 10",
+    "title": "Criptografia sin humo",
+    "description": "Hashes, cifrado, claves, certificados y conceptos criptograficos aplicados a seguridad real.",
+    "icon": "crypto",
+    "topics": []
+  }
 ];
 
 const roadmapExpansionRows = `
@@ -3656,7 +3673,7 @@ const roadmapExpansionRows = `
 226|informatica-base|BIOS, UEFI y arranque: que pasa al encender el PC|El recorrido desde que pulsas el boton hasta que carga el sistema operativo.|Informatica base,Sistemas|boot,operating_systems|computer_basics|1|
 227|informatica-base|Usuarios, permisos y administrador sin complicarlo|Por que existen cuentas, privilegios y permisos antes de hablar de root o sudo.|Informatica base,Permisos|permissions,operating_systems|operating_systems|1|
 228|informatica-base|Virtualizacion: laboratorios seguros antes de tocar nada real|Que es una maquina virtual y por que es tan importante para practicar ciberseguridad con seguridad.|Informatica base,Labs|virtual_machines,labs|operating_systems|1|Crear una maquina virtual de pruebas y documentar que red usa.
-229|informatica-base|Programacion para ciber: Python, Bash, C, JavaScript y SQL|Para que sirve cada lenguaje en ciber sin convertirlo en un curso entero de programacion.|Programacion,Informatica base|programming,python,bash,c_language,javascript,sql|computer_basics|2|
+229|programacion-hacking|Programacion para ciber: Python, Bash, C, JavaScript y SQL|Para que sirve cada lenguaje en ciber sin convertirlo en un curso entero de programacion.|Programacion,Informatica base|programming,python,bash,c_language,javascript,sql|computer_basics|2|
 230|linux-sistemas|Servicios, demonios y procesos en segundo plano|Como funcionan los servicios que se quedan ejecutando en un sistema Linux.|Linux,Sistemas|services,linux|linux,terminal|2|Ver servicios activos y diferenciar proceso puntual de servicio persistente.
 231|linux-sistemas|PATH, variables de entorno y configuracion del sistema|Por que un comando se encuentra, de donde salen las variables y como afecta al sistema.|Linux,Terminal|environment_variables,terminal|terminal|2|
 232|linux-sistemas|Logs en Linux: mirar que ha pasado de verdad|Primer acercamiento a registros del sistema para investigar errores, accesos y actividad sospechosa.|Linux,Blue Team|logs,blue_team|linux,terminal|2|Buscar eventos basicos en logs y explicar que significan.
@@ -3673,14 +3690,14 @@ const roadmapExpansionRows = `
 243|fundamentos-ciber|CVE, CWE y CVSS: entender una vulnerabilidad publicada|Como se nombran, clasifican y priorizan vulnerabilidades reales.|Fundamentos,Vulnerabilidades|cve,cwe,cvss,vulnerabilities|vulnerabilities|3|
 244|fundamentos-ciber|Payload, exploit y zero-day sin humo|Diferenciar fallo, tecnica, codigo que lo aprovecha y vulnerabilidad desconocida.|Fundamentos,Exploits|exploit,payload,zero_day|vulnerabilities|3|
 245|fundamentos-ciber|Rootkit, RAT, botnet y backdoor: malware con persistencia|Familias y comportamientos de malware mas alla del virus clasico.|Malware|rootkit,rat,botnet,backdoor,malware|malware|3|
-246|fundamentos-ciber|Cifrar, codificar y hacer hash no es lo mismo|La diferencia practica entre ocultar, transformar y verificar datos.|Criptografia|cryptography,hashing,encoding,encryption|computer_basics|2|
-247|fundamentos-ciber|AES, RSA, firmas y certificados explicados sin matematicas|Criptografia simetrica, asimetrica y confianza digital aplicada a Internet.|Criptografia,Web|cryptography,certificates,tls|cryptography,http|3|
+246|criptografia|Cifrar, codificar y hacer hash no es lo mismo|La diferencia practica entre ocultar, transformar y verificar datos.|Criptografia|cryptography,hashing,encoding,encryption|computer_basics|2|
+247|criptografia|AES, RSA, firmas y certificados explicados sin matematicas|Criptografia simetrica, asimetrica y confianza digital aplicada a Internet.|Criptografia,Web|cryptography,certificates,tls|cryptography,http|3|
 248|fundamentos-ciber|Privacidad cotidiana: cookies, trackers, Tor y VPN con sentido comun|Que protege cada herramienta y que no protege, sin vender magia.|Privacidad|privacy,trackers,tor,vpn,cookies|web_basics|2|
 249|fundamentos-ciber|IA generativa y ciberseguridad: riesgos, usos y limites|LLMs, phishing con IA, prompt injection y automatizacion defensiva explicados con cabeza.|IA,Ciberseguridad|ai_security,prompt_injection,phishing|cybersecurity,web_basics|3|
 250|hacking-pentesting|Metodologia de pentesting: de permiso a informe|Fases de un pentest etico: alcance, reconocimiento, explotacion controlada, evidencias e informe.|Pentesting,Metodologia|pentesting_methodology,reporting|pentesting|3|
 251|hacking-pentesting|Enumeracion de servicios despues del escaneo|Que hacer con un puerto abierto: identificar version, servicio y posibles rutas de prueba.|Pentesting,Nmap|enumeration,network_scanning|nmap,ports|3|Partir de un resultado de Nmap y escribir hipotesis de enumeracion.
 252|hacking-pentesting|Metasploit y exploits solo en laboratorio autorizado|Como entender frameworks de explotacion sin saltarse la parte legal ni la metodologia.|Pentesting,Labs|metasploit,exploit,labs|enumeration,vulnerabilities|4|
-253|hacking-pentesting|Scripts utiles para pentesting con Python y Bash|Automatizar tareas repetitivas sin depender siempre de herramientas cerradas.|Pentesting,Programacion|python,bash,automation,pentesting|programming,terminal|4|
+253|programacion-hacking|Scripts utiles para pentesting con Python y Bash|Automatizar tareas repetitivas sin depender siempre de herramientas cerradas.|Pentesting,Programacion|python,bash,automation,pentesting|programming,terminal|4|
 254|hacking-web|IDOR y control de acceso roto|Cuando una aplicacion permite ver o modificar recursos que no deberias tocar.|Hacking web,OWASP|idor,access_control,web_hacking|http_requests,sessions|4|
 255|hacking-web|File inclusion, path traversal y subidas de archivos|Errores comunes al manejar rutas, ficheros y archivos enviados por usuarios.|Hacking web,OWASP|file_inclusion,path_traversal,upload_vulnerabilities|web_basics,linux|4|
 256|hacking-web|SSRF, XXE y SSTI: cuando el servidor hace cosas por ti|Vulnerabilidades donde el backend procesa entradas peligrosas o accede a recursos internos.|Hacking web,OWASP|ssrf,xxe,ssti,web_hacking|http_requests,backend|5|
@@ -4188,7 +4205,7 @@ function renderRoadmapRoutes() {
     const order = index + 1;
     const stats = routeStats(route);
     return `
-      <button class="roadmap-route-card roadmap-planet-card planet-${((order - 1) % 9) + 1}" style="--planet-delay:${order * -0.38}s" type="button" data-roadmap-route="${route.id}" data-orbit-index="${index}" data-orbit-total="${totalRoutes}">
+      <button class="roadmap-route-card roadmap-planet-card planet-${((order - 1) % 11) + 1}" style="--planet-delay:${order * -0.38}s" type="button" data-roadmap-route="${route.id}" data-orbit-index="${index}" data-orbit-total="${totalRoutes}">
         <span class="roadmap-route-num">${String(order).padStart(2, "0")}</span>
         <span class="roadmap-planet" aria-hidden="true"><i></i></span>
         <strong>${route.title}</strong>
