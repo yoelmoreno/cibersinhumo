@@ -344,17 +344,29 @@
 
     <div class="roadmap-assistant" id="roadmap-assistant">
       <div class="assistant-orbit" aria-hidden="true"></div>
-      <div class="assistant-mantis" aria-hidden="true">
-        <img src="logo-cibersinhumo-transparent.png?v=1" alt="">
+      <div class="assistant-chat-side">
+        <div class="assistant-intro-copy">
+          <span class="section-tag">asistente</span>
+          <h3>&iquest;No tienes ni idea de d&oacute;nde empezar?</h3>
+          <p>Pregunta al asistente o ind&iacute;cale los conocimientos que tienes.</p>
+        </div>
+        <div class="assistant-chat">
+          <div class="assistant-output" id="roadmap-assistant-output" aria-live="polite"></div>
+          <form class="assistant-form" id="roadmap-assistant-form">
+            <input id="roadmap-assistant-input" type="text" placeholder="" aria-label="Escribe tu duda" autocomplete="off">
+            <button type="submit" aria-label="Enviar mensaje"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></button>
+          </form>
+        </div>
       </div>
-      <div class="assistant-chat">
-        <div class="assistant-output" id="roadmap-assistant-output" aria-live="polite"></div>
-        <form class="assistant-form" id="roadmap-assistant-form">
-          <input id="roadmap-assistant-input" type="text" placeholder="" aria-label="Escribe tu duda" autocomplete="off">
-          <button type="submit" aria-label="Enviar mensaje"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></button>
-        </form>
-        <button class="assistant-skip" type="button" data-roadmap-scroll>Ver roadmap</button>
-      </div>
+      <aside class="roadmap-cta-side">
+        <div class="assistant-mantis roadmap-cta-mark" aria-hidden="true">
+          <img src="logo-cibersinhumo-transparent.png?v=1" alt="">
+        </div>
+        <span class="section-tag">roadmap</span>
+        <h3>&iquest;Ya sabes algo de ciber?</h3>
+        <p>Pincha Ver roadmap y entra directamente al mapa de aprendizaje.</p>
+        <button class="assistant-skip roadmap-cta-button" type="button" data-roadmap-scroll>Ver roadmap</button>
+      </aside>
     </div>
 
     <div class="continue-card" id="roadmap-continue" hidden></div>
