@@ -1,4 +1,4 @@
-﻿const canvas = document.getElementById("matrix");
+const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
 function resize() {
@@ -3651,6 +3651,76 @@ const roadmapRoutes = [
   }
 ];
 
+const roadmapExpansionRows = `
+225|informatica-base|CPU, RAM y almacenamiento: como piensa un ordenador|CPU, memoria y almacenamiento explicados como base para entender rendimiento, procesos y ataques.|Informatica base,Hardware|cpu,memory,storage,computer_basics|computer_basics|1|
+226|informatica-base|BIOS, UEFI y arranque: que pasa al encender el PC|El recorrido desde que pulsas el boton hasta que carga el sistema operativo.|Informatica base,Sistemas|boot,operating_systems|computer_basics|1|
+227|informatica-base|Usuarios, permisos y administrador sin complicarlo|Por que existen cuentas, privilegios y permisos antes de hablar de root o sudo.|Informatica base,Permisos|permissions,operating_systems|operating_systems|1|
+228|informatica-base|Virtualizacion: laboratorios seguros antes de tocar nada real|Que es una maquina virtual y por que es tan importante para practicar ciberseguridad con seguridad.|Informatica base,Labs|virtual_machines,labs|operating_systems|1|Crear una maquina virtual de pruebas y documentar que red usa.
+229|informatica-base|Programacion para ciber: Python, Bash, C, JavaScript y SQL|Para que sirve cada lenguaje en ciber sin convertirlo en un curso entero de programacion.|Programacion,Informatica base|programming,python,bash,c_language,javascript,sql|computer_basics|2|
+230|linux-sistemas|Servicios, demonios y procesos en segundo plano|Como funcionan los servicios que se quedan ejecutando en un sistema Linux.|Linux,Sistemas|services,linux|linux,terminal|2|Ver servicios activos y diferenciar proceso puntual de servicio persistente.
+231|linux-sistemas|PATH, variables de entorno y configuracion del sistema|Por que un comando se encuentra, de donde salen las variables y como afecta al sistema.|Linux,Terminal|environment_variables,terminal|terminal|2|
+232|linux-sistemas|Logs en Linux: mirar que ha pasado de verdad|Primer acercamiento a registros del sistema para investigar errores, accesos y actividad sospechosa.|Linux,Blue Team|logs,blue_team|linux,terminal|2|Buscar eventos basicos en logs y explicar que significan.
+233|redes-desde-cero|Switch, punto de acceso, Ethernet y Wi-Fi|Las piezas reales de una red domestica o de laboratorio antes de capturar trafico.|Redes,Wi-Fi|switch,wifi,networking|networking|2|
+234|redes-desde-cero|Capturar trafico: ver paquetes antes de analizarlos|Que significa capturar trafico y por que Wireshark ayuda a entender lo que viaja por la red.|Redes,Wireshark|wireshark,packet_capture|tcp_udp,dns|3|Capturar una consulta DNS y localizar origen, destino y protocolo.
+235|redes-desde-cero|Wi-Fi publico: riesgos reales y que protege cada capa|Que puede pasar en una red publica y que papel tienen HTTPS, VPN y buenas practicas.|Redes,Privacidad|wifi,privacy,vpn|web_basics,vpn|2|
+236|redes-desde-cero|Bluetooth, NFC e IoT: redes pequenas que tambien importan|Dispositivos cotidianos conectados, superficie de ataque y errores frecuentes.|Redes,IoT|iot,mobile_security,networking|networking|3|
+237|como-funciona-web|Hosting, CDN y cache: por que una web carga rapido|Donde vive una web, como llega al navegador y por que se guarda contenido por el camino.|Web,Infraestructura|hosting,cdn,cache,web_basics|dns,http|3|
+238|como-funciona-web|Peticion y respuesta completa: URL, parametros, headers y body|La anatomia de una peticion HTTP antes de aprender Burp o hacking web.|Web,HTTP|http_requests,headers,url|http|3|
+239|como-funciona-web|Formularios, tokens y sesiones: como una web recuerda quien eres|Autenticacion, cookies, tokens y sesiones explicados desde el flujo de usuario.|Web,Sesiones|sessions,tokens,authentication|cookies,http_requests|3|
+240|como-funciona-web|SQL desde cero antes de hablar de SQL Injection|Tablas, consultas y datos para entender por que una inyeccion SQL puede funcionar.|Web,Bases de datos|sql,databases|web_basics|3|
+241|como-funciona-web|APIs REST, JSON y DevTools para entender aplicaciones modernas|Como hablan las aplicaciones web por dentro y como observarlo desde el navegador.|Web,APIs|api,json,devtools|http_requests,javascript|3|Abrir DevTools y localizar una peticion fetch o XHR sencilla.
+242|fundamentos-ciber|Amenaza, riesgo, superficie y vector de ataque|Las palabras que ordenan cualquier problema de seguridad antes de hablar de herramientas.|Fundamentos,Riesgo|risk,threat_modeling,cybersecurity|cybersecurity|2|
+243|fundamentos-ciber|CVE, CWE y CVSS: entender una vulnerabilidad publicada|Como se nombran, clasifican y priorizan vulnerabilidades reales.|Fundamentos,Vulnerabilidades|cve,cwe,cvss,vulnerabilities|vulnerabilities|3|
+244|fundamentos-ciber|Payload, exploit y zero-day sin humo|Diferenciar fallo, tecnica, codigo que lo aprovecha y vulnerabilidad desconocida.|Fundamentos,Exploits|exploit,payload,zero_day|vulnerabilities|3|
+245|fundamentos-ciber|Rootkit, RAT, botnet y backdoor: malware con persistencia|Familias y comportamientos de malware mas alla del virus clasico.|Malware|rootkit,rat,botnet,backdoor,malware|malware|3|
+246|fundamentos-ciber|Cifrar, codificar y hacer hash no es lo mismo|La diferencia practica entre ocultar, transformar y verificar datos.|Criptografia|cryptography,hashing,encoding,encryption|computer_basics|2|
+247|fundamentos-ciber|AES, RSA, firmas y certificados explicados sin matematicas|Criptografia simetrica, asimetrica y confianza digital aplicada a Internet.|Criptografia,Web|cryptography,certificates,tls|cryptography,http|3|
+248|fundamentos-ciber|Privacidad cotidiana: cookies, trackers, Tor y VPN con sentido comun|Que protege cada herramienta y que no protege, sin vender magia.|Privacidad|privacy,trackers,tor,vpn,cookies|web_basics|2|
+249|fundamentos-ciber|IA generativa y ciberseguridad: riesgos, usos y limites|LLMs, phishing con IA, prompt injection y automatizacion defensiva explicados con cabeza.|IA,Ciberseguridad|ai_security,prompt_injection,phishing|cybersecurity,web_basics|3|
+250|hacking-pentesting|Metodologia de pentesting: de permiso a informe|Fases de un pentest etico: alcance, reconocimiento, explotacion controlada, evidencias e informe.|Pentesting,Metodologia|pentesting_methodology,reporting|pentesting|3|
+251|hacking-pentesting|Enumeracion de servicios despues del escaneo|Que hacer con un puerto abierto: identificar version, servicio y posibles rutas de prueba.|Pentesting,Nmap|enumeration,network_scanning|nmap,ports|3|Partir de un resultado de Nmap y escribir hipotesis de enumeracion.
+252|hacking-pentesting|Metasploit y exploits solo en laboratorio autorizado|Como entender frameworks de explotacion sin saltarse la parte legal ni la metodologia.|Pentesting,Labs|metasploit,exploit,labs|enumeration,vulnerabilities|4|
+253|hacking-pentesting|Scripts utiles para pentesting con Python y Bash|Automatizar tareas repetitivas sin depender siempre de herramientas cerradas.|Pentesting,Programacion|python,bash,automation,pentesting|programming,terminal|4|
+254|hacking-web|IDOR y control de acceso roto|Cuando una aplicacion permite ver o modificar recursos que no deberias tocar.|Hacking web,OWASP|idor,access_control,web_hacking|http_requests,sessions|4|
+255|hacking-web|File inclusion, path traversal y subidas de archivos|Errores comunes al manejar rutas, ficheros y archivos enviados por usuarios.|Hacking web,OWASP|file_inclusion,path_traversal,upload_vulnerabilities|web_basics,linux|4|
+256|hacking-web|SSRF, XXE y SSTI: cuando el servidor hace cosas por ti|Vulnerabilidades donde el backend procesa entradas peligrosas o accede a recursos internos.|Hacking web,OWASP|ssrf,xxe,ssti,web_hacking|http_requests,backend|5|
+257|hacking-web|JWT, seguridad de APIs y fallos de logica|Tokens, endpoints y errores de diseno que no siempre se ven con un escaner.|Hacking web,APIs|jwt,api_security,business_logic|api,sessions|5|
+258|casos-reales|OSINT practico: dorks, usuarios, dominios y WHOIS|Como investigar informacion publica sin cruzar lineas legales ni eticas.|OSINT,Casos reales|osint,google_dorks,whois|web_basics|3|Localizar informacion publica de un dominio de laboratorio y documentar fuentes.
+259|casos-reales|Metadatos, EXIF y busqueda inversa de imagenes|Que informacion puede esconder un archivo o una imagen y como revisarla.|OSINT,Metadatos|metadata,exif,reverse_image_search|osint|3|
+260|casos-reales|Wayback Machine, filtraciones y OPSEC|Buscar huellas historicas, entender filtraciones y proteger tu propia exposicion.|OSINT,Privacidad|wayback,leaks,opsec,privacy|osint|3|
+261|casos-reales|Analisis de malware: estatico vs dinamico|Dos formas de observar malware sin ejecutarlo a lo loco ni salir del laboratorio.|Malware,Analisis|malware_analysis,static_analysis,dynamic_analysis|malware,virtual_machines|4|
+262|casos-reales|Hashes, Strings, VirusTotal y sandbox|Herramientas basicas para observar un archivo sospechoso con prudencia.|Malware,Herramientas|hashing,virustotal,sandbox,malware_analysis|malware_analysis,hashing|4|Analizar un archivo benigno de laboratorio con hashes y cadenas.
+263|casos-reales|C2, persistencia y ofuscacion explicados desde un caso|Conceptos de malware avanzado explicados a nivel defensivo y educativo.|Malware,Casos reales|c2,persistence,obfuscation,malware|malware_analysis|4|
+264|casos-reales|Android, APK, permisos, root y jailbreak|Seguridad movil explicada desde permisos, instalacion de apps y riesgos reales.|Mobile,Privacidad|mobile_security,android,apk,permissions|operating_systems,privacy|3|
+265|casos-reales|Camaras IP, routers, Smart TV e IoT mal configurado|Dispositivos conectados que suelen fallar por exposicion, credenciales o configuracion.|IoT,Casos reales|iot,shodan,networking|networking,osint|3|
+266|defensa-siguiente-paso|Logs, eventos y alertas: aprender a mirar senales|La base de la defensa: saber que ha pasado y donde buscar evidencias.|Blue Team,Defensa|logs,alerts,blue_team|logs,cybersecurity|3|
+267|defensa-siguiente-paso|IOC, TTP y MITRE ATT&CK|Indicadores, comportamientos y mapas para entender como actua un atacante.|Blue Team,Threat Intel|ioc,ttp,mitre,threat_intelligence|cybersecurity|3|
+268|defensa-siguiente-paso|IDS, IPS, EDR, XDR y SIEM: que hace cada herramienta|No memorizar siglas: entender que observa, bloquea o correlaciona cada sistema.|Blue Team,Herramientas|ids,ips,edr,xdr,siem|logs,networking|4|
+269|defensa-siguiente-paso|Hardening, parches y gestion de vulnerabilidades|Reducir superficie de ataque antes de que llegue el incidente.|Defensa,Hardening|hardening,patching,vulnerability_management|vulnerabilities|3|
+270|defensa-siguiente-paso|Incident Response: contener, erradicar y recuperar|Que hacer cuando ya ha pasado algo: ordenar la respuesta sin improvisar.|Blue Team,Incidentes|incident_response,containment,recovery|logs,malware|4|
+271|defensa-siguiente-paso|Forense digital: evidencias, hashes y cadena de custodia|Como tratar evidencias sin romperlas ni perder su valor.|Forense,Defensa|forensics,evidence,chain_of_custody,hashing|logs,hashing|4|
+272|defensa-siguiente-paso|Timeline, disco y memoria RAM en forense|Primer mapa de lo que se puede analizar en un equipo comprometido.|Forense,Sistemas|forensics,memory_forensics,disk_forensics|forensics,operating_systems|5|
+273|defensa-siguiente-paso|Cloud Security: servidores, buckets, IAM y responsabilidad compartida|Conceptos minimos para entender seguridad en nube sin perderse en proveedores.|Cloud,Defensa|cloud_security,iam,shared_responsibility|networking,web_basics|4|
+274|defensa-siguiente-paso|Profesiones en ciber: pentester, SOC, DFIR, AppSec, GRC y mas|Un mapa realista de salidas laborales para elegir camino sin humo.|Profesiones,Ciberseguridad|cyber_careers,cyber_roles|cybersecurity|2|
+275|defensa-siguiente-paso|Elegir tu siguiente camino despues de las bases|Como decidir entre redes, web, pentesting, defensa, forense, cloud u OSINT segun lo que te guste.|Roadmap,Profesiones|career_path,cyber_careers|cybersecurity,networking,web_basics|3|
+`.trim().split("`n").map((row) => {
+  const [number, routeId, title, summary, tags, concepts, prerequisites, difficulty, lab] = row.split("|");
+  return { id: `topic-${number}`, number: Number(number), routeId, title, summary, tags: tags.split(","), concepts: concepts.split(","), prerequisites: prerequisites ? prerequisites.split(",").filter(Boolean) : [], difficulty: Number(difficulty), lab };
+});
+
+function applyRoadmapExpansion() {
+  const cleanTitle = (value) => String(value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+  const existingTitles = new Set(roadmapRoutes.flatMap((route) => route.topics || []).map((topic) => cleanTitle(topic.title)));
+  roadmapExpansionRows.forEach((topic) => {
+    const route = roadmapRoutes.find((item) => item.id === topic.routeId);
+    if (!route || existingTitles.has(cleanTitle(topic.title))) return;
+    route.topics.push({ id: topic.id, number: topic.number, title: topic.title, status: "pending", statusLabel: "Pendiente", url: "", thumbnail: "", summary: topic.summary, tags: topic.tags, level: route.level, route: route.title, lab: topic.lab || "" });
+    existingTitles.add(cleanTitle(topic.title));
+  });
+}
+
+applyRoadmapExpansion();
+
 const roadmapRoutesContainer = document.getElementById("roadmap-routes");
 const roadmapView = document.getElementById("roadmap-view");
 const roadmapPath = document.getElementById("roadmap-path");
@@ -4545,6 +4615,60 @@ const assistantSpecificGoals = new Set([
   "virtual_machines", "ip", "mac", "ports", "dns", "http", "cookies", "sql_injection",
   "phishing", "vpn", "trojan", "spyware", "keylogger", "ransomware", "ddos", "mitm", "osint", "deep_web"
 ]);
+function applyAssistantRoadmapExpansionKnowledge() {
+  Object.assign(assistantConceptAliases, {
+    programming: ["programacion", "programar", "codigo", "scripting", "python", "bash", "javascript", "sql", "lenguaje c"],
+    cryptography: ["criptografia", "criptografía", "cifrado", "hash", "rsa", "aes", "certificado"],
+    privacy: ["privacidad", "trackers", "tor", "vpn", "cookies", "rastro"],
+    blue_team: ["blue team", "defensa", "soc", "siem", "edr", "alertas", "logs"],
+    forensics: ["forense", "forensica", "evidencias", "cadena de custodia", "memoria ram"],
+    cloud_security: ["cloud", "nube", "iam", "bucket", "servidores cloud"],
+    mobile_security: ["android", "apk", "movil", "root", "jailbreak"],
+    iot: ["iot", "camaras ip", "smart tv", "router", "dispositivos inteligentes"],
+    ai_security: ["ia", "inteligencia artificial", "llm", "prompt injection", "chatgpt"],
+    osint: [...assistantConceptAliases.osint, "dorks", "whois", "wayback", "exif", "busqueda inversa"],
+    malware_analysis: ["analisis de malware", "virustotal", "sandbox", "strings", "analisis estatico", "analisis dinamico"],
+    logs: ["logs", "registros", "eventos", "visor de eventos"],
+    cve: ["cve", "cwe", "cvss", "vulnerabilidad publicada"],
+    exploit: ["exploit", "payload", "zero day", "zero-day"],
+    pentesting_methodology: ["metodologia de pentesting", "fases de pentesting", "informe de pentesting"],
+    enumeration: ["enumeracion", "enumerar", "servicios abiertos"],
+    metasploit: ["metasploit"],
+    incident_response: ["respuesta a incidentes", "contencion", "erradicacion", "recuperacion"],
+    web_hacking: [...assistantConceptAliases.web_hacking, "idor", "ssrf", "xxe", "ssti", "jwt", "api security", "path traversal"],
+    cyber_careers: ["profesiones", "salidas laborales", "pentester", "dfir", "appsec", "grc", "soc"]
+  });
+
+  roadmapExpansionRows.forEach((topic) => {
+    assistantTopicMetadata[topic.id] = {
+      conceptsTaught: topic.concepts || [],
+      prerequisites: topic.prerequisites || [],
+      difficulty: topic.difficulty || 3
+    };
+  });
+
+  Object.assign(assistantGoalTargets, {
+    programming: ["topic-229"], python: ["topic-229"], bash: ["topic-229"], c_language: ["topic-229"],
+    privacy: ["topic-248"], cryptography: ["topic-246"], ai_security: ["topic-249"],
+    blue_team: ["topic-266"], defense: ["topic-266"], forensics: ["topic-271"], cloud_security: ["topic-273"],
+    iot: ["topic-265"], mobile_security: ["topic-264"], malware_analysis: ["topic-261"],
+    idor: ["topic-254"], ssrf: ["topic-256"], jwt: ["topic-257"], api_security: ["topic-257"],
+    cyber_careers: ["topic-274"], career_path: ["topic-275"]
+  });
+
+  Object.assign(assistantDiagnosticBlocks, {
+    programming: ["programming", "python", "bash", "javascript", "sql"],
+    privacy: ["privacy", "cookies", "vpn", "tor"],
+    defense: ["logs", "blue_team", "siem", "incident_response", "forensics"],
+    malware: ["malware", "trojan", "spyware", "ransomware", "malware_analysis"],
+    cloud: ["networking", "web_basics", "cloud_security"],
+    mobile: ["mobile_security", "permissions", "privacy", "iot"]
+  });
+
+  ["programming", "cryptography", "privacy", "blue_team", "forensics", "cloud_security", "mobile_security", "iot", "ai_security", "malware_analysis", "cyber_careers", "career_path"].forEach((goal) => assistantSpecificGoals.add(goal));
+}
+
+applyAssistantRoadmapExpansionKnowledge();
 
 function getRoadmapNode(topicId) {
   const topic = allRoadmapTopics().find((item) => item.id === topicId);
