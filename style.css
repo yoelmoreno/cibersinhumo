@@ -792,6 +792,8 @@ select {
 .route-planet-7 { background: radial-gradient(circle at 34% 30%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #00ffe1, #1935ff 52%, #030724); }
 .route-planet-8 { background: radial-gradient(circle at 34% 30%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #a673ff, #43208c 50%, #10021d); }
 .route-planet-9 { background: radial-gradient(circle at 34% 30%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #f4f4f4, #7b8588 48%, #151819); }
+.route-planet-10 { background: radial-gradient(circle at 34% 30%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #78ffec, #0d8a77 45%, #061b19); }
+.route-planet-11 { background: radial-gradient(circle at 34% 30%, #fff 0 8%, transparent 9%), linear-gradient(135deg, #d8b8ff, #6a23b8 48%, #160421); }
 
 .hero-side-right .hud-kicker {
   align-self: flex-start;
@@ -10743,15 +10745,29 @@ body.roadmap-fullscreen-mode > * {
 
 #canal .channel-brand-image {
   background-position: center -58px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #000 !important;
 }
 
+
+#canal .channel-brand-image::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 10px;
+  background: #000;
+  pointer-events: none;
+}
 #canal .channel-brand-image img {
   display: block !important;
   width: 100% !important;
   height: 112% !important;
   object-fit: cover !important;
   object-position: center top !important;
-  transform: translateY(-88px) scale(1.04) !important;
+  transform: translateY(-106px) scale(1.04) !important;
 }
 
 #canal .activity-project-card .about-project-mark img {
