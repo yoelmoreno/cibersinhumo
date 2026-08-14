@@ -7247,6 +7247,12 @@ async function initYoutubeChannelPanel() {
 
   const localLatestVideos = [
     {
+      url: "https://www.youtube.com/watch?v=plaRNTudKPA",
+      thumbnail: "https://i.ytimg.com/vi/plaRNTudKPA/hqdefault.jpg",
+      category: "Informática base",
+      title: "Qué es un sistema operativo?"
+    },
+    {
       url: "https://www.youtube.com/watch?v=YfnVA5sx3pQ",
       thumbnail: "https://i.ytimg.com/vi/YfnVA5sx3pQ/hqdefault.jpg",
       category: "Informática base",
@@ -7257,12 +7263,6 @@ async function initYoutubeChannelPanel() {
       thumbnail: "https://i.ytimg.com/vi/g3WsvKOQ_GE/hqdefault.jpg",
       category: "Noticias",
       title: "Red 764, qué es y por qué preocupa"
-    },
-    {
-      url: "https://www.youtube.com/watch?v=FzjM9Imdb8Q",
-      thumbnail: "https://i.ytimg.com/vi/FzjM9Imdb8Q/hqdefault.jpg",
-      category: "Otros",
-      title: "¿Qué hacer si un virus roba todas tus contraseñas?"
     },
     {
       url: "https://www.youtube.com/watch?v=3t8Esks_Idg",
