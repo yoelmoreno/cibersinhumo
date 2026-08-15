@@ -3826,6 +3826,14 @@ function applyRoadmapExpansion() {
   roadmapRoutes.forEach((route) => {
     route.topics.sort((a, b) => Number(a.number) - Number(b.number));
   });
+
+  let globalTopicNumber = 1;
+  roadmapRoutes.forEach((route) => {
+    route.topics.forEach((topic) => {
+      topic.number = globalTopicNumber;
+      globalTopicNumber += 1;
+    });
+  });
 }
 
 applyRoadmapExpansion();
