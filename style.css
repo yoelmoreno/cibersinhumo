@@ -10831,3 +10831,38 @@ body.roadmap-fullscreen-mode > * {
   0%, 100% { border-color: rgba(0,255,136,.22); color: rgba(0,255,136,.86); }
   50% { border-color: rgba(0,255,136,.48); color: #00ff88; box-shadow: 0 0 18px rgba(0,255,136,.12); }
 }
+/* Ajuste final movil: logo de suscriptores y texto del asistente sin partir palabras */
+@media (max-width: 768px) {
+  #canal .channel-brand-image img {
+    height: 108% !important;
+    object-position: center center !important;
+    transform: translateY(-32px) scale(1.02) !important;
+  }
+
+  #videos.video-roadmap-section:not(.is-roadmap-open) .assistant-intro-copy h3,
+  #videos.video-roadmap-section:not(.is-roadmap-open) .assistant-intro-copy p,
+  #videos.video-roadmap-section:not(.is-roadmap-open) .assistant-chat,
+  #videos.video-roadmap-section:not(.is-roadmap-open) .assistant-message,
+  #videos.video-roadmap-section:not(.is-roadmap-open) .assistant-message p,
+  #videos.video-roadmap-section:not(.is-roadmap-open) .assistant-form input,
+  #videos.video-roadmap-section:not(.is-roadmap-open) .roadmap-cta-side h3,
+  #videos.video-roadmap-section:not(.is-roadmap-open) .roadmap-cta-side p {
+    letter-spacing: 0 !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+  }
+
+  #videos.video-roadmap-section:not(.is-roadmap-open) .assistant-intro-copy h3,
+  #videos.video-roadmap-section:not(.is-roadmap-open) .roadmap-cta-side h3 {
+    font-size: clamp(1.42rem, 6.2vw, 2rem) !important;
+    line-height: 1.16 !important;
+  }
+
+  #videos.video-roadmap-section:not(.is-roadmap-open) .assistant-intro-copy .section-tag,
+  #videos.video-roadmap-section:not(.is-roadmap-open) .assistant-message-label,
+  #videos.video-roadmap-section:not(.is-roadmap-open) .assistant-action,
+  #videos.video-roadmap-section:not(.is-roadmap-open) .roadmap-cta-button {
+    letter-spacing: 0.08em !important;
+  }
+}

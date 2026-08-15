@@ -3652,7 +3652,7 @@ const roadmapRoutes = [
 ,
   {
     "id": "programacion-hacking",
-    "level": "Nivel 9",
+    "level": "Nivel 10",
     "title": "Programacion orientada al hacking",
     "description": "Scripting, automatizacion y lenguajes utiles para entender herramientas, crear pruebas y leer codigo.",
     "icon": "code",
@@ -3660,7 +3660,7 @@ const roadmapRoutes = [
   },
   {
     "id": "criptografia",
-    "level": "Nivel 10",
+    "level": "Nivel 11",
     "title": "Criptografia sin humo",
     "description": "Hashes, cifrado, claves, certificados y conceptos criptograficos aplicados a seguridad real.",
     "icon": "crypto",
@@ -3787,19 +3787,44 @@ const roadmapExpansionRows = `
 341|criptografia|Que es un ataque Man-in-the-Middle y que papel juega la criptografia?|MITM visto desde certificados, TLS y confianza.|Criptografia,Ataques|mitm,cryptography,tls|mitm,cryptography|3|
 342|criptografia|Podran los ordenadores cuanticos romper nuestras contrasenas?|Introduccion realista a computacion cuantica y criptografia actual.|Criptografia|cryptography,quantum|cryptography|4|
 343|criptografia|Que es la criptografia post-cuantica?|Por que se preparan algoritmos resistentes a futuros ordenadores cuanticos.|Criptografia|cryptography,post_quantum|cryptography|4|
-344|criptografia|Como comprobar que un archivo descargado no ha sido modificado|Verificacion de hashes para descargar archivos con mas seguridad.|Criptografia,Labs|hashing,security_habits|hashing|3|Comparar el hash publicado de un archivo con el hash local.`.trim().split("`n").map((row) => {
+344|criptografia|Como comprobar que un archivo descargado no ha sido modificado|Verificacion de hashes para descargar archivos con mas seguridad.|Criptografia,Labs|hashing,security_habits|hashing|3|Comparar el hash publicado de un archivo con el hash local.`.trim().split("\n").map((row) => {
   const [number, routeId, title, summary, tags, concepts, prerequisites, difficulty, lab] = row.split("|");
   return { id: `topic-${number}`, number: Number(number), routeId, title, summary, tags: tags.split(","), concepts: concepts.split(","), prerequisites: prerequisites ? prerequisites.split(",").filter(Boolean) : [], difficulty: Number(difficulty), lab };
 });
 
 function applyRoadmapExpansion() {
   const cleanTitle = (value) => String(value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
-  const existingTitles = new Set(roadmapRoutes.flatMap((route) => route.topics || []).map((topic) => cleanTitle(topic.title)));
+  const topicKey = (routeId, title) => `${routeId}:${cleanTitle(title)}`;
+  const existingTopics = new Set(roadmapRoutes.flatMap((route) =>
+    (route.topics || []).map((topic) => topicKey(route.id, topic.title))
+  ));
+
   roadmapExpansionRows.forEach((topic) => {
     const route = roadmapRoutes.find((item) => item.id === topic.routeId);
-    if (!route || existingTitles.has(cleanTitle(topic.title))) return;
-    route.topics.push({ id: topic.id, number: topic.number, title: topic.title, status: "pending", statusLabel: "Pendiente", url: "", thumbnail: "", summary: topic.summary, tags: topic.tags, level: route.level, route: route.title, lab: topic.lab || "" });
-    existingTitles.add(cleanTitle(topic.title));
+    if (!route) return;
+
+    const key = topicKey(route.id, topic.title);
+    if (existingTopics.has(key)) return;
+
+    route.topics.push({
+      id: topic.id,
+      number: topic.number,
+      title: topic.title,
+      status: "pending",
+      statusLabel: "Pendiente",
+      url: "",
+      thumbnail: "",
+      summary: topic.summary,
+      tags: topic.tags,
+      level: route.level,
+      route: route.title,
+      lab: topic.lab || ""
+    });
+    existingTopics.add(key);
+  });
+
+  roadmapRoutes.forEach((route) => {
+    route.topics.sort((a, b) => Number(a.number) - Number(b.number));
   });
 }
 
