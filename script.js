@@ -3857,6 +3857,7 @@ const labsGrid = document.getElementById("labs-grid");
 const labPanel = document.getElementById("lab-panel");
 const labContinue = document.getElementById("lab-continue");
 let activeRoadmapRoute = null;
+const roadmapStorageKey = "csh-roadmap-progress-v1";
 
 function loadRoadmapProgress() {
   try { return JSON.parse(localStorage.getItem(roadmapStorageKey) || "{}"); }
@@ -3864,7 +3865,11 @@ function loadRoadmapProgress() {
 }
 
 function saveRoadmapProgress(progress) {
-  localStorage.setItem(roadmapStorageKey, JSON.stringify(progress));
+  try {
+    localStorage.setItem(roadmapStorageKey, JSON.stringify(progress));
+  } catch (error) {
+    console.warn("Roadmap progress could not be saved", error);
+  }
 }
 
 function getRoadmapProgress() {
@@ -4518,7 +4523,7 @@ function selectRoadmapTopic(topicId) {
     </div>
     <div class="topic-actions">
       ${topic.url ? `<a class="btn btn-primary" href="${topic.url}" target="_blank" rel="noopener">Ver vídeo</a>` : `<span class="btn btn-secondary is-disabled">${topic.status === "preparing" ? "En preparación" : "Próximamente"}</span>`}
-      <button class="btn btn-secondary" type="button" data-toggle-topic="${topic.id}">${done ? "Marcar pendiente" : "Marcar completado"}</button>
+      <button class="btn btn-secondary roadmap-complete-btn" type="button" data-toggle-topic="${topic.id}" aria-pressed="${done ? "true" : "false"}">${done ? "Marcar como pendiente" : "Marcar como completado"}</button>
     </div>
   `;
   const p = getRoadmapProgress();
@@ -4530,12 +4535,20 @@ function selectRoadmapTopic(topicId) {
 }
 
 function toggleTopic(topicId) {
+  const topic = allRoadmapTopics().find((item) => item.id === topicId);
+  if (!topic) return;
   const progress = getRoadmapProgress();
-  progress.completed = progress.completed.includes(topicId) ? progress.completed.filter((id) => id !== topicId) : [...progress.completed, topicId];
+  const completed = new Set(progress.completed);
+  if (completed.has(topicId)) completed.delete(topicId);
+  else completed.add(topicId);
+  progress.completed = [...completed];
+  progress.lastTopicId = topicId;
+  progress.lastRouteId = topic.routeId;
   saveRoadmapProgress(progress);
   if (activeRoadmapRoute) renderRoadmapPath(activeRoadmapRoute);
   selectRoadmapTopic(topicId);
   renderRoadmapRoutes();
+  renderContinueCard();
 }
 
 function renderContinueCard() {
