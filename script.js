@@ -226,18 +226,18 @@ const roadmapRoutes = [
       {
         "id": "topic-3",
         "number": 3,
-        "title": "Windows, Linux y macOS: qu\u00e9 diferencia hay?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Windows, Linux y macOS: qu\u00e9 diferencia hay?",
+        "title": "Todo lo que un principiante debería saber de Linux",
+        "status": "published",
+        "statusLabel": "Publicado",
+        "url": "https://www.youtube.com/watch?v=dp8vyvcoSMs",
+        "thumbnail": "https://i.ytimg.com/vi/dp8vyvcoSMs/hqdefault.jpg",
+        "summary": "Una introducción clara a Linux para entender qué es, por qué se usa tanto en informática y por qué aparece constantemente en ciberseguridad.",
         "tags": [
-          "Linux",
-          "Redes"
+          "Informática base",
+          "Linux"
         ],
         "level": "Nivel 0",
-        "route": "Inform\u00e1tica base"
+        "route": "Informática base"
       },
       {
         "id": "topic-4",
@@ -4648,7 +4648,7 @@ const assistantConceptAliases = {
 
 const assistantTopicMetadata = {
   "topic-1": { conceptsTaught: ["computer_basics"], prerequisites: [], difficulty: 0 },
-  "topic-3": { conceptsTaught: ["operating_systems"], prerequisites: ["computer_basics"], difficulty: 0 },
+  "topic-3": { conceptsTaught: ["linux", "operating_systems"], prerequisites: ["computer_basics"], difficulty: 0 },
   "topic-16": { conceptsTaught: ["linux"], prerequisites: ["operating_systems"], difficulty: 1 },
   "topic-20": { conceptsTaught: ["terminal"], prerequisites: ["linux"], difficulty: 1 },
   "topic-26": { conceptsTaught: ["terminal", "linux"], prerequisites: ["linux"], difficulty: 1 },
@@ -7293,6 +7293,12 @@ async function initYoutubeChannelPanel() {
 
   const localLatestVideos = [
     {
+      url: "https://www.youtube.com/watch?v=dp8vyvcoSMs",
+      thumbnail: "https://i.ytimg.com/vi/dp8vyvcoSMs/hqdefault.jpg",
+      category: "Informática base",
+      title: "Todo lo que un principiante debería saber de Linux"
+    },
+    {
       url: "https://www.youtube.com/watch?v=plaRNTudKPA",
       thumbnail: "https://i.ytimg.com/vi/plaRNTudKPA/hqdefault.jpg",
       category: "Informática base",
@@ -7303,24 +7309,6 @@ async function initYoutubeChannelPanel() {
       thumbnail: "https://i.ytimg.com/vi/YfnVA5sx3pQ/hqdefault.jpg",
       category: "Informática base",
       title: "Hardware y software: la base para empezar"
-    },
-    {
-      url: "https://www.youtube.com/watch?v=g3WsvKOQ_GE",
-      thumbnail: "https://i.ytimg.com/vi/g3WsvKOQ_GE/hqdefault.jpg",
-      category: "Noticias",
-      title: "Red 764, qué es y por qué preocupa"
-    },
-    {
-      url: "https://www.youtube.com/watch?v=3t8Esks_Idg",
-      thumbnail: "https://i.ytimg.com/vi/3t8Esks_Idg/hqdefault.jpg",
-      category: "Linux",
-      title: "Abrí la terminal de Linux y parecía una casa abandonada"
-    },
-    {
-      url: "https://www.youtube.com/watch?v=BLKqTM585WM",
-      thumbnail: "https://i.ytimg.com/vi/BLKqTM585WM/hqdefault.jpg",
-      category: "Redes",
-      title: "Tu móvil tiene matrícula: así funcionan las direcciones MAC"
     }
   ];
 
