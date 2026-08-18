@@ -10768,7 +10768,7 @@ body.roadmap-fullscreen-mode > * {
   height: 112% !important;
   object-fit: cover !important;
   object-position: center top !important;
-  transform: translateY(-106px) scale(1.04) !important;
+  transform: translateY(-88px) scale(1.04) !important;
 }
 
 #canal .activity-project-card .about-project-mark img {
@@ -10776,7 +10776,7 @@ body.roadmap-fullscreen-mode > * {
   height: 76% !important;
   object-fit: contain !important;
   object-position: center center !important;
-  transform: translateY(-48px) scale(1.02) !important;
+  transform: translateY(-34px) scale(1.02) !important;
 }
 
 #videos.video-roadmap-section:not(.is-roadmap-open) .roadmap-assistant {
