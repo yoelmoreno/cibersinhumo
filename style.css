@@ -11293,3 +11293,32 @@ body.roadmap-fullscreen-mode > * {
     grid-template-columns: 1fr 1fr;
   }
 }
+/* Ajuste fino actividad: evitar corte lateral y encuadrar imagenes */
+#canal .channel-dashboard-expanded {
+  width: min(96vw, 1780px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+#canal .activity-about-card .about-photo {
+  object-fit: cover !important;
+  object-position: 50% 58% !important;
+  transform: scale(1.01) !important;
+}
+
+#canal .channel-brand-image img {
+  display: block !important;
+  width: 100% !important;
+  height: 112% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  transform: translateY(-72px) scale(1.04) !important;
+}
+
+#canal .activity-project-card .about-project-mark img {
+  width: 76% !important;
+  height: 76% !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  transform: translateY(-24px) scale(1.02) !important;
+}
