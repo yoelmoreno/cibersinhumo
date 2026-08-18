@@ -4328,6 +4328,7 @@ function renderRoadmapRoutes() {
 }
 
 let roadmapSolarFrame = null;
+let roadmapSolarStartedAt = 0;
 
 function updateRoadmapSolarSystem(timestamp = 0) {
   const videosSection = document.getElementById("videos");
@@ -4343,11 +4344,13 @@ function updateRoadmapSolarSystem(timestamp = 0) {
   const radiusX = Math.max(260, Math.min(rect.width * 0.38, 690));
   const radiusY = Math.max(115, Math.min(rect.height * 0.24, 245));
   const angularSpeed = 0.000026;
+  if (!roadmapSolarStartedAt) roadmapSolarStartedAt = timestamp;
+  const elapsed = timestamp - roadmapSolarStartedAt;
 
   cards.forEach((card, index) => {
     const order = Number(card.dataset.orbitIndex || index);
-    const baseAngle = ((order / total) * Math.PI * 2) - Math.PI / 2;
-    const angle = baseAngle + timestamp * angularSpeed;
+    const baseAngle = Math.PI / 2 + (order / total) * Math.PI * 2;
+    const angle = baseAngle + elapsed * angularSpeed;
     const x = Math.cos(angle) * radiusX;
     const y = Math.sin(angle) * radiusY;
     const depth = (Math.sin(angle) + 1) / 2;
@@ -4365,6 +4368,7 @@ function updateRoadmapSolarSystem(timestamp = 0) {
 
 function startRoadmapSolarSystem() {
   if (roadmapSolarFrame) return;
+  roadmapSolarStartedAt = 0;
   roadmapSolarFrame = window.requestAnimationFrame(updateRoadmapSolarSystem);
 }
 
@@ -4372,6 +4376,7 @@ function stopRoadmapSolarSystem() {
   if (!roadmapSolarFrame) return;
   window.cancelAnimationFrame(roadmapSolarFrame);
   roadmapSolarFrame = null;
+  roadmapSolarStartedAt = 0;
 }
 function openRoadmapRoute(routeId, focusTopicId = null) {
   const route = roadmapRoutes.find((item) => item.id === routeId);
