@@ -6189,6 +6189,16 @@ if (roadmapRoutesContainer) {
   };
 
   document.querySelectorAll("[data-roadmap-scroll]").forEach((button) => button.addEventListener("click", openRoadmapScreen));
+  document.querySelectorAll("[data-hero-route]").forEach((button) => button.addEventListener("click", () => {
+    const routeId = button.dataset.heroRoute;
+    const panels = document.getElementById("roadmap-panels");
+    const videosSection = document.getElementById("videos");
+    panels?.classList.add("is-open");
+    videosSection?.classList.add("is-roadmap-open");
+    document.body.classList.add("roadmap-fullscreen-mode");
+    videosSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.setTimeout(() => openRoadmapRoute(routeId), 220);
+  }));
   document.querySelectorAll("[data-roadmap-chat-back]").forEach((button) => button.addEventListener("click", closeRoadmapScreen));
   assistantForm?.addEventListener("submit", (event) => {
     event.preventDefault();

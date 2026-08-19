@@ -11322,3 +11322,28 @@ body.roadmap-fullscreen-mode > * {
   object-position: center center !important;
   transform: translateY(-24px) scale(1.02) !important;
 }
+/* Rutas del inicio como accesos directos */
+.route-mini-list button {
+  position: relative;
+  margin: 0;
+  min-height: 42px;
+  width: 100%;
+  padding: 6px 9px 6px 40px;
+  border: 1px solid rgba(0, 255, 136, 0.12);
+  border-radius: 12px;
+  color: var(--muted);
+  background: rgba(0, 18, 10, 0.32);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.route-mini-list button:hover,
+.route-mini-list button:focus-visible {
+  transform: translateX(-4px);
+  border-color: rgba(0, 255, 136, 0.38);
+  color: var(--text);
+  background: radial-gradient(circle at 14% 50%, rgba(0, 255, 136, 0.22), transparent 42%), rgba(0, 18, 10, 0.5);
+  outline: none;
+}
