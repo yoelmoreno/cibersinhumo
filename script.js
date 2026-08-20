@@ -5273,6 +5273,8 @@ const assistantGoalEvidence = {
   http: ["http", "https"],
   cookies: ["cookie", "cookies"],
   deep_web: ["deep web", "dark web", "onion"],
+  programming: ["programacion", "programar", "python", "bash", "javascript", "codigo", "script", "scripting"],
+  cryptography: ["criptografia", "criptografía", "cripto", "cifrado", "cifrar", "hash", "hashing", "rsa", "aes", "tls", "https", "certificado", "certificados", "clave publica", "clave privada", "firma digital", "base64", "sha", "sha256", "sha-256", "md5", "bitlocker", "criptografia post cuantica"],
   defense: ["defensa", "blue team", "seguridad defensiva", "proteger", "proteccion"],
 };
 
@@ -5430,7 +5432,7 @@ function updateProfileFromText(profile, input) {
   if (!intent.absoluteBeginner && (intent.knownConcepts.includes("networking") || intent.knownConcepts.includes("ip") || intent.knownConcepts.includes("router"))) {
     setAssistantConcept(profile, "computer_basics", "known", "inference", "conoce base de redes");
   }
-  if (intent.absoluteBeginner) {
+  if (intent.absoluteBeginner && (intent.goal === "general_learning" || intent.goal === "continue_learning")) {
     profile.experienceLevel = "beginner";
     ["computer_basics", "networking", "linux", "web_basics", "cybersecurity"].forEach((concept) => setAssistantConcept(profile, concept, "unknown", "message", input));
   }
@@ -5463,12 +5465,16 @@ function goalDiagnosticBlock(goal) {
   if (goal === "osint") return "osint";
   if (goal === "phishing" || goal === "malware" || goal === "trojan" || goal === "spyware" || goal === "keylogger" || goal === "ransomware") return "cybersecurity";
   if (goal === "defense") return "cybersecurity";
+  if (goal === "cryptography" || goal === "hashing" || goal === "tls" || goal === "certificates") return "cryptography";
+  if (goal === "programming" || goal === "python" || goal === "bash" || goal === "c_language" || goal === "javascript") return "programming";
   return "general";
 }
 
 assistantDiagnosticBlocks.general = ["computer_basics", "operating_systems", "networking", "cybersecurity"];
 assistantDiagnosticBlocks.cybersecurity = ["cybersecurity", "phishing", "malware", "privacy"];
 assistantDiagnosticBlocks.osint = ["osint", "metadata", "shodan", "privacy"];
+assistantDiagnosticBlocks.cryptography = ["cryptography", "hashing", "tls", "certificates"];
+assistantDiagnosticBlocks.programming = ["programming", "python", "bash", "javascript", "sql"];
 
 function chooseDiagnosticQuestion(goal, profile) {
   const block = goalDiagnosticBlock(goal);
@@ -5643,7 +5649,7 @@ function makeAssistantDecision(input, options = {}) {
     return continueRecommendation(profile);
   }
 
-  if (intent.absoluteBeginner) {
+  if (intent.absoluteBeginner && (intent.goal === "general_learning" || intent.goal === "continue_learning")) {
     assistantPendingGoal = "general_learning";
     profile.conversation.pendingGoal = assistantPendingGoal;
     saveAssistantProfile(profile);
@@ -5997,6 +6003,11 @@ function assistantConceptLabel(concept) {
     privacy: "privacidad",
     metadata: "metadatos",
     shodan: "Shodan",
+    programming: "programación",
+    cryptography: "criptografía",
+    hashing: "hashing",
+    tls: "TLS",
+    certificates: "certificados",
   };
   return labels[concept] || String(concept || "").replace(/_/g, " ");
 }
