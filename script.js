@@ -3838,6 +3838,81 @@ function applyRoadmapExpansion() {
 
 applyRoadmapExpansion();
 
+function normalizeRoadmapLearningStructure() {
+  const routeMeta = {
+    "informatica-base": { stage: "core", stageLabel: "Tronco común", pathHint: "Empieza aquí", title: "Informática base", description: "Conceptos mínimos para entender cualquier ordenador antes de meterte en ciberseguridad." },
+    "linux-sistemas": { stage: "core", stageLabel: "Tronco común", pathHint: "Sistema y terminal", title: "Sistemas, Linux y terminal", description: "Linux, terminal, usuarios, permisos, procesos y primeros laboratorios controlados." },
+    "redes-desde-cero": { stage: "core", stageLabel: "Tronco común", pathHint: "Redes e Internet", title: "Redes e Internet", description: "IP, MAC, puertos, DNS, protocolos y cómo se comunican los equipos." },
+    "como-funciona-web": { stage: "core", stageLabel: "Tronco común", pathHint: "Web y HTTP", title: "Web, HTTP y cómo funciona Internet por dentro", description: "Navegador, servidor, HTTP, cookies, APIs y la base que después se aplica al hacking web." },
+    "fundamentos-ciber": { stage: "core", stageLabel: "Tronco común", pathHint: "Base de seguridad", title: "Fundamentos de ciberseguridad", description: "Amenazas, vulnerabilidades, malware, riesgos y mentalidad defensiva/ofensiva." },
+    "hacking-pentesting": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Elige tu camino", title: "Pentesting y hacking ético", description: "Reconocimiento, laboratorios, metodología, explotación controlada y reporte ético." },
+    "hacking-web": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Seguridad web", title: "Seguridad web y hacking web", description: "Burp Suite, peticiones HTTP, SQL Injection, XSS, sesiones y vulnerabilidades web." },
+    "casos-reales": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Investigación digital", title: "OSINT e investigación digital", description: "Búsqueda de información pública, metadatos, huella digital, verificación y casos reales." },
+    "defensa-siguiente-paso": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Blue Team", title: "Blue Team y defensa", description: "Monitorización, hardening, logs, respuesta a incidentes y protección de sistemas." },
+    "programacion-hacking": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Programar para ciber", title: "Programación para ciberseguridad", description: "Python, Bash, C, JavaScript, APIs, sockets, automatización y lectura de exploits." },
+    "criptografia": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Cripto aplicada", title: "Criptografía aplicada", description: "Cifrado, hashing, claves, certificados, TLS, firmas digitales y seguridad real." }
+  };
+
+  const baseTitles = [
+    ["Hardware y software: la base para empezar", "Hardware y software explicados desde cero para entender la base de cualquier sistema."],
+    ["Qué es un sistema operativo", "Qué hace un sistema operativo y por qué conecta el hardware con los programas."],
+    ["Windows, Linux y macOS: qué diferencia hay", "Diferencias prácticas entre sistemas operativos y por qué Linux aparece tanto en ciberseguridad."],
+    ["Archivos, carpetas, extensiones y rutas", "Cómo organiza tu ordenador la información y por qué las rutas importan tanto."],
+    ["Bits, bytes y almacenamiento de información", "Cómo se representa y se guarda la información dentro de un ordenador."],
+    ["CPU, RAM y almacenamiento", "Qué papel cumple cada pieza principal cuando un programa se ejecuta."],
+    ["Programas, procesos y servicios", "Qué ocurre cuando abres una aplicación y cómo vive dentro del sistema."],
+    ["Usuarios, cuentas y permisos", "Por qué los permisos son una de las bases de la seguridad informática."]
+  ];
+
+  const routeTopicBlueprints = {
+    "linux-sistemas": ["Qué es Linux y por qué se usa tanto en ciberseguridad", "Distribuciones Linux: Ubuntu, Debian, Kali y Parrot", "Terminal de Linux: moverte sin perderte", "Archivos, permisos y propietarios en Linux", "Usuarios, grupos y privilegios", "Procesos, servicios y demonios", "Gestores de paquetes y repositorios", "Variables de entorno y PATH", "Redirecciones, pipes y filtros", "Scripts básicos con Bash", "SSH explicado desde cero", "Máquinas virtuales y entornos seguros", "Instalar Kali Linux sin romper nada", "Primer laboratorio Linux controlado"],
+    "redes-desde-cero": ["Qué es una IP y para qué sirve", "Direcciones MAC: el DNI invisible de tus dispositivos", "IP pública vs IP privada", "Router, switch, módem y punto de acceso", "Puertos: qué son y para qué sirven", "TCP y UDP explicados juntos", "DNS: cómo se traducen dominios a IP", "DHCP: cómo tu equipo recibe configuración", "NAT: por qué muchos equipos salen con una IP", "Subredes explicadas sin dolor", "Ping, traceroute y conectividad básica", "Wireshark: leer paquetes por primera vez", "Qué pasa cuando te conectas a una red Wi-Fi", "VPN: cuándo sirve y cuándo no"],
+    "como-funciona-web": ["Qué pasa cuando entras a una web", "Qué es un navegador", "Qué es un servidor web", "Cliente vs servidor aplicado a una web", "Qué es un dominio", "Dominio vs dirección IP", "Qué es una URL", "HTTP explicado desde cero", "HTTPS y el candado del navegador", "Cookies: qué son y por qué importan", "Sesiones e inicio de sesión", "APIs: cómo hablan las aplicaciones", "Frontend, backend y base de datos", "Cómo carga una página web paso a paso"],
+    "fundamentos-ciber": ["Qué es realmente la ciberseguridad", "Amenaza, riesgo y vulnerabilidad", "Qué es un malware", "Virus, gusanos, troyanos y ransomware", "Phishing explicado sin humo", "Ingeniería social y manipulación", "Contraseñas y autenticación en dos pasos", "Actualizaciones y superficie de ataque", "CVE y vulnerabilidades públicas", "Qué es un exploit", "Privacidad, seguridad y anonimato", "Buenas prácticas para no empezar mal"],
+    "hacking-pentesting": ["Qué es el hacking ético", "Metodología de un pentest", "Reconocimiento pasivo y activo", "Escaneo de puertos junto a mí", "Enumeración de servicios", "Laboratorios legales para practicar", "Nmap explicado con calma", "Burp Suite como herramienta de apoyo", "Explotación controlada en laboratorio", "Post-explotación explicada con límites", "Cómo documentar hallazgos", "Cómo escribir un reporte básico"],
+    "hacking-web": ["Qué es una vulnerabilidad web", "Peticiones y respuestas HTTP para hackers", "Parámetros, formularios y entradas de usuario", "SQL Injection explicado desde cero", "XSS explicado desde cero", "CSRF explicado con ejemplos", "Autenticación rota", "Control de acceso roto", "Subida insegura de archivos", "Burp Suite para analizar tráfico", "OWASP Top 10 explicado", "Primer laboratorio web seguro"],
+    "casos-reales": ["Qué es OSINT", "Búsqueda avanzada en Google", "Metadatos: qué cuentan tus archivos", "Así te investigan sin hackearte: OSINT y metadatos", "Red 764: qué es y por qué preocupa", "Verificación de perfiles y fuentes", "Huella digital en redes sociales", "Investigación de dominios y subdominios", "Have I Been Pwned y filtraciones", "Shodan explicado con límites", "Herramientas OSINT útiles", "Cómo documentar una investigación"],
+    "defensa-siguiente-paso": ["Qué es Blue Team", "Hardening explicado fácil", "Logs: qué son y por qué importan", "Antivirus, EDR y detección", "Copias de seguridad bien planteadas", "Respuesta a incidentes desde cero", "Qué hacer si un equipo se infecta", "Caso real: resolver un troyano", "Segmentación de red", "Monitorización básica", "Buenas prácticas para usuarios", "Cómo crear un checklist defensivo"],
+    "programacion-hacking": ["Por qué los hackers necesitan saber programar", "Qué lenguaje aprender para ciberseguridad", "Python para hacking: por qué se usa tanto", "Bash: automatizando Linux desde la terminal", "Por qué C es tan importante en ciberseguridad", "JavaScript para hackers", "SQL: el lenguaje detrás de las bases de datos", "Tu primer script de ciberseguridad con Python", "Crear un escáner de puertos sencillo con Python", "Peticiones HTTP con Python", "Sockets: cómo se comunican dos programas", "Automatizar tareas de ciberseguridad", "Leer y modificar un exploit en Python", "Analizar logs automáticamente", "Crear una herramienta de línea de comandos", "Qué es una API y cómo usarla desde Python", "Argumentos de un programa", "Compilado vs interpretado: C vs Python", "Punteros explicados para hacking", "Stack vs Heap explicado fácil", "Buffer Overflow desde cero", "Vulnerabilidades de memoria en C", "Qué es Assembly", "Qué es un PoC", "De CVE a código: cómo funciona un exploit público"],
+    "criptografia": ["Qué es la criptografía", "Cifrado vs hashing vs codificación", "Base64 no es cifrado", "Cifrado César: así empezó todo", "Qué es una clave criptográfica", "Cifrado simétrico explicado fácil", "Cifrado asimétrico explicado fácil", "Clave pública y clave privada", "AES explicado sin matemáticas imposibles", "RSA explicado sin humo", "Qué es un hash", "SHA-256 y huellas digitales", "Por qué un hash no se descifra", "MD5 y por qué ya no deberías usarlo", "Cómo guardan las webs tus contraseñas", "Qué es un salt", "Rainbow Tables", "Fuerza bruta vs diccionario", "Cómo funciona HTTPS realmente", "Qué pasa cuando aparece el candado", "Qué es TLS", "Qué es un certificado digital", "Autoridades certificadoras", "Qué es una firma digital", "Claves SSH", "Cifrado de extremo a extremo", "Cómo se cifra un disco duro", "Qué hace BitLocker", "VPN y cifrado", "Criptografía post-cuántica", "Comprobar que un archivo no ha sido modificado"]
+  };
+
+  roadmapRoutes.forEach((route, routeIndex) => {
+    Object.assign(route, routeMeta[route.id] || { stage: "speciality", stageLabel: "Especialidad", pathHint: "Elige tu camino" });
+    const blueprint = routeTopicBlueprints[route.id];
+    if (route.id === "informatica-base") {
+      route.topics = baseTitles.map(([title, summary], index) => {
+        const existing = route.topics[index] || {};
+        return { ...existing, id: existing.id || `topic-base-${index + 1}`, title, summary, tags: Array.from(new Set([...(existing.tags || []), "Informática base"])), level: route.level, route: route.title };
+      });
+    } else if (blueprint) {
+      route.topics = blueprint.map((title, index) => {
+        const existing = route.topics[index] || {};
+        return { ...existing, id: existing.id || `topic-${route.id}-${index + 1}`, title: existing.url ? existing.title : title, summary: existing.url ? existing.summary : `Tema del roadmap para aprender: ${title}.`, tags: Array.from(new Set([...(existing.tags || []), route.title])), level: route.level, route: route.title, status: existing.status || "pending", statusLabel: existing.statusLabel || "Pendiente", url: existing.url || "", thumbnail: existing.thumbnail || "" };
+      });
+    }
+  });
+
+  let globalTopicNumber = 1;
+  roadmapRoutes.forEach((route, routeIndex) => {
+    route.topics.forEach((topic, topicIndex) => {
+      const importance = topicIndex < 8 ? "imprescindible" : topicIndex < 18 ? "recomendado" : "ampliacion";
+      const importanceLabel = importance === "imprescindible" ? "Imprescindible" : importance === "recomendado" ? "Recomendado" : "Ampliación";
+      topic.number = globalTopicNumber;
+      topic.route = route.title;
+      topic.level = topic.level || route.level;
+      topic.routeStage = route.stage;
+      topic.routeStageLabel = route.stageLabel;
+      topic.importance = topic.importance || importance;
+      topic.importanceLabel = topic.importanceLabel || importanceLabel;
+      topic.contentKind = topic.url ? "Vídeo" : topic.status === "preparing" ? "En preparación" : "Tema previsto";
+      topic.prerequisiteHint = routeIndex >= 5 ? "Recomendado: tener claro el tronco común antes de entrar aquí." : "Forma parte del tronco común.";
+      globalTopicNumber += 1;
+    });
+  });
+}
+
+normalizeRoadmapLearningStructure();
 const roadmapRoutesContainer = document.getElementById("roadmap-routes");
 const roadmapView = document.getElementById("roadmap-view");
 const roadmapPath = document.getElementById("roadmap-path");
@@ -4310,9 +4385,11 @@ function renderRoadmapRoutes() {
     const order = index + 1;
     const stats = routeStats(route);
     return `
-      <button class="roadmap-route-card roadmap-planet-card planet-${((order - 1) % 11) + 1}" style="--planet-delay:${order * -0.38}s" type="button" data-roadmap-route="${route.id}" data-orbit-index="${index}" data-orbit-total="${totalRoutes}">
+      <button class="roadmap-route-card roadmap-planet-card planet-${((order - 1) % 11) + 1} is-${route.stage || "speciality"}" style="--planet-delay:${order * -0.38}s" type="button" data-roadmap-route="${route.id}" data-orbit-index="${index}" data-orbit-total="${totalRoutes}">
         <span class="roadmap-route-num">${String(order).padStart(2, "0")}</span>
+        <span class="roadmap-stage-badge is-${route.stage || "speciality"}">${route.stageLabel || "Especialidad"}</span>
         <span class="roadmap-planet" aria-hidden="true"><i></i></span>
+        <small class="roadmap-route-hint">${route.pathHint || "Ruta"}</small>
         <strong>${route.title}</strong>
         <span>${route.description}</span>
         <div class="route-meter"><i style="width:${Math.max(stats.percent, stats.published ? 8 : 0)}%"></i></div>
@@ -4403,7 +4480,7 @@ function renderRoadmapPath(route) {
       <button class="roadmap-node is-${topic.status} ${done ? "is-completed" : ""} is-${side}" type="button" data-topic-id="${topic.id}">
         <span class="node-core">${done ? "✓" : topic.number}</span>
         <span class="node-copy">
-          <small>${topic.statusLabel}</small>
+          <small>${topic.statusLabel} · ${topic.importanceLabel || "Recomendado"}</small>
           <strong>${topic.title}</strong>
         </span>
       </button>
@@ -4516,7 +4593,8 @@ function selectRoadmapTopic(topicId) {
     <h3>${topic.title}</h3>
     <div class="topic-status-row">
       <span class="topic-pill is-${topic.status}">${topic.statusLabel}</span>
-      <span>Tema ${topic.number} de 224</span>
+      <span class="topic-pill importance-${topic.importance || "recomendado"}">${topic.importanceLabel || "Recomendado"}</span>
+      <span>${topic.contentKind || "Tema"} · ${topic.prerequisiteHint || ""}</span>
     </div>
     ${renderTopicVideoPreview(topic)}
     <p>${topic.summary}</p>
@@ -4585,7 +4663,7 @@ function renderRoadmapSearch() {
   if (!query) { roadmapSearchResults.hidden = true; roadmapSearchResults.innerHTML = ""; return; }
   const terms = query.split(/\s+/).filter(Boolean);
   const results = allRoadmapTopics().filter((topic) => {
-    const text = normalizeRoadmapText([topic.title, topic.routeTitle, topic.summary, topic.statusLabel, ...topic.tags].join(" "));
+    const text = normalizeRoadmapText([topic.title, topic.routeTitle, topic.routeStageLabel, topic.summary, topic.statusLabel, topic.importanceLabel, topic.contentKind, ...topic.tags].join(" "));
     return terms.every((term) => text.includes(term));
   }).slice(0, 12);
   roadmapSearchResults.hidden = false;
