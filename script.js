@@ -242,12 +242,12 @@ const roadmapRoutes = [
       {
         "id": "topic-4",
         "number": 4,
-        "title": "Qu\u00e9 es un archivo y que es una carpeta?",
+        "title": "Archivos, carpetas y rutas: c\u00f3mo organiza tu ordenador la informaci\u00f3n",
         "status": "pending",
         "statusLabel": "Pendiente",
         "url": "",
         "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es un archivo y que es una carpeta?",
+        "summary": "Tema del roadmap para aprender c\u00f3mo se organizan archivos, carpetas y rutas dentro del ordenador.",
         "tags": [
           "Inform\u00e1tica base"
         ],
