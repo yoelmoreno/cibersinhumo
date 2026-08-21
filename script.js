@@ -258,10 +258,10 @@ const roadmapRoutes = [
         "id": "topic-5",
         "number": 5,
         "title": "Qu\u00e9 es una extensi\u00f3n de archivo?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
+        "status": "published",
+        "statusLabel": "Programado",
+        "url": "https://youtu.be/TORvq8VO8Eg",
+        "thumbnail": "https://i.ytimg.com/vi/TORvq8VO8Eg/hqdefault.jpg",
         "summary": "Tema del roadmap para aprender: Qu\u00e9 es una extensi\u00f3n de archivo?",
         "tags": [
           "Inform\u00e1tica base"
