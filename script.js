@@ -273,10 +273,10 @@ const roadmapRoutes = [
         "id": "topic-6",
         "number": 6,
         "title": "Qu\u00e9 es un programa?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
+        "status": "published",
+        "statusLabel": "Publicado",
+        "url": "https://youtu.be/obGrNiELvYQ",
+        "thumbnail": "https://i.ytimg.com/vi/obGrNiELvYQ/hqdefault.jpg",
         "summary": "Tema del roadmap para aprender: Qu\u00e9 es un programa?",
         "tags": [
           "Inform\u00e1tica base"
