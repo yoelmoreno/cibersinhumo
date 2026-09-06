@@ -287,12 +287,12 @@ const roadmapRoutes = [
       {
         "id": "topic-7",
         "number": 7,
-        "title": "Qu\u00e9 es un proceso?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es un proceso?",
+        "title": "Programa, proceso y servicio: la diferencia que tienes que entender",
+        "status": "published",
+        "statusLabel": "Publicado",
+        "url": "https://youtu.be/2wNgvFExJWw",
+        "thumbnail": "https://i.ytimg.com/vi/2wNgvFExJWw/hqdefault.jpg",
+        "summary": "Programa: instalado. Proceso: ejecutandose. Servicio: trabajando en segundo plano.",
         "tags": [
           "Inform\u00e1tica base"
         ],
