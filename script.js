@@ -408,10 +408,10 @@ const roadmapRoutes = [
         "id": "topic-15",
         "number": 15,
         "title": "Qu\u00e9 son los logs y por qu\u00e9 importan en ciberseguridad?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
+        "status": "published",
+        "statusLabel": "Publicado",
+        "url": "https://youtu.be/DrVp_ALVsNU",
+        "thumbnail": "https://i.ytimg.com/vi/DrVp_ALVsNU/hqdefault.jpg",
         "summary": "Tema del roadmap para aprender: Qu\u00e9 son los logs y por qu\u00e9 importan en ciberseguridad?",
         "tags": [
           "Inform\u00e1tica base"
