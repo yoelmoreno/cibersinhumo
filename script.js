@@ -303,10 +303,10 @@ const roadmapRoutes = [
         "id": "topic-8",
         "number": 8,
         "title": "Qu\u00e9 significa ejecutar un programa?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
+        "status": "published",
+        "statusLabel": "Publicado",
+        "url": "https://www.youtube.com/watch?v=DrVp_ALVsNU",
+        "thumbnail": "https://i.ytimg.com/vi/DrVp_ALVsNU/hqdefault.jpg",
         "summary": "Tema del roadmap para aprender: Qu\u00e9 significa ejecutar un programa?",
         "tags": [
           "Inform\u00e1tica base"
