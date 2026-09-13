@@ -4131,6 +4131,209 @@ function normalizeRoadmapLearningStructure() {
     }
   ];
 
+  const webTopicPlan = [
+    {
+      "title": "Qué pasa cuando entras en una web",
+      "summary": "Visión general de todo el proceso: URL → DNS → conexión con el servidor → HTTP/HTTPS → respuesta → navegador muestra la página. Sirve como mapa de todo lo que se aprenderá después."
+    },
+    {
+      "title": "De qué está hecha una página web",
+      "summary": "Explicar que una página web no es simplemente “una página”, sino un conjunto de recursos como HTML, CSS, JavaScript, imágenes, fuentes y datos que el navegador obtiene y procesa."
+    },
+    {
+      "title": "Frontend y backend: navegador y servidor",
+      "summary": "Diferenciar claramente qué ocurre en el navegador del usuario y qué ocurre en el servidor. Utilizar ejemplos como un formulario de inicio de sesión."
+    },
+    {
+      "title": "HTML: la estructura de una página",
+      "summary": "Introducción básica a HTML, etiquetas, atributos, enlaces, imágenes, formularios e inputs. No enseñar desarrollo web completo, sino lo suficiente para entender posteriormente el código de una página."
+    },
+    {
+      "title": "CSS: el aspecto de una web",
+      "summary": "Explicar qué papel tiene CSS y cómo modifica la apariencia de HTML. Selectores y estilos únicamente a nivel básico."
+    },
+    {
+      "title": "JavaScript: páginas que reaccionan",
+      "summary": "Explicar qué es JavaScript, dónde se ejecuta normalmente y cómo permite modificar una página, reaccionar a eventos o realizar peticiones al servidor."
+    },
+    {
+      "title": "DOM: cómo representa el navegador una página",
+      "summary": "Explicar qué es el Document Object Model y cómo el navegador convierte HTML en una estructura que JavaScript puede consultar y modificar."
+    },
+    {
+      "title": "DevTools: las herramientas del navegador",
+      "summary": "Aprender a utilizar DevTools: inspector, consola, pestaña Network, almacenamiento y código fuente. Será una herramienta fundamental antes de llegar a seguridad web."
+    },
+    {
+      "title": "Anatomía de una URL",
+      "summary": "Descomponer una URL como:\nhttps://app.ejemplo.com:443/login?id=15#perfil\ny explicar protocolo, dominio, subdominio, puerto, ruta, parámetros de consulta y fragmento."
+    },
+    {
+      "title": "Dominios, hosting y servidores web",
+      "summary": "Explicar qué significa registrar un dominio, dónde se aloja una web y qué hace un servidor web cuando recibe una petición."
+    },
+    {
+      "title": "Apache y Nginx: servidores HTTP",
+      "summary": "Introducir qué es un servidor HTTP y por qué herramientas como Apache o Nginx aparecen constantemente en Internet."
+    },
+    {
+      "title": "HTTP: peticiones y respuestas",
+      "summary": "Explicar qué es HTTP y el modelo petición-respuesta. Mostrar visualmente cómo el navegador solicita un recurso y el servidor responde."
+    },
+    {
+      "title": "Cómo leer una petición HTTP",
+      "summary": "Analizar una petición real:\nGET /perfil HTTP/1.1\njunto con Host, headers, cookies y otros elementos. Que el alumno empiece a sentirse cómodo leyendo HTTP en texto."
+    },
+    {
+      "title": "Cómo leer una respuesta HTTP",
+      "summary": "Explicar línea de estado, headers y body. Mostrar una respuesta real y relacionarla con la petición anterior."
+    },
+    {
+      "title": "Métodos HTTP: GET, POST, PUT, PATCH y DELETE",
+      "summary": "Explicar qué representa cada método y por qué una aplicación utiliza diferentes métodos dependiendo de la acción que quiere realizar."
+    },
+    {
+      "title": "Códigos de estado HTTP",
+      "summary": "Explicar las familias:\n- 1xx\n- 2xx\n- 3xx\n- 4xx\n- 5xx\ny ejemplos importantes como 200, 201, 301, 302, 400, 401, 403, 404, 500 y 502."
+    },
+    {
+      "title": "Cabeceras HTTP esenciales",
+      "summary": "Explicar qué son las cabeceras HTTP y analizar algunas muy habituales: Host, User-Agent, Content-Type, Accept, Authorization, Referer, Location y Set-Cookie."
+    },
+    {
+      "title": "El cuerpo HTTP y sus formatos",
+      "summary": "Explicar dónde viajan los datos dentro de determinadas peticiones y respuestas y formatos como:\n- application/x-www-form-urlencoded\n- multipart/form-data\n- application/json\n- text/html"
+    },
+    {
+      "title": "Parámetros en la URL y en el cuerpo",
+      "summary": "Explicar las diferentes formas de enviar información desde el navegador al servidor y por qué unos datos aparecen en la URL mientras otros viajan en el cuerpo de la petición."
+    },
+    {
+      "title": "Qué ocurre al enviar un formulario",
+      "summary": "Seguir el recorrido completo de un formulario HTML hasta el servidor. Relacionar inputs, método, ruta, parámetros y respuesta."
+    },
+    {
+      "title": "Cookies: cómo recuerda información una web",
+      "summary": "Explicar que las peticiones HTTP son independientes y cómo las cookies permiten que una web almacene o recupere cierta información entre peticiones."
+    },
+    {
+      "title": "Sesiones: cómo mantiene una web tu acceso",
+      "summary": "Explicar el concepto de sesión y el típico funcionamiento:\nusuario inicia sesión → servidor crea una sesión → navegador recibe un identificador → cookie se envía en las siguientes peticiones."
+    },
+    {
+      "title": "Atributos de las cookies",
+      "summary": "Explicar los principales atributos de una cookie y qué controla cada uno. Sin entrar todavía en técnicas para atacarlas."
+    },
+    {
+      "title": "Almacenamiento en el navegador",
+      "summary": "Explicar dónde puede guardar información una aplicación web en el navegador y las diferencias básicas respecto a las cookies."
+    },
+    {
+      "title": "Autenticación y autorización",
+      "summary": "Diferenciar claramente:\nAutenticación: demostrar quién eres.\nAutorización: determinar qué puedes hacer.\nUtilizar ejemplos con usuario normal y administrador."
+    },
+    {
+      "title": "Inicio de sesión y segundo factor",
+      "summary": "Explicar a nivel conceptual cómo una web gestiona un login y cómo puede añadir un segundo factor. No entrar todavía en vulnerabilidades."
+    },
+    {
+      "title": "Bases de datos: dónde guarda información una web",
+      "summary": "Explicar para qué se utilizan las bases de datos y ejemplos de información almacenada: usuarios, publicaciones, productos, pedidos, contraseñas procesadas, etc."
+    },
+    {
+      "title": "SQL: tablas y consultas básicas",
+      "summary": "Introducción sencilla a tablas, columnas, filas y consultas como SELECT. El objetivo es que posteriormente SQL Injection no aparezca sin haber explicado antes qué es SQL."
+    },
+    {
+      "title": "NoSQL: documentos y otras formas de guardar datos",
+      "summary": "Explicar que no todas las bases de datos utilizan tablas y SQL. Introducir de forma sencilla ejemplos como MongoDB y documentos JSON."
+    },
+    {
+      "title": "Qué es una API",
+      "summary": "Explicar qué es una API y mostrar un ejemplo de una aplicación que solicita información a un servidor sin cargar una página HTML completa."
+    },
+    {
+      "title": "Endpoints: las rutas de una API",
+      "summary": "Introducir el concepto de endpoint y mostrar ejemplos como:\nGET /api/users/15\nPOST /api/login\nRelacionarlo con los métodos HTTP ya aprendidos."
+    },
+    {
+      "title": "JSON: intercambiar datos en la web",
+      "summary": "Explicar objetos, propiedades, arrays y cómo APIs y aplicaciones web utilizan JSON para intercambiar información."
+    },
+    {
+      "title": "XML: datos entre etiquetas",
+      "summary": "Explicar qué es XML, su estructura mediante etiquetas y por qué todavía aparece en APIs, configuraciones y servicios."
+    },
+    {
+      "title": "Cómo funciona la subida de archivos",
+      "summary": "Explicar qué sucede cuando subimos una foto o documento: formulario, multipart/form-data, servidor, almacenamiento y posterior acceso al archivo."
+    },
+    {
+      "title": "HTTPS y TLS: proteger la conexión",
+      "summary": "Explicar la diferencia entre HTTP y HTTPS y qué proporciona TLS: cifrado, integridad y autenticación del servidor."
+    },
+    {
+      "title": "Certificados y autoridades certificadoras",
+      "summary": "Explicar qué contiene un certificado, qué es una autoridad certificadora y cómo el navegador comprueba que está hablando con el servidor adecuado."
+    },
+    {
+      "title": "HTTP/1.1, HTTP/2 y HTTP/3",
+      "summary": "Explicar a nivel conceptual cómo HTTP ha evolucionado. No profundizar excesivamente en detalles técnicos; entender especialmente que HTTP/2 permite multiplexación y HTTP/3 utiliza QUIC."
+    },
+    {
+      "title": "Origen y política del mismo origen",
+      "summary": "Explicar qué significa \"origen\" —protocolo + host + puerto— y por qué los navegadores aíslan unas páginas de otras."
+    },
+    {
+      "title": "CORS: acceso entre distintos orígenes",
+      "summary": "Explicar por qué una API puede querer aceptar peticiones desde otro dominio y cómo CORS permite definir qué orígenes están autorizados."
+    },
+    {
+      "title": "Preflight: peticiones OPTIONS",
+      "summary": "Explicar de forma sencilla por qué el navegador a veces envía una petición OPTIONS antes de realizar otra petición cross-origin."
+    },
+    {
+      "title": "Tokens de autenticación y autorización",
+      "summary": "Explicar qué es un token y por qué las aplicaciones modernas los utilizan para representar autenticación o autorización."
+    },
+    {
+      "title": "JWT: estructura y contenido",
+      "summary": "Explicar la estructura general:\nheader.payload.signature\nqué información puede transportar un JWT y dejar muy claro que normalmente está codificado, no cifrado.\nNo entrar todavía en ataques contra JWT."
+    },
+    {
+      "title": "Acceder con Google, Microsoft o GitHub",
+      "summary": "Explicar a nivel conceptual qué ocurre cuando una aplicación permite acceder utilizando una cuenta de Google, Microsoft, GitHub, etc. Diferenciar la aplicación, el proveedor y los permisos concedidos."
+    },
+    {
+      "title": "WebSockets: comunicación en tiempo real",
+      "summary": "Explicar por qué algunas aplicaciones necesitan mantener una comunicación bidireccional continua con el servidor y ejemplos como chats, juegos o notificaciones."
+    },
+    {
+      "title": "Caché web: reutilizar recursos",
+      "summary": "Explicar por qué navegador, servidores y otros intermediarios pueden guardar temporalmente recursos para evitar descargarlos constantemente."
+    },
+    {
+      "title": "CDN: contenido cerca del usuario",
+      "summary": "Explicar qué es una Content Delivery Network y por qué una página puede servirse desde infraestructura cercana al usuario."
+    },
+    {
+      "title": "Reverse proxy en una aplicación web",
+      "summary": "Retomar el concepto visto en Redes y aplicarlo a arquitecturas web. Explicar especialmente que el usuario puede estar hablando con un reverse proxy sin acceder directamente al servidor que ejecuta la aplicación."
+    },
+    {
+      "title": "Arquitectura de una web moderna",
+      "summary": "Juntar frontend, backend, API, base de datos, reverse proxy, CDN y servicios externos en un único esquema para mostrar cómo puede estar construida una web real."
+    },
+    {
+      "title": "El recorrido completo de un inicio de sesión",
+      "summary": "Ejemplo práctico:\nusuario pulsa \"Iniciar sesión\" → JavaScript/formulario → petición HTTP → reverse proxy → backend → base de datos → comprobación → sesión/token → respuesta → navegador.\nEl objetivo es conectar todos los conceptos anteriores."
+    },
+    {
+      "title": "Laboratorio final: analiza una aplicación web",
+      "summary": "Utilizar una aplicación de laboratorio y pedir al alumno que identifique:\n- HTML, CSS y JavaScript.\n- Dominio y URL.\n- Peticiones y respuestas.\n- Métodos HTTP.\n- Headers.\n- Cookies.\n- Sesiones.\n- API.\n- JSON.\n- Backend.\n- Base de datos a nivel conceptual.\n- HTTPS.\n- CORS.\n- Almacenamiento del navegador.\nDebe utilizar principalmente las herramientas de desarrollador del navegador para analizarlo."
+    }
+  ];
+
   const routeTopicBlueprints = {
     "linux-sistemas": ["Qué es Linux y por qué se usa tanto en ciberseguridad", "Distribuciones Linux: Ubuntu, Debian, Kali y Parrot", "Terminal de Linux: moverte sin perderte", "Archivos, permisos y propietarios en Linux", "Usuarios, grupos y privilegios", "Procesos, servicios y demonios", "Gestores de paquetes y repositorios", "Variables de entorno y PATH", "Redirecciones, pipes y filtros", "Scripts básicos con Bash", "SSH explicado desde cero", "Máquinas virtuales y entornos seguros", "Instalar Kali Linux sin romper nada", "Primer laboratorio Linux controlado"],
     "redes-desde-cero": ["Qué es una IP y para qué sirve", "Direcciones MAC: el DNI invisible de tus dispositivos", "IP pública vs IP privada", "Router, switch, módem y punto de acceso", "Puertos: qué son y para qué sirven", "TCP y UDP explicados juntos", "DNS: cómo se traducen dominios a IP", "DHCP: cómo tu equipo recibe configuración", "NAT: por qué muchos equipos salen con una IP", "Subredes explicadas sin dolor", "Ping, traceroute y conectividad básica", "Wireshark: leer paquetes por primera vez", "Qué pasa cuando te conectas a una red Wi-Fi", "VPN: cuándo sirve y cuándo no"],
@@ -4181,6 +4384,25 @@ function normalizeRoadmapLearningStructure() {
           title,
           summary,
           tags: ["Redes"],
+          level: route.level,
+          route: route.title,
+          status: existing?.url ? "published" : "pending",
+          statusLabel: existing?.url ? "Publicado" : "Pendiente",
+          url: existing?.url || "",
+          thumbnail: existing?.thumbnail || ""
+        };
+      });
+    } else if (route.id === "como-funciona-web") {
+      const existingVideoIds = { 0: "topic-85", 20: "topic-103" };
+      const existingTopics = route.topics;
+      route.topics = webTopicPlan.map(({ title, summary }, index) => {
+        const existing = existingTopics.find((topic) => topic.id === existingVideoIds[index]);
+        return {
+          ...(existing || {}),
+          id: existing?.id || `topic-web-plan-${index + 1}`,
+          title,
+          summary,
+          tags: ["Web"],
           level: route.level,
           route: route.title,
           status: existing?.url ? "published" : "pending",
@@ -4900,7 +5122,7 @@ function selectRoadmapTopic(topicId) {
       <span class="topic-pill importance-${topic.importance || "recomendado"}">${topic.importanceLabel || "Recomendado"}</span>
       <span>${topic.contentKind || "Tema"} · ${topic.prerequisiteHint || ""}</span>
     </div>
-    <p class="topic-description">${escapeAssistantHtml(topic.summary)}</p>
+    <p class="topic-description">${escapeAssistantHtml(topic.summary).replace(/\n/g, "<br>")}</p>
     ${renderTopicVideoPreview(topic)}
     <div class="topic-tags">${topic.tags.map((tag) => `<span>${tag}</span>`).join("")}</div>
     ${renderTopicLabs(labsForTopic(topic))}
