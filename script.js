@@ -3865,6 +3865,125 @@ function normalizeRoadmapLearningStructure() {
     ["Máquinas virtuales y virtualización", "Qué son las máquinas virtuales y cómo funciona la virtualización."]
   ];
 
+  const linuxTopicPlan = [
+    {
+      "summary": "Explicar qué es Linux, dónde se utiliza, por qué aparece tanto en servidores y ciberseguridad y qué significa que existan distribuciones como Ubuntu, Debian, Kali, Parrot o Arch. Aclarar también que Kali no es simplemente “el Linux de los hackers”, sino una distribución orientada a seguridad con muchas herramientas preinstaladas.",
+      "title": "Linux: qué es, sus distribuciones y por qué se usa tanto en ciberseguridad"
+    },
+    {
+      "summary": "Diferenciar terminal, consola, shell y Bash. Explicar de forma sencilla qué ocurre cuando escribimos un comando y cómo la shell interpreta lo que escribimos.",
+      "title": "Terminal, consola, shell y Bash: ¿son lo mismo?"
+    },
+    {
+      "summary": "Introducción práctica a comandos sencillos como whoami, uname, hostname, echo, clear, history, man y --help. El objetivo es empezar a perderle el miedo a la terminal.",
+      "title": "Tus primeros comandos de Linux"
+    },
+    {
+      "summary": "Aprender a navegar por el sistema de archivos utilizando pwd, ls y cd. Explicar rutas absolutas, rutas relativas, . , .. y el directorio personal ~.",
+      "title": "Moverte por Linux: pwd, ls y cd"
+    },
+    {
+      "summary": "Explicar touch, mkdir, cp, mv, rm y rmdir. Mostrar cómo realizar desde la terminal las operaciones básicas que normalmente haríamos con el explorador de archivos.",
+      "title": "Crear, copiar, mover y borrar archivos y carpetas"
+    },
+    {
+      "summary": "Utilizar cat, less, head, tail y un editor sencillo como nano. Enseñar cómo consultar y modificar archivos sin depender de una interfaz gráfica.",
+      "title": "Leer y editar archivos desde la terminal"
+    },
+    {
+      "summary": "Explicar de forma sencilla para qué sirven directorios como /home, /etc, /var, /tmp, /usr, /bin, /dev y /proc. El objetivo no es memorizar todo, sino entender la estructura general del sistema.",
+      "title": "Cómo está organizado Linux por dentro"
+    },
+    {
+      "summary": "Explicar qué significa que un archivo empiece por ., cómo mostrar archivos ocultos, para qué sirve el comando file y qué son los enlaces simbólicos. Explicar también que Linux no depende tanto de las extensiones como Windows.",
+      "title": "Archivos ocultos, tipos de archivo y enlaces"
+    },
+    {
+      "summary": "Introducir find, locate, which, whereis y grep. Mostrar cómo buscar archivos, comandos y contenido dentro de archivos.",
+      "title": "Cómo encontrar cualquier cosa en Linux"
+    },
+    {
+      "summary": "Explicar operadores como |, >, >>, <, &&, || y ;. Mostrar cómo conectar comandos y cómo utilizar la salida de un comando como entrada de otro.",
+      "title": "Pipes y redirecciones: el verdadero poder de la terminal"
+    },
+    {
+      "summary": "Introducción práctica a herramientas como wc, sort, uniq, cut, tr y xargs, con una pequeña introducción a sed y awk. El objetivo es entender cómo Linux permite trabajar rápidamente con grandes cantidades de texto.",
+      "title": "Filtrar y transformar texto desde Linux"
+    },
+    {
+      "summary": "Explicar qué es un usuario, un UID y un grupo. Utilizar comandos como id y groups y explicar de forma sencilla qué información contiene /etc/passwd.",
+      "title": "Usuarios y grupos en Linux"
+    },
+    {
+      "summary": "Explicar qué es el usuario root, qué hace sudo, qué significa ejecutar algo con privilegios elevados y por qué no es recomendable trabajar siempre como root.",
+      "title": "Root y sudo: quién manda realmente en Linux"
+    },
+    {
+      "summary": "Explicar lectura, escritura y ejecución. Enseñar a interpretar permisos como -rwxr-xr-- y diferenciar los permisos del propietario, grupo y resto de usuarios.",
+      "title": "Permisos de Linux: r, w y x"
+    },
+    {
+      "summary": "Explicar cómo modificar permisos y propietarios de archivos utilizando chmod, chown y chgrp. Introducir también la notación numérica de permisos como 755, 644, etc.",
+      "title": "chmod, chown y chgrp"
+    },
+    {
+      "summary": "Explicar de forma introductoria qué son estos permisos especiales y por qué son relevantes para la seguridad. No entrar todavía en técnicas de explotación o escalada de privilegios.",
+      "title": "Permisos especiales: SUID, SGID y Sticky Bit"
+    },
+    {
+      "summary": "Explicar qué es un proceso y qué significa PID. Utilizar herramientas como ps, top y htop, y explicar brevemente los procesos padre e hijo.",
+      "title": "Procesos: qué está ejecutándose en Linux"
+    },
+    {
+      "summary": "Introducir kill, señales básicas, jobs, bg, fg y &. Explicar cómo controlar procesos que se están ejecutando.",
+      "title": "Matar procesos y trabajar en segundo plano"
+    },
+    {
+      "summary": "Explicar qué es un servicio o daemon y utilizar systemctl para comprobar su estado, arrancarlo, detenerlo y reiniciarlo.",
+      "title": "Servicios y demonios en Linux"
+    },
+    {
+      "summary": "Explicar paquetes y repositorios. Introducir apt, dpkg, apt update y apt upgrade, y explicar por qué la instalación de software funciona de forma diferente a Windows.",
+      "title": "Cómo se instalan programas en Linux"
+    },
+    {
+      "summary": "Explicar qué son las variables de entorno y utilizar ejemplos como $PATH, $HOME y $USER. Mostrar env y export y explicar por qué podemos ejecutar determinados comandos sin escribir su ruta completa.",
+      "title": "Variables de entorno y PATH"
+    },
+    {
+      "summary": "Explicar qué son los logs y por qué son importantes. Introducir /var/log y journalctl y mostrar cómo se pueden utilizar para investigar errores, accesos y actividad del sistema.",
+      "title": "Logs: el historial de lo que ocurre en Linux"
+    },
+    {
+      "summary": "Introducir df, du y lsblk. Explicar de forma sencilla qué significa montar una unidad y para qué sirve mount.",
+      "title": "Discos, espacio y sistemas de archivos"
+    },
+    {
+      "summary": "Explicar herramientas como tar, gzip, zip y unzip. Mostrar cómo empaquetar y extraer archivos desde la terminal.",
+      "title": "Comprimir y descomprimir archivos"
+    },
+    {
+      "summary": "Introducir comandos como ip, ping, ss, curl, wget, dig, nslookup y traceroute. Centrarse en qué hace cada comando sin entrar todavía demasiado en teoría de redes, ya que eso se explicará en la Ruta 03.",
+      "title": "Linux conectado a la red: comandos esenciales"
+    },
+    {
+      "summary": "Explicar qué es SSH y el concepto de conexión remota. Mostrar una conexión con ssh usuario@IP, introducir las claves SSH y explicar de forma básica la transferencia de archivos utilizando scp.",
+      "title": "SSH: controlar otro ordenador desde tu terminal"
+    },
+    {
+      "summary": "Explicar qué es cron, qué es un crontab y cómo Linux puede ejecutar tareas automáticamente en determinados momentos.",
+      "title": "Tareas programadas: cron"
+    },
+    {
+      "summary": "Introducción a los scripts .sh. Explicar el shebang, variables, argumentos, condicionales if y bucles sencillos. El objetivo es aprender a automatizar varios comandos, no aprender programación avanzada.",
+      "title": "Bash scripting desde cero"
+    },
+    {
+      "summary": "Ejercicio práctico donde el alumno tenga que utilizar lo aprendido para descubrir información sobre una máquina Linux: usuario actual, sistema operativo, archivos, permisos, procesos, servicios, red, almacenamiento y logs.",
+      "title": "Laboratorio final: investiga una máquina Linux tú solo"
+    }
+  ];
+
   const routeTopicBlueprints = {
     "linux-sistemas": ["Qué es Linux y por qué se usa tanto en ciberseguridad", "Distribuciones Linux: Ubuntu, Debian, Kali y Parrot", "Terminal de Linux: moverte sin perderte", "Archivos, permisos y propietarios en Linux", "Usuarios, grupos y privilegios", "Procesos, servicios y demonios", "Gestores de paquetes y repositorios", "Variables de entorno y PATH", "Redirecciones, pipes y filtros", "Scripts básicos con Bash", "SSH explicado desde cero", "Máquinas virtuales y entornos seguros", "Instalar Kali Linux sin romper nada", "Primer laboratorio Linux controlado"],
     "redes-desde-cero": ["Qué es una IP y para qué sirve", "Direcciones MAC: el DNI invisible de tus dispositivos", "IP pública vs IP privada", "Router, switch, módem y punto de acceso", "Puertos: qué son y para qué sirven", "TCP y UDP explicados juntos", "DNS: cómo se traducen dominios a IP", "DHCP: cómo tu equipo recibe configuración", "NAT: por qué muchos equipos salen con una IP", "Subredes explicadas sin dolor", "Ping, traceroute y conectividad básica", "Wireshark: leer paquetes por primera vez", "Qué pasa cuando te conectas a una red Wi-Fi", "VPN: cuándo sirve y cuándo no"],
@@ -3885,6 +4004,24 @@ function normalizeRoadmapLearningStructure() {
       route.topics = baseTitles.map(([title, summary], index) => {
         const existing = route.topics[index] || {};
         return { ...existing, id: existing.id || `topic-base-${index + 1}`, title, summary, tags: Array.from(new Set([...(existing.tags || []), "Informática base"])), level: route.level, route: route.title };
+      });
+    } else if (route.id === "linux-sistemas") {
+      const basicCommandsVideo = route.topics.find((topic) => topic.id === "topic-26");
+      route.topics = linuxTopicPlan.map(({ title, summary }, index) => {
+        const existing = index === 2 ? basicCommandsVideo : null;
+        return {
+          ...(existing || {}),
+          id: existing?.id || `topic-linux-plan-${index + 1}`,
+          title,
+          summary,
+          tags: ["Linux"],
+          level: route.level,
+          route: route.title,
+          status: existing?.url ? "published" : "pending",
+          statusLabel: existing?.url ? "Publicado" : "Pendiente",
+          url: existing?.url || "",
+          thumbnail: existing?.thumbnail || ""
+        };
       });
     } else if (blueprint) {
       route.topics = blueprint.map((title, index) => {
@@ -4597,8 +4734,8 @@ function selectRoadmapTopic(topicId) {
       <span class="topic-pill importance-${topic.importance || "recomendado"}">${topic.importanceLabel || "Recomendado"}</span>
       <span>${topic.contentKind || "Tema"} · ${topic.prerequisiteHint || ""}</span>
     </div>
+    <p class="topic-description">${escapeAssistantHtml(topic.summary)}</p>
     ${renderTopicVideoPreview(topic)}
-    <p>${topic.summary}</p>
     <div class="topic-tags">${topic.tags.map((tag) => `<span>${tag}</span>`).join("")}</div>
     ${renderTopicLabs(labsForTopic(topic))}
     <div class="topic-nav-mini">
