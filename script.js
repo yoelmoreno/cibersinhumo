@@ -3984,6 +3984,153 @@ function normalizeRoadmapLearningStructure() {
     }
   ];
 
+  const networkTopicPlan = [
+    {
+      "summary": "Explicar qué es una red informática y qué hace falta para que dos dispositivos puedan intercambiar información. Introducir de forma muy visual la idea de enviar datos de un dispositivo a otro.",
+      "title": "¿Qué es una red y cómo se comunican dos ordenadores?"
+    },
+    {
+      "summary": "Explicar las diferencias entre una red local, una red de gran tamaño e Internet. Utilizar ejemplos como la red de casa, la universidad y la propia Internet.",
+      "title": "LAN, WAN e Internet"
+    },
+    {
+      "summary": "Explicar los modelos cliente-servidor y P2P. Mostrar ejemplos como navegador-servidor web, videojuego online o intercambio de archivos.",
+      "title": "Cliente, servidor y Peer-to-Peer"
+    },
+    {
+      "summary": "Explicar para qué sirven los modelos OSI y TCP/IP, sus capas principales y cómo ayudan a entender una comunicación. No plantearlo como algo que haya que memorizar de golpe.",
+      "title": "El modelo OSI y TCP/IP sin complicarlo"
+    },
+    {
+      "summary": "Explicar para qué sirve una IP, cómo identifica a un dispositivo dentro de una red y por qué una IP no identifica necesariamente a una persona.",
+      "title": "¿Qué es una dirección IP?"
+    },
+    {
+      "summary": "Explicar IPv4, las IP privadas (192.168.x.x, 10.x.x.x, etc.), IP pública, 127.0.0.1 y conceptos básicos de direcciones reservadas.",
+      "title": "IPv4: pública, privada, loopback y otras direcciones especiales"
+    },
+    {
+      "summary": "Explicar por qué IPv4 se quedó pequeño, cómo son las direcciones IPv6 y qué ventajas aporta. No profundizar todavía en configuración avanzada.",
+      "title": "IPv6: por qué existe"
+    },
+    {
+      "summary": "Explicar qué es una interfaz de red y por qué un ordenador puede tener varias. Mostrar ejemplos de Ethernet, Wi-Fi, loopback y una interfaz VPN como tun0.",
+      "title": "Interfaces de red: eth0, wlan0, lo, tun0..."
+    },
+    {
+      "summary": "Explicar qué es una dirección MAC, dónde se utiliza y la diferencia fundamental entre una MAC y una IP.",
+      "title": "Dirección MAC: la identidad de la tarjeta de red"
+    },
+    {
+      "summary": "Explicar de forma visual cómo ARP relaciona direcciones IP con direcciones MAC dentro de una red local.",
+      "title": "ARP: ¿cómo averigua mi ordenador la MAC de otro dispositivo?"
+    },
+    {
+      "summary": "Diferenciar switch, router y access point. Explicar por qué no todo lo que solemos llamar \"router\" en casa es técnicamente una sola cosa.",
+      "title": "Switch, router y punto de acceso: ¿qué hace cada uno?"
+    },
+    {
+      "summary": "Explicar qué es la puerta de enlace predeterminada y por qué un dispositivo la necesita para comunicarse con otras redes.",
+      "title": "Gateway: la puerta de salida de tu red"
+    },
+    {
+      "summary": "Explicar qué significan cosas como 255.255.255.0 o /24 y cómo permiten saber qué parte de una IP identifica la red y qué parte identifica al dispositivo.",
+      "title": "Máscara de subred y CIDR"
+    },
+    {
+      "summary": "Introducir cómo dividir una red en redes más pequeñas. Hacer ejemplos sencillos para entender /24, /25, /26, etc., sin convertirlo en una clase matemática interminable.",
+      "title": "Subnetting explicado fácil"
+    },
+    {
+      "summary": "Explicar cómo un ordenador recibe IP, máscara, gateway y DNS al conectarse a una red y qué ocurre durante el proceso DHCP.",
+      "title": "DHCP: cómo obtiene automáticamente una IP tu dispositivo"
+    },
+    {
+      "summary": "Explicar por qué varios dispositivos con IP privadas pueden salir a Internet utilizando una única IP pública y cuál es el papel de los puertos en PAT.",
+      "title": "NAT y PAT: cómo toda tu casa comparte una IP pública"
+    },
+    {
+      "summary": "Explicar cómo nombres como google.com terminan convirtiéndose en direcciones IP. Introducir cliente DNS, resolver y servidores DNS.",
+      "title": "DNS: la agenda telefónica de Internet"
+    },
+    {
+      "summary": "Profundizar un poco más: caché DNS, servidor recursivo, root servers, TLD y servidor autoritativo. Explicarlo como un recorrido paso a paso.",
+      "title": "Cómo funciona una consulta DNS"
+    },
+    {
+      "summary": "Explicar qué son los puertos TCP/UDP, por qué una IP puede ofrecer muchos servicios y qué significan ejemplos conocidos como 22, 53, 80 y 443.",
+      "title": "Puertos: las puertas de entrada a los servicios"
+    },
+    {
+      "summary": "Explicar que una comunicación suele identificarse mediante IP + puerto + protocolo. Introducir de forma sencilla qué significa que un programa esté \"escuchando\" en un puerto.",
+      "title": "Sockets y conexiones"
+    },
+    {
+      "summary": "Comparar ambos protocolos: conexión, fiabilidad, velocidad, orden de los datos y situaciones habituales donde se utiliza cada uno.",
+      "title": "TCP vs UDP"
+    },
+    {
+      "summary": "Explicar SYN, SYN-ACK y ACK y mostrar visualmente cómo dos dispositivos establecen una conexión TCP. Introducir también de forma básica FIN y RST.",
+      "title": "Cómo funciona una conexión TCP: el Three-Way Handshake"
+    },
+    {
+      "summary": "Explicar para qué sirve ICMP, qué hace realmente ping y cómo traceroute permite observar por qué dispositivos va pasando una comunicación.",
+      "title": "ICMP, ping y traceroute"
+    },
+    {
+      "summary": "Explicar que los datos se dividen y encapsulan mientras atraviesan las distintas capas. Diferenciar de forma básica trama Ethernet, paquete IP y segmento TCP/datagrama UDP.",
+      "title": "Paquetes, tramas y cabeceras"
+    },
+    {
+      "summary": "Introducción general a protocolos importantes: HTTP/HTTPS, SSH, FTP/SFTP, SMTP, IMAP, POP3, SMB, DNS y DHCP. Explicar para qué sirve cada uno sin profundizar todavía en su seguridad.",
+      "title": "Protocolos que vas a encontrarte constantemente"
+    },
+    {
+      "summary": "Explicar qué es una tabla de rutas, cómo decide un dispositivo dónde enviar un paquete y por qué existen routers entre redes.",
+      "title": "Routing: cómo encuentra un paquete su camino"
+    },
+    {
+      "summary": "Explicar qué es una VLAN, para qué sirve segmentar una red y por qué se utiliza muchísimo en empresas.",
+      "title": "VLAN: varias redes dentro de la misma infraestructura"
+    },
+    {
+      "summary": "Explicar qué hace un firewall, reglas de entrada y salida y cómo puede filtrar tráfico utilizando IP, puerto, protocolo o estado de una conexión.",
+      "title": "Firewalls: quién puede hablar con quién"
+    },
+    {
+      "summary": "Explicar la diferencia entre un proxy normal y un reverse proxy. Mostrar ejemplos de para qué se utilizan y preparar el terreno para Burp Suite y arquitectura web.",
+      "title": "Proxy y Reverse Proxy"
+    },
+    {
+      "summary": "Explicar qué es una VPN realmente, qué significa crear un túnel y cómo puede permitir que un dispositivo se comporte como si estuviera conectado a otra red. Relacionarlo con interfaces como tun0.",
+      "title": "VPN y túneles"
+    },
+    {
+      "summary": "Explicar de forma básica SSID, punto de acceso, canales, frecuencias de 2,4/5/6 GHz y cómo un dispositivo se conecta de forma inalámbrica a una red.",
+      "title": "Cómo funciona una red Wi-Fi"
+    },
+    {
+      "summary": "Introducir los principales mecanismos de seguridad inalámbrica y explicar por qué una red Wi-Fi abierta o mal configurada supone un riesgo. Sin enseñar todavía ataques inalámbricos.",
+      "title": "Wi-Fi y seguridad: WPA2, WPA3 y contraseñas"
+    },
+    {
+      "summary": "Introducir captura de tráfico con Wireshark. Mostrar paquetes, IP origen/destino, protocolo, puertos y filtros básicos. Es el momento de ver físicamente muchos de los conceptos anteriores.",
+      "title": "Wireshark: ver lo que realmente viaja por la red"
+    },
+    {
+      "summary": "Introducción sencilla a tcpdump, cómo seleccionar una interfaz, capturar paquetes y aplicar filtros básicos.",
+      "title": "tcpdump: analizar tráfico desde la terminal"
+    },
+    {
+      "summary": "Crear una metodología sencilla ante el típico \"no tengo Internet\": comprobar interfaz, IP, gateway, conectividad local, ping, DNS, rutas y servicios. Utilizar herramientas aprendidas en la Ruta 2.",
+      "title": "Diagnosticar una red paso a paso"
+    },
+    {
+      "summary": "Montar o utilizar una pequeña red virtual y pedir al alumno que identifique su IP, MAC, máscara, gateway, DNS, ruta, interfaces, conexiones y tráfico. Utilizar herramientas como ip, ping, ss, traceroute, dig y Wireshark.",
+      "title": "Laboratorio final: descubre cómo funciona una red"
+    }
+  ];
+
   const routeTopicBlueprints = {
     "linux-sistemas": ["Qué es Linux y por qué se usa tanto en ciberseguridad", "Distribuciones Linux: Ubuntu, Debian, Kali y Parrot", "Terminal de Linux: moverte sin perderte", "Archivos, permisos y propietarios en Linux", "Usuarios, grupos y privilegios", "Procesos, servicios y demonios", "Gestores de paquetes y repositorios", "Variables de entorno y PATH", "Redirecciones, pipes y filtros", "Scripts básicos con Bash", "SSH explicado desde cero", "Máquinas virtuales y entornos seguros", "Instalar Kali Linux sin romper nada", "Primer laboratorio Linux controlado"],
     "redes-desde-cero": ["Qué es una IP y para qué sirve", "Direcciones MAC: el DNI invisible de tus dispositivos", "IP pública vs IP privada", "Router, switch, módem y punto de acceso", "Puertos: qué son y para qué sirven", "TCP y UDP explicados juntos", "DNS: cómo se traducen dominios a IP", "DHCP: cómo tu equipo recibe configuración", "NAT: por qué muchos equipos salen con una IP", "Subredes explicadas sin dolor", "Ping, traceroute y conectividad básica", "Wireshark: leer paquetes por primera vez", "Qué pasa cuando te conectas a una red Wi-Fi", "VPN: cuándo sirve y cuándo no"],
@@ -4015,6 +4162,25 @@ function normalizeRoadmapLearningStructure() {
           title,
           summary,
           tags: ["Linux"],
+          level: route.level,
+          route: route.title,
+          status: existing?.url ? "published" : "pending",
+          statusLabel: existing?.url ? "Publicado" : "Pendiente",
+          url: existing?.url || "",
+          thumbnail: existing?.thumbnail || ""
+        };
+      });
+    } else if (route.id === "redes-desde-cero") {
+      const existingVideoIds = { 4: "topic-53", 8: "topic-56", 29: "topic-80" };
+      const existingTopics = route.topics;
+      route.topics = networkTopicPlan.map(({ title, summary }, index) => {
+        const existing = existingTopics.find((topic) => topic.id === existingVideoIds[index]);
+        return {
+          ...(existing || {}),
+          id: existing?.id || `topic-network-plan-${index + 1}`,
+          title,
+          summary,
+          tags: ["Redes"],
           level: route.level,
           route: route.title,
           status: existing?.url ? "published" : "pending",
