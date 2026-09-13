@@ -317,17 +317,17 @@ const roadmapRoutes = [
       {
         "id": "topic-9",
         "number": 9,
-        "title": "Qu\u00e9 es el kernel?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es el kernel?",
+        "title": "Máquinas virtuales y virtualización",
+        "status": "published",
+        "statusLabel": "Publicado",
+        "url": "https://www.youtube.com/watch?v=bL8H_mR0BFw",
+        "thumbnail": "https://i.ytimg.com/vi/bL8H_mR0BFw/hqdefault.jpg",
+        "summary": "Qué son las máquinas virtuales y cómo funciona la virtualización.",
         "tags": [
-          "Inform\u00e1tica base"
+          "Informática base"
         ],
         "level": "Nivel 0",
-        "route": "Inform\u00e1tica base"
+        "route": "Informática base"
       },
       {
         "id": "topic-10",
@@ -3861,7 +3861,8 @@ function normalizeRoadmapLearningStructure() {
     ["Bits, bytes y almacenamiento de información", "Cómo se representa y se guarda la información dentro de un ordenador."],
     ["CPU, RAM y almacenamiento", "Qué papel cumple cada pieza principal cuando un programa se ejecuta."],
     ["Programas, procesos y servicios", "Qué ocurre cuando abres una aplicación y cómo vive dentro del sistema."],
-    ["Usuarios, cuentas y permisos", "Por qué los permisos son una de las bases de la seguridad informática."]
+    ["Usuarios, cuentas y permisos", "Por qué los permisos son una de las bases de la seguridad informática."],
+    ["Máquinas virtuales y virtualización", "Qué son las máquinas virtuales y cómo funciona la virtualización."]
   ];
 
   const routeTopicBlueprints = {
