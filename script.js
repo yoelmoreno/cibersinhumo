@@ -4334,6 +4334,209 @@ function normalizeRoadmapLearningStructure() {
     }
   ];
 
+  const fundamentalsTopicPlan = [
+    {
+      "title": "Qué protege la ciberseguridad",
+      "summary": "Explicar qué intenta proteger la ciberseguridad: dispositivos, redes, aplicaciones, datos, identidades y servicios. Mostrar que ciberseguridad no significa simplemente “evitar hackers”."
+    },
+    {
+      "title": "Confidencialidad, integridad y disponibilidad",
+      "summary": "Explicar los tres objetivos fundamentales:\n- Confidencialidad: que solo acceda quien debe.\n- Integridad: que la información no sea modificada indebidamente.\n- Disponibilidad: que los sistemas estén accesibles cuando se necesiten.\nUtilizar ejemplos cotidianos."
+    },
+    {
+      "title": "Activos: qué necesitamos proteger",
+      "summary": "Explicar qué es un activo dentro de seguridad: información, servidores, cuentas, dispositivos, aplicaciones, reputación, dinero, etc."
+    },
+    {
+      "title": "Amenaza, vulnerabilidad y riesgo",
+      "summary": "Diferenciar claramente estos tres conceptos.\nEjemplo:\n- Vulnerabilidad: puerta sin cerrar.\n- Amenaza: alguien que podría entrar.\n- Riesgo: probabilidad e impacto de que ocurra.\nEs una diferencia fundamental para toda la ruta."
+    },
+    {
+      "title": "Qué es un ciberataque y qué busca",
+      "summary": "Explicar qué significa realmente realizar un ataque contra un sistema y que no todos los ataques buscan necesariamente robar información.\nIntroducir objetivos como robo, espionaje, sabotaje, fraude o interrupción del servicio."
+    },
+    {
+      "title": "Superficie de ataque",
+      "summary": "Explicar que cualquier elemento accesible o interactuable puede ampliar las oportunidades de ataque: puertos, aplicaciones web, usuarios, APIs, dispositivos, servicios, etc."
+    },
+    {
+      "title": "Vectores de ataque",
+      "summary": "Explicar por dónde puede producirse un ataque: phishing, vulnerabilidad web, contraseña robada, servicio expuesto, USB malicioso, proveedor comprometido, etc.\nDiferenciarlo de superficie de ataque."
+    },
+    {
+      "title": "De dónde salen las vulnerabilidades",
+      "summary": "Explicar de dónde salen las vulnerabilidades:\n- Errores de programación.\n- Configuraciones incorrectas.\n- Software antiguo.\n- Contraseñas débiles.\n- Diseños inseguros.\n- Errores humanos."
+    },
+    {
+      "title": "Exploit y payload: diferencias",
+      "summary": "Diferenciar:\nExploit: aprovecha una vulnerabilidad.\nPayload: acción o código que se ejecuta después de conseguir aprovecharla.\nNo enseñar todavía explotación práctica."
+    },
+    {
+      "title": "CVE: identificar vulnerabilidades",
+      "summary": "Explicar qué significa algo como:\nCVE-2026-XXXXX\ny por qué existe un sistema estándar para identificar vulnerabilidades conocidas."
+    },
+    {
+      "title": "CVSS: medir la gravedad",
+      "summary": "Explicar qué representa una puntuación CVSS y por qué una vulnerabilidad puede clasificarse como baja, media, alta o crítica.\nNo entrar todavía en todos los cálculos."
+    },
+    {
+      "title": "CWE: tipos de debilidades",
+      "summary": "Explicar que mientras CVE identifica vulnerabilidades concretas, CWE clasifica tipos de debilidades, como errores de validación, memoria o control de acceso."
+    },
+    {
+      "title": "Zero-day: vulnerabilidades sin parche",
+      "summary": "Explicar qué significa que exista una vulnerabilidad desconocida o todavía sin parche disponible.\nDiferenciar vulnerabilidad zero-day, exploit zero-day y ataque zero-day."
+    },
+    {
+      "title": "Actualizaciones y parches de seguridad",
+      "summary": "Explicar por qué actualizar software es una medida de seguridad y qué significa parchear una vulnerabilidad.\nAclarar que actualizar no sirve únicamente para añadir funciones."
+    },
+    {
+      "title": "Hardening: endurecer un sistema",
+      "summary": "Explicar el concepto de endurecimiento de sistemas.\nEjemplos:\n- Desactivar servicios innecesarios.\n- Cambiar configuraciones inseguras.\n- Limitar usuarios.\n- Actualizar software.\n- Cerrar puertos innecesarios."
+    },
+    {
+      "title": "Principio de mínimo privilegio",
+      "summary": "Explicar que cada usuario, programa o servicio debería tener únicamente los permisos que necesita.\nRelacionarlo con usuarios, administrador, root y sudo vistos anteriormente."
+    },
+    {
+      "title": "Defensa en profundidad",
+      "summary": "Explicar por qué no debemos depender de una única medida de seguridad.\nEjemplo:\ncontraseña + MFA + firewall + EDR + permisos + logs + backups.\nSi una defensa falla, todavía existen otras."
+    },
+    {
+      "title": "Identidad, autenticación, autorización e IAM",
+      "summary": "Repasar y llevar al contexto de seguridad:\n- Quién eres.\n- Cómo demuestras quién eres.\n- Qué tienes permitido hacer.\nIntroducir el concepto general de IAM."
+    },
+    {
+      "title": "MFA: factores de autenticación",
+      "summary": "Explicar factores de autenticación:\n- Algo que sabes.\n- Algo que tienes.\n- Algo que eres.\nExplicar por qué añadir un segundo factor mejora la seguridad."
+    },
+    {
+      "title": "Contraseñas seguras y gestores",
+      "summary": "Explicar longitud, reutilización, gestores de contraseñas y por qué las contraseñas predecibles son peligrosas.\nIntroducir el concepto de contraseña filtrada.\nNo entrar todavía profundamente en hashes o cracking."
+    },
+    {
+      "title": "Qué es el malware",
+      "summary": "Explicar que malware significa software malicioso y que existen múltiples categorías según su comportamiento y objetivo."
+    },
+    {
+      "title": "Tipos de malware: virus, troyanos y spyware",
+      "summary": "Explicar las diferencias entre los tipos más conocidos de malware.\nTambién pueden introducirse brevemente:\n- Adware.\n- Keylogger.\n- Rootkit.\n- Bot."
+    },
+    {
+      "title": "Cómo funciona el ransomware",
+      "summary": "Explicar a nivel conceptual:\nentrada → ejecución → propagación → cifrado/robo → extorsión.\nNo explicar técnicas operativas para desplegarlo."
+    },
+    {
+      "title": "Botnets y ataques DDoS",
+      "summary": "Explicar qué es una botnet, cómo miles de dispositivos comprometidos pueden controlarse conjuntamente y cómo pueden utilizarse para saturar servicios."
+    },
+    {
+      "title": "Ingeniería social",
+      "summary": "Explicar ataques que explotan principalmente a las personas en lugar de vulnerabilidades técnicas.\nEjemplos:\n- Engaño.\n- Urgencia.\n- Autoridad.\n- Miedo.\n- Curiosidad."
+    },
+    {
+      "title": "Phishing y sus variantes",
+      "summary": "Diferenciar los principales tipos de phishing y explicar cómo intentan conseguir contraseñas, dinero o ejecución de archivos maliciosos."
+    },
+    {
+      "title": "Firewall, antivirus y EDR",
+      "summary": "Explicar de forma introductoria:\nFirewall: controla comunicaciones.\nAntivirus: busca y bloquea malware conocido o sospechoso.\nEDR: monitoriza continuamente endpoints y detecta comportamientos sospechosos."
+    },
+    {
+      "title": "IDS e IPS: detectar y bloquear",
+      "summary": "Explicar:\nIDS: detecta actividad sospechosa.\nIPS: además puede intentar bloquearla.\nMostrar su función dentro de una red."
+    },
+    {
+      "title": "Logs: detectar e investigar incidentes",
+      "summary": "Retomar los logs de Linux y explicar por qué son fundamentales para detectar e investigar incidentes.\nEjemplos:\n- Inicios de sesión.\n- Errores.\n- Conexiones.\n- Cambios en sistemas.\n- Ejecución de procesos."
+    },
+    {
+      "title": "SIEM: centralizar eventos y alertas",
+      "summary": "Introducir qué hace un SIEM y cómo centraliza información de servidores, endpoints, firewalls y aplicaciones para generar alertas.\nNo enseñar todavía Splunk o Elastic en profundidad."
+    },
+    {
+      "title": "Backups y regla 3-2-1",
+      "summary": "Explicar por qué las copias de seguridad forman parte de la ciberseguridad.\nIntroducir de forma sencilla la regla 3-2-1 y explicar por qué un backup desconectado puede ser fundamental frente al ransomware."
+    },
+    {
+      "title": "Segmentación de red",
+      "summary": "Explicar por qué no debería poder comunicarse todo con todo dentro de una organización.\nRelacionarlo con las VLAN vistas en Redes y explicar cómo limitar el movimiento de un atacante."
+    },
+    {
+      "title": "Gestión de vulnerabilidades",
+      "summary": "Explicar el ciclo:\ndescubrir → analizar → priorizar → corregir → comprobar.\nMostrar que encontrar una vulnerabilidad es solo el principio."
+    },
+    {
+      "title": "Modelado de amenazas",
+      "summary": "Introducir la idea de preguntarse:\n- ¿Qué tengo?\n- ¿Qué quiero proteger?\n- ¿Quién podría atacarlo?\n- ¿Cómo podría hacerlo?\n- ¿Qué impacto tendría?\n- ¿Cómo puedo reducir el riesgo?\nSin entrar todavía en metodologías complejas."
+    },
+    {
+      "title": "Zero Trust: verificar siempre",
+      "summary": "Explicar el principio:\n“Never trust, always verify.”\nNo asumir que alguien es fiable simplemente porque esté dentro de la red de la empresa.\nExplicar identidad, dispositivo y privilegios a nivel conceptual."
+    },
+    {
+      "title": "Ataques a la cadena de suministro",
+      "summary": "Explicar que una organización también puede ser comprometida a través de software, librerías, actualizaciones o proveedores externos.\nUtilizar algún ejemplo conceptual de dependencia comprometida."
+    },
+    {
+      "title": "Red Team, Blue Team y Purple Team",
+      "summary": "Diferenciar claramente:\nRed Team: simula ataques.\nBlue Team: detecta y defiende.\nPurple Team: mejora la colaboración y aprendizaje entre ambos.\nTambién mencionar que Red Team no es exactamente lo mismo que pentesting."
+    },
+    {
+      "title": "Pentest, auditoría, bug bounty y Red Team",
+      "summary": "Explicar qué busca cada actividad:\n- Pentest.\n- Auditoría.\n- Bug bounty.\n- Red Team.\nMostrar que tienen objetivos, alcance y reglas diferentes."
+    },
+    {
+      "title": "SOC: el centro de operaciones de seguridad",
+      "summary": "Introducir qué es un Security Operations Center y qué hacen perfiles como SOC Analyst L1, L2 y L3.\nPreparar al alumno para la futura Ruta Blue Team."
+    },
+    {
+      "title": "Respuesta a incidentes",
+      "summary": "Introducir las etapas generales:\n1. Preparación.\n2. Detección.\n3. Análisis.\n4. Contención.\n5. Erradicación.\n6. Recuperación.\n7. Lecciones aprendidas.\nNo profundizar todavía en DFIR."
+    },
+    {
+      "title": "Indicadores de compromiso: IOC",
+      "summary": "Explicar qué es una pista de que podría haberse producido un ataque.\nEjemplos:\n- IP sospechosa.\n- Dominio malicioso.\n- Hash de un archivo.\n- Proceso extraño.\n- Archivo concreto."
+    },
+    {
+      "title": "Inteligencia de amenazas",
+      "summary": "Explicar qué significa recopilar y analizar información sobre amenazas, atacantes, campañas, malware e infraestructura maliciosa.\nIntroducción únicamente."
+    },
+    {
+      "title": "MITRE ATT&CK: tácticas y técnicas",
+      "summary": "Explicar qué es MITRE ATT&CK y por qué organiza comportamientos reales de atacantes en tácticas y técnicas.\nMostrar ejemplos sencillos como:\nInitial Access → Credential Access → Lateral Movement → Exfiltration.\nNo hace falta memorizar la matriz."
+    },
+    {
+      "title": "Cyber Kill Chain: fases de un ataque",
+      "summary": "Introducir la idea de que un ataque suele tener varias fases y que defenderse en cualquiera de ellas puede interrumpirlo.\nCompararlo brevemente con MITRE ATT&CK."
+    },
+    {
+      "title": "Seguridad física",
+      "summary": "Explicar que proteger ordenadores también implica controlar:\n- Acceso físico.\n- USB.\n- Servidores.\n- Dispositivos robados.\n- Shoulder surfing.\n- Tailgating."
+    },
+    {
+      "title": "Las personas como parte de la defensa",
+      "summary": "Explicar por qué las personas forman parte de la seguridad: errores, malas configuraciones, reutilización de contraseñas, phishing y procedimientos.\nEvitar simplemente decir que “el usuario es el eslabón más débil”; explicar que también forma parte de las defensas."
+    },
+    {
+      "title": "Seguridad y usabilidad",
+      "summary": "Explicar que seguridad siempre implica decisiones y compromisos.\nEjemplo:\nuna contraseña de 200 caracteres sería difícil de adivinar pero poco práctica.\nIntroducir la idea de encontrar un equilibrio adecuado."
+    },
+    {
+      "title": "Riesgo residual: por qué no existe el riesgo cero",
+      "summary": "Explicar que riesgo cero prácticamente no existe.\nLa seguridad busca reducir la probabilidad y el impacto hasta niveles aceptables."
+    },
+    {
+      "title": "Ética, autorización y divulgación responsable",
+      "summary": "Dejar claro que tener conocimientos técnicos no autoriza a probarlos contra sistemas ajenos.\nExplicar conceptos como:\n- Autorización.\n- Alcance.\n- Sistemas propios.\n- Laboratorios.\n- Responsible Disclosure.\nEsto prepara directamente la ruta de Pentesting."
+    },
+    {
+      "title": "Laboratorio final: analiza la seguridad de una empresa",
+      "summary": "Presentar una pequeña empresa ficticia con:\n- Servidores.\n- Página web.\n- Empleados.\n- Wi-Fi.\n- Correos.\n- Base de datos.\n- Copias de seguridad.\nPedir al alumno que identifique:\n- Activos.\n- Amenazas.\n- Vulnerabilidades.\n- Riesgos.\n- Superficie de ataque.\n- Posibles vectores.\n- Controles de seguridad.\n- Medidas para reducir el riesgo."
+    }
+  ];
+
   const routeTopicBlueprints = {
     "linux-sistemas": ["Qué es Linux y por qué se usa tanto en ciberseguridad", "Distribuciones Linux: Ubuntu, Debian, Kali y Parrot", "Terminal de Linux: moverte sin perderte", "Archivos, permisos y propietarios en Linux", "Usuarios, grupos y privilegios", "Procesos, servicios y demonios", "Gestores de paquetes y repositorios", "Variables de entorno y PATH", "Redirecciones, pipes y filtros", "Scripts básicos con Bash", "SSH explicado desde cero", "Máquinas virtuales y entornos seguros", "Instalar Kali Linux sin romper nada", "Primer laboratorio Linux controlado"],
     "redes-desde-cero": ["Qué es una IP y para qué sirve", "Direcciones MAC: el DNI invisible de tus dispositivos", "IP pública vs IP privada", "Router, switch, módem y punto de acceso", "Puertos: qué son y para qué sirven", "TCP y UDP explicados juntos", "DNS: cómo se traducen dominios a IP", "DHCP: cómo tu equipo recibe configuración", "NAT: por qué muchos equipos salen con una IP", "Subredes explicadas sin dolor", "Ping, traceroute y conectividad básica", "Wireshark: leer paquetes por primera vez", "Qué pasa cuando te conectas a una red Wi-Fi", "VPN: cuándo sirve y cuándo no"],
@@ -4409,6 +4612,27 @@ function normalizeRoadmapLearningStructure() {
           statusLabel: existing?.url ? "Publicado" : "Pendiente",
           url: existing?.url || "",
           thumbnail: existing?.thumbnail || ""
+        };
+      });
+    } else if (route.id === "fundamentos-ciber") {
+      const existingVideoIds = { 21: "topic-124", 22: "topic-127", 23: "topic-128", 25: "topic-122" };
+      const relatedVideoIds = { 4: ["topic-129"], 21: ["topic-125", "topic-126"] };
+      const existingTopics = route.topics;
+      route.topics = fundamentalsTopicPlan.map(({ title, summary }, index) => {
+        const existing = existingTopics.find((topic) => topic.id === existingVideoIds[index]);
+        return {
+          ...(existing || {}),
+          id: existing?.id || `topic-fundamentals-plan-${index + 1}`,
+          title,
+          summary,
+          tags: ["Ciberseguridad"],
+          level: route.level,
+          route: route.title,
+          status: existing?.url ? "published" : "pending",
+          statusLabel: existing?.url ? "Publicado" : "Pendiente",
+          url: existing?.url || "",
+          thumbnail: existing?.thumbnail || "",
+          relatedVideos: (relatedVideoIds[index] || []).map((id) => existingTopics.find((topic) => topic.id === id)).filter((topic) => topic?.url)
         };
       });
     } else if (blueprint) {
@@ -5124,6 +5348,7 @@ function selectRoadmapTopic(topicId) {
     </div>
     <p class="topic-description">${escapeAssistantHtml(topic.summary).replace(/\n/g, "<br>")}</p>
     ${renderTopicVideoPreview(topic)}
+    ${(topic.relatedVideos || []).length ? `<div class="topic-related-videos"><h4>Vídeos relacionados</h4>${topic.relatedVideos.map((video) => renderTopicVideoPreview(video)).join("")}</div>` : ""}
     <div class="topic-tags">${topic.tags.map((tag) => `<span>${tag}</span>`).join("")}</div>
     ${renderTopicLabs(labsForTopic(topic))}
     <div class="topic-nav-mini">
