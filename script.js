@@ -4537,6 +4537,249 @@ function normalizeRoadmapLearningStructure() {
     }
   ];
 
+  const pentestTopicPlan = [
+    {
+      "title": "Qué es un pentest",
+      "summary": "Explicar qué es una prueba de penetración, cuál es su objetivo y por qué consiste en encontrar y demostrar riesgos de seguridad antes de que lo haga un atacante real.\nDiferenciarlo brevemente de un análisis automático de vulnerabilidades."
+    },
+    {
+      "title": "Pentest, auditoría, bug bounty y Red Team",
+      "summary": "Repasar las diferencias entre estas actividades desde un punto de vista práctico: objetivo, alcance, duración, reglas y resultado esperado."
+    },
+    {
+      "title": "Fases de una prueba de penetración",
+      "summary": "Presentar el mapa completo de la ruta:\n1. Preparación.\n2. Reconocimiento.\n3. Escaneo.\n4. Enumeración.\n5. Análisis de vulnerabilidades.\n6. Explotación.\n7. Escalada de privilegios.\n8. Post-explotación.\n9. Documentación.\n10. Informe.\nEl alumno debe entender desde el principio que pentesting no significa simplemente \"tirar exploits\"."
+    },
+    {
+      "title": "Alcance y reglas del pentest",
+      "summary": "Explicar qué sistemas pueden probarse, cuáles no, qué técnicas están permitidas, horarios, contactos de emergencia y otras reglas.\nEnseñar por qué el alcance es una de las partes más importantes de una auditoría profesional."
+    },
+    {
+      "title": "Black box, grey box y white box",
+      "summary": "Explicar cuánto conocimiento tiene inicialmente el pentester en cada modalidad.\nUtilizar ejemplos sencillos para entender cuándo puede utilizarse cada enfoque."
+    },
+    {
+      "title": "Preparar un laboratorio de pentesting",
+      "summary": "Preparar un entorno seguro utilizando máquinas virtuales y máquinas deliberadamente vulnerables.\nExplicar atacante, objetivo, red virtual, snapshots y por qué nunca deberíamos practicar contra sistemas reales sin autorización."
+    },
+    {
+      "title": "Kali Linux y sus herramientas",
+      "summary": "Explicar qué aporta Kali y cómo está organizado su conjunto de herramientas.\nEvitar la idea de que saber utilizar Kali equivale a saber pentesting."
+    },
+    {
+      "title": "Reconocimiento pasivo y activo",
+      "summary": "Diferenciar:\nPasivo: obtener información sin interactuar directamente con el objetivo.\nActivo: comunicarse directamente con sus sistemas.\nExplicar las ventajas, limitaciones y nivel de visibilidad de ambos."
+    },
+    {
+      "title": "Reconocimiento de un dominio autorizado",
+      "summary": "En un laboratorio o dominio autorizado, aprender a identificar información como:\n- DNS.\n- Subdominios.\n- Direcciones IP.\n- Tecnologías.\n- Certificados.\n- Infraestructura expuesta.\nAquí puede conectarse con la futura ruta de OSINT."
+    },
+    {
+      "title": "Descubrimiento de hosts",
+      "summary": "Explicar cómo descubrir qué equipos existen dentro de una red autorizada antes de empezar a analizar sus servicios.\nRelacionarlo con ICMP, ARP y los conceptos aprendidos en Redes."
+    },
+    {
+      "title": "Primeros pasos con Nmap",
+      "summary": "Introducir Nmap y explicar:\n- Objetivo.\n- Host.\n- Puerto.\n- Estado del puerto.\n- Servicio.\nRealizar los primeros escaneos únicamente contra máquinas de laboratorio."
+    },
+    {
+      "title": "Qué ocurre durante un escaneo de puertos",
+      "summary": "Explicar técnicamente qué está haciendo Nmap.\nRelacionarlo con TCP SYN, conexiones y respuestas como SYN-ACK o RST.\nAsí el alumno entiende el escaneo en lugar de memorizar comandos."
+    },
+    {
+      "title": "Tipos de escaneo",
+      "summary": "Introducir conceptualmente distintos tipos de escaneo y por qué pueden producir resultados diferentes.\nCentrarse especialmente en comprender la diferencia entre comprobar conexiones y detectar puertos."
+    },
+    {
+      "title": "Identificación de servicios y versiones",
+      "summary": "Explicar cómo podemos pasar de saber:\nPuerto 22 abierto\na obtener información como:\nSSH — OpenSSH x.x\ny por qué conocer la versión puede ser importante para evaluar seguridad."
+    },
+    {
+      "title": "Detección del sistema operativo",
+      "summary": "Explicar cómo una herramienta puede intentar inferir si un objetivo utiliza Linux, Windows u otro sistema analizando su comportamiento de red.\nAclarar que estas detecciones no son siempre exactas."
+    },
+    {
+      "title": "Nmap Scripting Engine",
+      "summary": "Introducir Nmap Scripting Engine.\nExplicar que permite automatizar tareas de descubrimiento, enumeración y comprobaciones de seguridad dentro de un entorno autorizado.\nNo hace falta entrar todavía en scripts agresivos o evasivos."
+    },
+    {
+      "title": "Escaneo y enumeración: diferencias",
+      "summary": "Diferenciar claramente:\nEscaneo: descubrir qué existe.\nEnumeración: obtener información detallada sobre ello.\nEste concepto es fundamental para los temas siguientes."
+    },
+    {
+      "title": "Metodología para enumerar servicios",
+      "summary": "Explicar cómo analizar un servicio encontrado:\n- Qué software es.\n- Qué versión.\n- Cómo se configura.\n- Qué información revela.\n- Qué funciones permite.\nMostrar una metodología general antes de entrar en protocolos concretos."
+    },
+    {
+      "title": "Enumeración de FTP",
+      "summary": "Analizar qué información podemos obtener de un servidor FTP autorizado.\nExplicar autenticación, acceso anónimo, archivos disponibles y configuraciones relevantes."
+    },
+    {
+      "title": "Enumeración de SSH",
+      "summary": "Explicar qué información puede proporcionar SSH y qué aspectos interesa comprobar durante una auditoría.\nNo convertirlo todavía en un vídeo de ataques contra contraseñas."
+    },
+    {
+      "title": "Enumeración de SMB",
+      "summary": "Introducir SMB desde la perspectiva de pentesting:\n- Shares.\n- Usuarios.\n- Archivos.\n- Permisos.\n- Información del sistema.\nMuy importante para posteriormente trabajar con entornos Windows."
+    },
+    {
+      "title": "Enumeración de DNS",
+      "summary": "Explicar qué información puede revelar DNS sobre la infraestructura de una organización:\n- Registros.\n- Hosts.\n- Subdominios.\n- Servidores."
+    },
+    {
+      "title": "Otros servicios: SMTP, SNMP, LDAP, RDP y NFS",
+      "summary": "Introducción a servicios como:\n- SMTP.\n- SNMP.\n- LDAP.\n- RDP.\n- NFS.\n- Bases de datos.\nNo hace falta dedicar inicialmente un vídeo completo a todos, pero sí enseñar que cada servicio requiere una enumeración diferente."
+    },
+    {
+      "title": "Banner grabbing",
+      "summary": "Explicar qué es obtener el \"banner\" de un servicio y cómo puede revelar software, versión u otra información útil.\nRelacionarlo con curl, conexiones TCP y otras herramientas ya conocidas."
+    },
+    {
+      "title": "Reconocimiento de aplicaciones web",
+      "summary": "Antes de la ruta específica de hacking web, enseñar únicamente reconocimiento web:\n- Tecnologías.\n- Directorios.\n- Archivos.\n- Subdominios.\n- Headers.\n- Servidor web.\nLas vulnerabilidades web concretas se dejan para la Ruta 07."
+    },
+    {
+      "title": "Descubrimiento de directorios y archivos",
+      "summary": "Explicar que una aplicación puede contener rutas, directorios o archivos que no aparecen en los enlaces visibles.\nIntroducir herramientas de descubrimiento de contenido dentro de laboratorios."
+    },
+    {
+      "title": "De la enumeración al análisis de vulnerabilidades",
+      "summary": "Explicar cómo se pasa de:\n\"tengo este servicio y esta versión\"\na:\n\"¿existen problemas de seguridad conocidos?\"\nEnseñar que una herramienta automática proporciona pistas, no verdades absolutas."
+    },
+    {
+      "title": "Escáneres de vulnerabilidades y validación",
+      "summary": "Introducir conceptualmente herramientas como Nessus, OpenVAS/Greenbone u otras.\nExplicar:\n- Qué hacen.\n- Qué detectan.\n- Falsos positivos.\n- Falsos negativos.\n- Por qué un pentester debe validar manualmente los resultados."
+    },
+    {
+      "title": "Investigar CVE y versiones afectadas",
+      "summary": "Aplicar los conocimientos de la Ruta 05.\nPartiendo de un software y versión determinados, aprender a investigar:\n- CVE.\n- Severidad.\n- Versiones afectadas.\n- Parche disponible.\n- Descripción técnica."
+    },
+    {
+      "title": "Leer y revisar un exploit público",
+      "summary": "Explicar qué es un exploit público, dónde pueden documentarse pruebas de concepto y por qué nunca deberíamos ejecutar código desconocido sin revisarlo.\nEnseñar a leer y entender un exploit antes de utilizarlo en un laboratorio."
+    },
+    {
+      "title": "Buscar exploits conocidos",
+      "summary": "Introducir repositorios y herramientas de búsqueda de exploits conocidos.\nEl objetivo debe ser aprender a investigar vulnerabilidades, no simplemente copiar y ejecutar comandos."
+    },
+    {
+      "title": "Metasploit: conceptos fundamentales",
+      "summary": "Explicar conceptos fundamentales:\n- Module.\n- Exploit.\n- Payload.\n- Target.\n- Options.\n- Session.\nMostrar su funcionamiento con una máquina deliberadamente vulnerable."
+    },
+    {
+      "title": "Explotación controlada en laboratorio",
+      "summary": "Mostrar el proceso completo dentro de un laboratorio:\nvulnerabilidad identificada → validación → selección del método → explotación → evidencia.\nEl énfasis debe estar en la metodología, no en \"conseguir entrar\"."
+    },
+    {
+      "title": "Qué significa obtener una shell",
+      "summary": "Explicar qué significa conseguir acceso a una shell en otra máquina y qué diferencia existe entre tener acceso a un servicio y poder ejecutar comandos en el sistema."
+    },
+    {
+      "title": "Reverse shell y bind shell",
+      "summary": "Explicar conceptualmente las dos arquitecturas:\nReverse shell: el objetivo inicia la conexión.\nBind shell: el objetivo escucha esperando una conexión.\nRelacionarlo con IP, puertos, cliente y servidor vistos en Redes."
+    },
+    {
+      "title": "Shells interactivas en laboratorio",
+      "summary": "Explicar, dentro de un laboratorio, por qué algunas shells iniciales son muy limitadas y qué significa conseguir una terminal más funcional o interactiva.\nNo es necesario entrar todavía en técnicas de evasión."
+    },
+    {
+      "title": "Transferir archivos entre máquinas del laboratorio",
+      "summary": "Explicar las diferentes formas legítimas de mover herramientas, evidencias o archivos entre máquinas del laboratorio.\nRelacionarlo con HTTP, SSH/SCP y otros mecanismos ya estudiados."
+    },
+    {
+      "title": "Credenciales y ataques online y offline",
+      "summary": "Introducir los distintos problemas relacionados con credenciales:\n- Contraseñas débiles.\n- Contraseñas reutilizadas.\n- Credenciales por defecto.\n- Credenciales expuestas.\n- Hashes.\nDiferenciar claramente ataques online y offline."
+    },
+    {
+      "title": "Fuerza bruta, diccionarios, spraying y stuffing",
+      "summary": "Explicar conceptualmente:\n- Fuerza bruta.\n- Ataque de diccionario.\n- Password spraying.\n- Credential stuffing.\nEnseñarlos únicamente contra servicios de laboratorio y explicar también protecciones como MFA, rate limiting y bloqueo de cuentas."
+    },
+    {
+      "title": "Auditar hashes con John the Ripper y Hashcat",
+      "summary": "Relacionarlo con criptografía.\nExplicar que si durante un laboratorio se obtiene legítimamente un hash, puede comprobarse la fortaleza de la contraseña utilizando herramientas como John the Ripper o Hashcat.\nDiferenciar claramente cracking offline de intentar contraseñas contra un servicio real."
+    },
+    {
+      "title": "Introducción a la post-explotación",
+      "summary": "Introducción a post-explotación.\nExplicar que obtener una shell no suele ser el final de un pentest.\nEl siguiente objetivo es comprender:\n- Qué usuario somos.\n- Qué permisos tenemos.\n- Qué sistema tenemos delante.\n- Qué información relevante existe.\n- Qué riesgos permite demostrar el acceso conseguido."
+    },
+    {
+      "title": "Enumeración del sistema tras obtener acceso",
+      "summary": "Aplicar todo lo aprendido en Linux y Windows para analizar:\n- Usuario actual.\n- Grupos.\n- Procesos.\n- Servicios.\n- Interfaces.\n- Conexiones.\n- Software.\n- Archivos.\n- Permisos."
+    },
+    {
+      "title": "Qué es la escalada de privilegios",
+      "summary": "Explicar qué significa pasar de un usuario limitado a uno con mayores privilegios.\nEjemplo:\nusuario → root\no\nusuario estándar → administrador/SYSTEM\nMostrar por qué esta fase es tan importante."
+    },
+    {
+      "title": "Escalada de privilegios en Linux: qué buscar",
+      "summary": "Introducir los grandes grupos de problemas que pueden permitir una escalada en laboratorios:\n- Permisos incorrectos.\n- SUID.\n- sudo.\n- Servicios.\n- Tareas programadas.\n- Credenciales.\n- Software vulnerable.\nLa finalidad es enseñar qué buscar, no memorizar una receta."
+    },
+    {
+      "title": "Escalada de privilegios en Windows: fundamentos",
+      "summary": "Introducción equivalente:\n- Servicios.\n- Permisos.\n- Tareas programadas.\n- Credenciales.\n- Configuraciones.\n- Software vulnerable.\nServirá además como puente hacia una futura ruta específica de Windows/Active Directory."
+    },
+    {
+      "title": "Herramientas de enumeración local",
+      "summary": "Explicar que existen scripts que recopilan información del sistema para detectar posibles vectores.\nEnseñar a interpretar los resultados en lugar de depender ciegamente de la herramienta."
+    },
+    {
+      "title": "Introducción a Active Directory",
+      "summary": "Introducción muy breve a:\n- Dominio.\n- Domain Controller.\n- Usuarios.\n- Grupos.\n- Kerberos.\n- NTLM.\nNo enseñar todavía ataques específicos contra AD; eso merece una ruta propia más adelante."
+    },
+    {
+      "title": "Movimiento lateral: concepto y contexto",
+      "summary": "Explicar conceptualmente qué significa que un atacante o pentester autorizado pase de una máquina comprometida a otra dentro de la misma infraestructura.\nRelacionarlo con segmentación, credenciales y permisos."
+    },
+    {
+      "title": "Pivoting: acceder a una red interna",
+      "summary": "Explicar mediante un esquema:\nTu máquina → equipo accesible → red interna que tú no podías alcanzar directamente\nMostrar el concepto sin entrar todavía en configuraciones avanzadas."
+    },
+    {
+      "title": "Túneles y reenvío de puertos",
+      "summary": "Explicar conceptualmente cómo una conexión puede utilizarse para acceder de forma controlada a servicios que se encuentran detrás de otra máquina.\nRelacionarlo con SSH y redes."
+    },
+    {
+      "title": "Demostrar impacto sin causar daño",
+      "summary": "Explicar que el objetivo profesional no es causar daño, sino demostrar hasta dónde podría llegar un atacante.\nEjemplos seguros:\n- Acceso a información ficticia.\n- Acceso administrativo.\n- Posibilidad de acceder a otro sistema.\n- Exposición de credenciales de laboratorio."
+    },
+    {
+      "title": "Recopilar y organizar evidencias",
+      "summary": "Explicar cómo guardar:\n- Capturas.\n- Comandos utilizados.\n- Resultados.\n- Fechas.\n- Hosts.\n- Vulnerabilidades.\n- Pruebas de impacto.\nUna vulnerabilidad sin evidencia clara es mucho más difícil de reportar correctamente."
+    },
+    {
+      "title": "Limpieza y restauración del entorno",
+      "summary": "Explicar que una auditoría profesional debe dejar el entorno como estaba siempre que sea posible.\nEliminar cuentas, archivos o cambios creados durante las pruebas y documentar cualquier modificación realizada."
+    },
+    {
+      "title": "Priorizar hallazgos según el riesgo",
+      "summary": "Aplicar CVSS, impacto real y contexto empresarial.\nMostrar que dos vulnerabilidades técnicamente iguales pueden tener riesgos muy distintos dependiendo del sistema afectado."
+    },
+    {
+      "title": "Cómo estructurar un informe de pentesting",
+      "summary": "Explicar la estructura:\n- Resumen ejecutivo.\n- Alcance.\n- Metodología.\n- Hallazgos.\n- Severidad.\n- Evidencias.\n- Impacto.\n- Reproducción controlada.\n- Recomendaciones.\nDejar claro que el informe es uno de los principales productos del pentest."
+    },
+    {
+      "title": "Redactar un hallazgo completo",
+      "summary": "Tomar una vulnerabilidad ficticia y convertirla en un hallazgo completo:\nTítulo → descripción → activo afectado → evidencia → impacto → severidad → recomendación."
+    },
+    {
+      "title": "Proponer remediaciones",
+      "summary": "Explicar que el trabajo no acaba en \"esto es vulnerable\".\nEnseñar a proponer soluciones:\n- Actualizar.\n- Cambiar configuración.\n- Limitar permisos.\n- Segmentar.\n- Eliminar servicios innecesarios.\n- Mejorar autenticación."
+    },
+    {
+      "title": "Retest: comprobar las correcciones",
+      "summary": "Explicar qué ocurre después de que la organización aplique las correcciones y cómo se comprueba que una vulnerabilidad ya no puede reproducirse."
+    },
+    {
+      "title": "Laboratorio guiado: pentest de una máquina",
+      "summary": "Dar una máquina vulnerable al alumno y hacerle seguir toda la metodología:\n1. Identificar objetivo.\n2. Descubrir puertos.\n3. Enumerar servicios.\n4. Investigar vulnerabilidades.\n5. Explotar una vulnerabilidad de laboratorio.\n6. Conseguir acceso.\n7. Enumerar el sistema.\n8. Escalar privilegios si el laboratorio está diseñado para ello.\n9. Recopilar evidencias.\n10. Proponer remediaciones."
+    },
+    {
+      "title": "Proyecto final: auditoría e informe completos",
+      "summary": "Crear un pequeño entorno con varias máquinas o servicios vulnerables.\nEl alumno deberá trabajar prácticamente como en una auditoría:\nscope → reconocimiento → enumeración → análisis → explotación controlada → post-explotación → evidencias → informe → recomendaciones.\nEl resultado final no será simplemente conseguir una flag, sino entregar un informe de pentesting completo."
+    }
+  ];
+
   const routeTopicBlueprints = {
     "linux-sistemas": ["Qué es Linux y por qué se usa tanto en ciberseguridad", "Distribuciones Linux: Ubuntu, Debian, Kali y Parrot", "Terminal de Linux: moverte sin perderte", "Archivos, permisos y propietarios en Linux", "Usuarios, grupos y privilegios", "Procesos, servicios y demonios", "Gestores de paquetes y repositorios", "Variables de entorno y PATH", "Redirecciones, pipes y filtros", "Scripts básicos con Bash", "SSH explicado desde cero", "Máquinas virtuales y entornos seguros", "Instalar Kali Linux sin romper nada", "Primer laboratorio Linux controlado"],
     "redes-desde-cero": ["Qué es una IP y para qué sirve", "Direcciones MAC: el DNI invisible de tus dispositivos", "IP pública vs IP privada", "Router, switch, módem y punto de acceso", "Puertos: qué son y para qué sirven", "TCP y UDP explicados juntos", "DNS: cómo se traducen dominios a IP", "DHCP: cómo tu equipo recibe configuración", "NAT: por qué muchos equipos salen con una IP", "Subredes explicadas sin dolor", "Ping, traceroute y conectividad básica", "Wireshark: leer paquetes por primera vez", "Qué pasa cuando te conectas a una red Wi-Fi", "VPN: cuándo sirve y cuándo no"],
@@ -4635,6 +4878,21 @@ function normalizeRoadmapLearningStructure() {
           relatedVideos: (relatedVideoIds[index] || []).map((id) => existingTopics.find((topic) => topic.id === id)).filter((topic) => topic?.url)
         };
       });
+    } else if (route.id === "hacking-pentesting") {
+      const osintVideo = route.topics.find((topic) => topic.id === "topic-152");
+      route.topics = pentestTopicPlan.map(({ title, summary }, index) => ({
+        id: `topic-pentest-plan-${index + 1}`,
+        title,
+        summary,
+        tags: ["Pentesting"],
+        level: route.level,
+        route: route.title,
+        status: "pending",
+        statusLabel: "Pendiente",
+        url: "",
+        thumbnail: "",
+        relatedVideos: index === 8 && osintVideo?.url ? [osintVideo] : []
+      }));
     } else if (blueprint) {
       route.topics = blueprint.map((title, index) => {
         const existing = route.topics[index] || {};
