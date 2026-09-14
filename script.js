@@ -5203,6 +5203,378 @@ function normalizeRoadmapLearningStructure() {
     }
   ];
 
+  const osintTopicPlan = [
+    {
+      "title": "¿Qué es OSINT?",
+      "summary": "Explicar qué significa Open Source Intelligence y qué diferencia existe entre buscar información y realizar una investigación estructurada."
+    },
+    {
+      "title": "OSINT no significa \"buscar en Google\"",
+      "summary": "Explicar que una investigación combina:\n\nFuentes.\nHipótesis.\nVerificación.\nCorrelación.\nDocumentación.\nConclusiones."
+    },
+    {
+      "title": "El ciclo de una investigación OSINT",
+      "summary": "Presentar una metodología básica:\n\nDefinir la pregunta.\nIdentificar fuentes.\nRecopilar información.\nAnalizarla.\nVerificarla.\nDocumentarla.\nElaborar conclusiones."
+    },
+    {
+      "title": "Define primero qué estás buscando",
+      "summary": "Explicar por qué una investigación debe comenzar con una pregunta concreta.\n\nEjemplo:\n\n\"¿Qué infraestructura pública pertenece a esta empresa?\"\n\nes mucho mejor que:\n\n\"Voy a buscar cosas sobre esta empresa.\""
+    },
+    {
+      "title": "Fuentes primarias y fuentes secundarias",
+      "summary": "Diferenciar información publicada directamente por la entidad investigada de información publicada por terceros."
+    },
+    {
+      "title": "Cómo valorar la fiabilidad de una fuente",
+      "summary": "Analizar:\n\nAutor.\nFecha.\nContexto.\nEvidencias.\nPosibles sesgos.\nCorroboración."
+    },
+    {
+      "title": "Correlación: una pista sola no demuestra nada",
+      "summary": "Explicar por qué varias fuentes independientes son mucho más fiables que una única coincidencia."
+    },
+    {
+      "title": "Falsos positivos en OSINT",
+      "summary": "Mostrar cómo dos personas, dominios, nombres de usuario o empresas pueden compartir nombres similares y llevar a conclusiones incorrectas."
+    },
+    {
+      "title": "Google como herramienta OSINT",
+      "summary": "Explicar cómo funcionan los motores de búsqueda y por qué una buena consulta puede descubrir información muy diferente de una búsqueda normal."
+    },
+    {
+      "title": "Operadores de búsqueda",
+      "summary": "Introducir operadores como:\n\n\"frase exacta\"\nsite:\nfiletype:\nintitle:\ninurl:\nexclusiones con -\n\nUsarlos sobre fuentes públicas y con fines de investigación legítimos."
+    },
+    {
+      "title": "Google Dorks",
+      "summary": "Explicar qué es un \"dork\" y cómo combinar operadores para localizar información indexada.\n\nDejar claro que encontrar algo expuesto públicamente no implica tener permiso para acceder a sistemas restringidos."
+    },
+    {
+      "title": "Otros motores de búsqueda",
+      "summary": "Explicar por qué conviene contrastar resultados utilizando diferentes motores y cómo sus índices pueden ser distintos."
+    },
+    {
+      "title": "Buscar documentos públicos",
+      "summary": "Explicar cómo localizar PDFs, presentaciones, hojas de cálculo y otros documentos publicados por organizaciones."
+    },
+    {
+      "title": "Cachés y copias indexadas",
+      "summary": "Explicar que contenido eliminado de una página puede seguir apareciendo temporalmente en buscadores, cachés u otros servicios."
+    },
+    {
+      "title": "Wayback Machine",
+      "summary": "Explicar cómo consultar versiones antiguas de sitios web y qué información puede obtenerse comparando cambios a lo largo del tiempo."
+    },
+    {
+      "title": "Investigar cómo ha cambiado una web",
+      "summary": "Buscar:\n\nPáginas eliminadas.\nProductos antiguos.\nEquipos anteriores.\nDatos históricos.\nCambios de estructura."
+    },
+    {
+      "title": "Crear una línea temporal",
+      "summary": "Explicar cómo organizar acontecimientos y evidencias cronológicamente para entender mejor una investigación."
+    },
+    {
+      "title": "Investigar un dominio",
+      "summary": "Repasar:\n\nDominio.\nTLD.\nDNS.\nSubdominio.\nIP.\n\nAplicarlo a investigación OSINT."
+    },
+    {
+      "title": "WHOIS y datos de registro",
+      "summary": "Explicar qué información puede estar disponible sobre el registro de un dominio y cómo las protecciones de privacidad han reducido los datos públicos disponibles."
+    },
+    {
+      "title": "DNS como fuente de información",
+      "summary": "Investigar registros como:\n\nA.\nAAAA.\nMX.\nNS.\nTXT.\nCNAME.\n\nExplicar qué puede sugerir cada uno sobre una organización."
+    },
+    {
+      "title": "Subdominios",
+      "summary": "Explicar cómo los subdominios pueden revelar servicios públicos como:\n\nmail.\nvpn.\ndev.\napi.\nportal.\n\nTrabajar únicamente con infraestructura pública y autorizada."
+    },
+    {
+      "title": "Certificate Transparency",
+      "summary": "Explicar cómo los certificados TLS públicos pueden revelar nombres de dominio y subdominios asociados."
+    },
+    {
+      "title": "IPs, ASN y proveedores",
+      "summary": "Explicar:\n\nIP.\nRango.\nASN.\nISP.\nProveedor cloud.\n\nMostrar cómo ayudan a entender dónde está alojada una infraestructura."
+    },
+    {
+      "title": "Shodan explicado desde cero",
+      "summary": "Explicar qué indexa Shodan y por qué permite buscar servicios visibles públicamente en Internet.\n\nCentrarse en análisis e investigación, no en explotación."
+    },
+    {
+      "title": "Censys y otros buscadores de infraestructura",
+      "summary": "Explicar herramientas similares y cómo permiten analizar certificados, hosts y servicios expuestos."
+    },
+    {
+      "title": "Relacionar dominios, IPs y servicios",
+      "summary": "Crear un esquema:\n\ndominio → DNS → IP → proveedor → servicios públicos\n\ny enseñar cómo correlacionar estos elementos."
+    },
+    {
+      "title": "Identificar tecnologías de una página web",
+      "summary": "Explicar cómo determinar si una web utiliza:\n\nWordPress.\nNginx.\nApache.\nFrameworks.\nCDN.\nAnalítica.\nServicios externos."
+    },
+    {
+      "title": "Cabeceras HTTP como fuente OSINT",
+      "summary": "Mostrar cómo determinadas respuestas HTTP pueden aportar información sobre tecnología e infraestructura."
+    },
+    {
+      "title": "Código fuente público de una web",
+      "summary": "Explicar qué información puede encontrarse legítimamente en HTML, JavaScript y recursos públicos."
+    },
+    {
+      "title": "robots.txt y sitemap.xml",
+      "summary": "Explicar qué son y por qué pueden aportar información sobre la estructura pública de una web.\n\nAclarar que una ruta mencionada en robots.txt no se convierte automáticamente en un recurso autorizado."
+    },
+    {
+      "title": "GitHub como fuente OSINT",
+      "summary": "Explicar cómo repositorios públicos pueden revelar información sobre proyectos, tecnologías, documentación y estructura de una organización."
+    },
+    {
+      "title": "Buscar información dentro de repositorios",
+      "summary": "Investigar:\n\nNombres de proyectos.\nDependencias.\nConfiguraciones públicas.\nDocumentación.\nHistorial de cambios."
+    },
+    {
+      "title": "Historial de commits",
+      "summary": "Explicar que Git conserva cambios y que una investigación puede analizar cómo ha evolucionado públicamente un proyecto."
+    },
+    {
+      "title": "Secretos expuestos accidentalmente",
+      "summary": "Explicar a nivel defensivo que claves, tokens o credenciales no deberían publicarse en repositorios.\n\nEl objetivo es reconocer el riesgo y saber reportarlo responsablemente, no utilizar credenciales encontradas."
+    },
+    {
+      "title": "Investigar una empresa con OSINT",
+      "summary": "Aprender a recopilar información pública sobre:\n\nWeb oficial.\nProductos.\nFiliales.\nUbicaciones corporativas.\nTecnologías.\nProveedores.\nEmpleo.\nInfraestructura."
+    },
+    {
+      "title": "Ofertas de empleo como fuente de información",
+      "summary": "Explicar cómo una oferta puede revelar tecnologías utilizadas:\n\nAWS\nKubernetes\nPython\nActive Directory\nSplunk\n\ny cómo esto permite comprender mejor el stack tecnológico de una organización."
+    },
+    {
+      "title": "Documentación corporativa pública",
+      "summary": "Analizar:\n\nInformes.\nNotas de prensa.\nPresentaciones.\nDocumentación técnica.\nPolíticas públicas."
+    },
+    {
+      "title": "Organigramas y relaciones empresariales",
+      "summary": "Explicar cómo identificar públicamente departamentos, filiales, proveedores y relaciones entre empresas."
+    },
+    {
+      "title": "Nombres de usuario",
+      "summary": "Explicar que un mismo alias puede utilizarse en varios servicios y cómo esto puede ayudar a relacionar presencia pública.\n\nEvitar asumir que una coincidencia de username demuestra identidad."
+    },
+    {
+      "title": "Herramientas de búsqueda de usernames",
+      "summary": "Mostrar herramientas que comprueban públicamente si un nombre de usuario existe en distintas plataformas.\n\nCentrarse en cuentas públicas y casos legítimos."
+    },
+    {
+      "title": "Presencia digital y perfiles públicos",
+      "summary": "Explicar cómo una persona u organización decide qué información publica y cómo diferentes perfiles pueden ofrecer contexto."
+    },
+    {
+      "title": "Verificación de identidad",
+      "summary": "Enseñar a distinguir:\n\n\"He encontrado dos perfiles parecidos\"\n\nde\n\n\"Tengo evidencias suficientes para afirmar que pertenecen a la misma entidad.\"\n\nLa segunda afirmación requiere varias señales independientes."
+    },
+    {
+      "title": "Cómo funciona una dirección de correo corporativa",
+      "summary": "Explicar formatos habituales:\n\nnombre.apellido@empresa.com\n\ny cómo las organizaciones suelen seguir convenciones."
+    },
+    {
+      "title": "Correos públicos en una investigación",
+      "summary": "Explicar cómo localizar direcciones publicadas oficialmente en:\n\nWebs.\nContactos.\nPDFs.\nNotas de prensa.\n\nNo fomentar la recopilación masiva de direcciones personales."
+    },
+    {
+      "title": "Cabeceras de correo electrónico",
+      "summary": "Explicar qué información técnica contienen las cabeceras de un mensaje:\n\nServidores.\nFechas.\nSPF.\nDKIM.\nDMARC.\nRutas de entrega."
+    },
+    {
+      "title": "Verificar un correo sospechoso",
+      "summary": "Aplicar las cabeceras y la investigación de dominios para analizar un posible phishing.\n\nEste tema conecta muy bien con Blue Team."
+    },
+    {
+      "title": "Búsqueda inversa de imágenes",
+      "summary": "Explicar cómo buscar dónde ha aparecido una imagen anteriormente y cómo esto ayuda a detectar reutilizaciones o contexto falso."
+    },
+    {
+      "title": "Metadatos de imágenes",
+      "summary": "Explicar qué es EXIF y qué tipo de información puede contener un archivo.\n\nAclarar que muchas plataformas eliminan estos metadatos al subir imágenes."
+    },
+    {
+      "title": "Verificar si una imagen está fuera de contexto",
+      "summary": "Analizar:\n\nFecha.\nLugar.\nVersiones anteriores.\nPublicación original.\nContexto."
+    },
+    {
+      "title": "Manipulación de imágenes",
+      "summary": "Introducir señales que pueden sugerir edición o reutilización, dejando claro que la inspección visual por sí sola no siempre demuestra manipulación."
+    },
+    {
+      "title": "Introducción a la geolocalización OSINT",
+      "summary": "Explicar cómo elementos visibles públicamente pueden ayudar a identificar de forma aproximada el lugar donde se tomó una imagen:\n\nIdioma.\nSeñales.\nArquitectura.\nCarreteras.\nVegetación.\nTransporte.\n\nUtilizar ejercicios y lugares públicos, no localización de domicilios o personas privadas."
+    },
+    {
+      "title": "Mapas y Street View",
+      "summary": "Utilizar mapas para contrastar referencias públicas, calles, edificios conocidos y puntos de interés."
+    },
+    {
+      "title": "Sombras, clima y entorno",
+      "summary": "Introducir que la luz, orientación, vegetación o meteorología pueden aportar pistas, pero deben tratarse como indicios y no como pruebas definitivas."
+    },
+    {
+      "title": "Imágenes de satélite",
+      "summary": "Explicar qué tipo de información pueden aportar imágenes satelitales públicas en investigaciones geográficas."
+    },
+    {
+      "title": "Verificación de vídeos",
+      "summary": "Explicar cómo analizar:\n\nFotogramas.\nAudio.\nSeñales.\nEdificios.\nTexto.\nPublicaciones anteriores."
+    },
+    {
+      "title": "Extraer fotogramas para investigar un vídeo",
+      "summary": "Mostrar conceptualmente cómo seleccionar imágenes clave de un vídeo para realizar búsquedas inversas o comparar detalles."
+    },
+    {
+      "title": "Determinar el origen de un vídeo",
+      "summary": "Explicar cómo intentar encontrar la publicación más antigua conocida y evitar confundir una republicación con la fuente original."
+    },
+    {
+      "title": "Redes sociales como fuente OSINT",
+      "summary": "Explicar qué información pública puede aportar una plataforma social y por qué los datos deben interpretarse con cautela."
+    },
+    {
+      "title": "Fechas, publicaciones y contexto",
+      "summary": "Mostrar cómo reconstruir cronologías utilizando contenido publicado públicamente."
+    },
+    {
+      "title": "Relaciones y conexiones públicas",
+      "summary": "Explicar que menciones, colaboraciones o interacciones pueden sugerir relaciones, pero no deben tratarse automáticamente como hechos confirmados."
+    },
+    {
+      "title": "Contenido eliminado y republicado",
+      "summary": "Explicar cómo una captura o republicación puede sobrevivir después de borrar el original y por qué siempre debemos buscar su procedencia."
+    },
+    {
+      "title": "¿Cómo verificar una noticia?",
+      "summary": "Crear un método:\n\nBuscar la fuente original.\nComprobar fecha.\nBuscar otras fuentes.\nRevisar imagen/vídeo.\nAnalizar contexto.\nBuscar evidencias independientes."
+    },
+    {
+      "title": "Desinformación, misinformation y manipulación",
+      "summary": "Explicar diferencias conceptuales y cómo pueden circular contenidos incorrectos sin que necesariamente exista intención maliciosa."
+    },
+    {
+      "title": "Detectar contenido sacado de contexto",
+      "summary": "Mostrar cómo una fotografía real puede utilizarse para contar una historia falsa simplemente cambiando fecha, lugar o descripción."
+    },
+    {
+      "title": "Deepfakes y contenido generado por IA",
+      "summary": "Explicar las limitaciones de intentar detectar contenido generado únicamente \"a ojo\".\n\nPriorizar procedencia, contexto y fuentes frente a detectores automáticos."
+    },
+    {
+      "title": "OPSEC para investigadores",
+      "summary": "Explicar qué significa Operational Security y por qué un investigador debe pensar en qué información expone durante su trabajo."
+    },
+    {
+      "title": "Separar investigación y vida personal",
+      "summary": "Recomendar trabajar con entornos adecuados, cuentas específicas cuando sea necesario y buenas prácticas de privacidad."
+    },
+    {
+      "title": "Navegadores, perfiles y entornos de investigación",
+      "summary": "Explicar conceptualmente cómo separar sesiones, perfiles de navegador y entornos de trabajo."
+    },
+    {
+      "title": "VPN, proxy y Tor: qué hacen y qué NO hacen",
+      "summary": "Repasar las diferencias y desmontar la idea de que utilizar estas herramientas convierte automáticamente a alguien en anónimo."
+    },
+    {
+      "title": "Automatizar tareas OSINT",
+      "summary": "Explicar cómo pequeños scripts pueden ahorrar trabajo repetitivo al consultar o procesar información pública."
+    },
+    {
+      "title": "APIs para OSINT",
+      "summary": "Utilizar APIs públicas para obtener información de forma estructurada y relacionarlo con programación y JSON."
+    },
+    {
+      "title": "Maltego y análisis de relaciones",
+      "summary": "Introducir herramientas gráficas que permiten representar entidades y relaciones.\n\nEl objetivo es visualizar información, no asumir que todas las relaciones generadas son ciertas."
+    },
+    {
+      "title": "Cómo guardar evidencias",
+      "summary": "Registrar:\n\nURL.\nFecha.\nFuente.\nCaptura.\nArchivo.\nContexto.\nObservaciones."
+    },
+    {
+      "title": "Preservar fuentes",
+      "summary": "Explicar por qué una página puede cambiar o desaparecer y por qué es importante conservar evidencia de forma legítima."
+    },
+    {
+      "title": "Notas y estructura de investigación",
+      "summary": "Enseñar a separar:\n\nHechos confirmados.\nPistas.\nHipótesis.\nDudas.\nConclusiones."
+    },
+    {
+      "title": "Mapas de relaciones",
+      "summary": "Representar gráficamente conexiones entre:\n\nDominios.\nIPs.\nEmpresas.\nServicios.\nDocumentos.\nEventos."
+    },
+    {
+      "title": "Cómo escribir un informe OSINT",
+      "summary": "Estructura:\n\nObjetivo.\nAlcance.\nMetodología.\nFuentes.\nHallazgos.\nNivel de confianza.\nLimitaciones.\nConclusiones."
+    },
+    {
+      "title": "Niveles de confianza",
+      "summary": "Evitar afirmaciones absolutas.\n\nUtilizar expresiones como:\n\nConfirmado.\nAltamente probable.\nPosible.\nNo verificado.\n\nY explicar qué evidencias justifican cada nivel."
+    },
+    {
+      "title": "OSINT durante un pentest",
+      "summary": "Mostrar cómo el reconocimiento de fuentes abiertas puede ayudar a comprender una organización antes de realizar pruebas técnicas autorizadas."
+    },
+    {
+      "title": "OSINT para Blue Team",
+      "summary": "Explicar cómo puede utilizarse para investigar:\n\nDominios sospechosos.\nIPs.\nCampañas.\nPhishing.\nInfraestructura maliciosa."
+    },
+    {
+      "title": "Threat Intelligence y OSINT",
+      "summary": "Relacionar fuentes abiertas con inteligencia de amenazas.\n\nExplicar que OSINT es una fuente de inteligencia, pero no toda Threat Intelligence es OSINT."
+    },
+    {
+      "title": "Investigar un dominio sospechoso",
+      "summary": "Crear un flujo defensivo:\n\ndominio → DNS → WHOIS → certificados → IP → ASN → reputación → relaciones."
+    },
+    {
+      "title": "Investigar una IP sospechosa",
+      "summary": "Analizar de forma defensiva:\n\nPropietario.\nASN.\nPaís aproximado.\nServicios públicos.\nReputación.\nDominios asociados."
+    },
+    {
+      "title": "Analizar una campaña de phishing",
+      "summary": "Combinar:\n\nCorreo.\nDominio.\nDNS.\nCertificados.\nPágina falsa.\nInfraestructura.\nIOC.\n\nEste puede ser uno de los mejores laboratorios de toda la ruta."
+    },
+    {
+      "title": "OSINT no es doxxing",
+      "summary": "Explicar que recopilar datos públicos no justifica exponer innecesariamente información personal o utilizarla para acosar, intimidar o perjudicar a alguien."
+    },
+    {
+      "title": "Privacidad y minimización de datos",
+      "summary": "Recoger únicamente la información necesaria para el objetivo legítimo de la investigación."
+    },
+    {
+      "title": "Legalidad y términos de servicio",
+      "summary": "Explicar que una fuente sea accesible desde Internet no implica necesariamente que cualquier forma de recopilación o automatización esté permitida."
+    },
+    {
+      "title": "Laboratorio: investiga una empresa ficticia",
+      "summary": "Proporcionar una organización creada para el ejercicio.\n\nEl alumno deberá identificar:\n\nDominio.\nSubdominios.\nDNS.\nCertificados.\nInfraestructura pública.\nTecnologías.\nDocumentos.\nPerfiles corporativos.\nInformación histórica."
+    },
+    {
+      "title": "Laboratorio: verifica una imagen",
+      "summary": "Dar una fotografía pública de ejercicio y pedir:\n\nBuscar origen.\nComparar versiones.\nIdentificar contexto.\nAproximar ubicación si procede.\nDocumentar evidencias."
+    },
+    {
+      "title": "Laboratorio: analiza un correo de phishing",
+      "summary": "Investigar:\n\nRemitente.\nCabeceras.\nDominio.\nURL.\nInfraestructura.\nIOC.\nEvidencias."
+    },
+    {
+      "title": "Laboratorio: verifica una noticia viral",
+      "summary": "El alumno deberá encontrar la fuente original, comprobar imágenes, fecha y contexto y emitir una conclusión con nivel de confianza."
+    },
+    {
+      "title": "Proyecto final: investigación OSINT completa",
+      "summary": "Entregar un caso ficticio que combine:\n\nEmpresa.\nInfraestructura.\nDominios.\nDocumentos.\nCódigo público.\nImágenes.\nRedes sociales.\nCronología."
+    }
+  ];
+  const osintIntroVideo = roadmapRoutes.flatMap((route) => route.topics).find((topic) => topic.id === "topic-152");
+
   const routeTopicBlueprints = {
     "linux-sistemas": ["Qué es Linux y por qué se usa tanto en ciberseguridad", "Distribuciones Linux: Ubuntu, Debian, Kali y Parrot", "Terminal de Linux: moverte sin perderte", "Archivos, permisos y propietarios en Linux", "Usuarios, grupos y privilegios", "Procesos, servicios y demonios", "Gestores de paquetes y repositorios", "Variables de entorno y PATH", "Redirecciones, pipes y filtros", "Scripts básicos con Bash", "SSH explicado desde cero", "Máquinas virtuales y entornos seguros", "Instalar Kali Linux sin romper nada", "Primer laboratorio Linux controlado"],
     "redes-desde-cero": ["Qué es una IP y para qué sirve", "Direcciones MAC: el DNI invisible de tus dispositivos", "IP pública vs IP privada", "Router, switch, módem y punto de acceso", "Puertos: qué son y para qué sirven", "TCP y UDP explicados juntos", "DNS: cómo se traducen dominios a IP", "DHCP: cómo tu equipo recibe configuración", "NAT: por qué muchos equipos salen con una IP", "Subredes explicadas sin dolor", "Ping, traceroute y conectividad básica", "Wireshark: leer paquetes por primera vez", "Qué pasa cuando te conectas a una red Wi-Fi", "VPN: cuándo sirve y cuándo no"],
@@ -5329,6 +5701,29 @@ function normalizeRoadmapLearningStructure() {
         url: "",
         thumbnail: ""
       }));
+    } else if (route.id === "casos-reales") {
+      const existingTopics = route.topics;
+      const relatedVideoIds = {
+        68: ["topic-192"],
+        79: ["topic-193", "topic-194", "topic-196"],
+        84: ["topic-198"]
+      };
+      route.topics = osintTopicPlan.map(({ title, summary }, index) => {
+        const existing = index === 0 ? osintIntroVideo : null;
+        return {
+          id: `topic-osint-plan-${index + 1}`,
+          title,
+          summary,
+          tags: ["OSINT"],
+          level: route.level,
+          route: route.title,
+          status: existing?.url ? "published" : "pending",
+          statusLabel: existing?.url ? "Publicado" : "Pendiente",
+          url: existing?.url || "",
+          thumbnail: existing?.thumbnail || "",
+          relatedVideos: (relatedVideoIds[index] || []).map((id) => existingTopics.find((topic) => topic.id === id)).filter((topic) => topic?.url)
+        };
+      });
     } else if (blueprint) {
       route.topics = blueprint.map((title, index) => {
         const existing = route.topics[index] || {};
