@@ -4780,6 +4780,429 @@ function normalizeRoadmapLearningStructure() {
     }
   ];
 
+  const webSecurityTopicPlan = [
+    {
+      "title": "Qué analiza un pentester web",
+      "summary": "Explicar qué analiza un pentester web y por qué una aplicación puede ser vulnerable aunque el servidor y la red estén correctamente configurados."
+    },
+    {
+      "title": "Dónde aparecen las vulnerabilidades web",
+      "summary": "Repasar:\ncliente → servidor → API → base de datos → servicios externos.\nExplicar dónde pueden aparecer vulnerabilidades en cada parte."
+    },
+    {
+      "title": "Metodología de un pentest web",
+      "summary": "Presentar un proceso general:\n1. Reconocimiento.\n2. Mapeo.\n3. Enumeración.\n4. Análisis de funcionalidades.\n5. Pruebas de vulnerabilidades.\n6. Validación.\n7. Impacto.\n8. Informe."
+    },
+    {
+      "title": "Burp Suite: proxy y herramientas",
+      "summary": "Explicar qué es Burp Suite y cómo actúa como proxy entre navegador y servidor.\nIntroducir:\n- Proxy.\n- HTTP History.\n- Repeater.\n- Intruder.\n- Decoder.\n- Comparer."
+    },
+    {
+      "title": "Interceptar y modificar peticiones en laboratorio",
+      "summary": "Mostrar en un laboratorio cómo visualizar una petición HTTP antes de que llegue al servidor y modificar parámetros para comprender el funcionamiento del proxy."
+    },
+    {
+      "title": "Burp Repeater",
+      "summary": "Explicar cómo repetir una petición manualmente, modificar parámetros y comparar respuestas.\nDebería convertirse en una de las herramientas principales de toda la ruta."
+    },
+    {
+      "title": "Burp Intruder",
+      "summary": "Introducir cómo automatizar variaciones de peticiones dentro de laboratorios.\nExplicar posiciones, payloads y resultados sin convertirlo simplemente en una herramienta de fuerza bruta."
+    },
+    {
+      "title": "Mapear una aplicación web",
+      "summary": "Antes de buscar vulnerabilidades, identificar:\n- Páginas.\n- Formularios.\n- Parámetros.\n- Cookies.\n- Endpoints.\n- APIs.\n- Funciones.\n- Roles.\n- Tecnologías."
+    },
+    {
+      "title": "Descubrir contenido oculto",
+      "summary": "Buscar en laboratorios rutas, directorios y recursos no enlazados directamente desde la interfaz.\nExplicar por qué encontrar una ruta oculta no implica automáticamente una vulnerabilidad."
+    },
+    {
+      "title": "Subdominios y superficie de ataque",
+      "summary": "Explicar por qué una organización puede tener muchas aplicaciones distintas bajo diferentes subdominios.\nRelacionarlo con reconocimiento y superficie de ataque."
+    },
+    {
+      "title": "Broken Access Control",
+      "summary": "Explicar qué ocurre cuando una aplicación no comprueba correctamente qué recursos puede utilizar cada usuario.\nDebe ser uno de los conceptos centrales de la ruta."
+    },
+    {
+      "title": "IDOR: referencias directas a objetos",
+      "summary": "Explicar el concepto de Insecure Direct Object Reference.\nEjemplo conceptual:\n/profile?id=15\ny qué ocurre si el servidor confía únicamente en ese identificador sin comprobar permisos."
+    },
+    {
+      "title": "Escalada horizontal de privilegios",
+      "summary": "Explicar qué significa acceder a recursos de otro usuario del mismo nivel.\nEjemplo:\nusuario A → información de usuario B."
+    },
+    {
+      "title": "Escalada vertical de privilegios",
+      "summary": "Explicar qué significa conseguir funciones reservadas a usuarios con más permisos.\nEjemplo:\nusuario normal → funciones de administrador."
+    },
+    {
+      "title": "Controles en la interfaz y en el servidor",
+      "summary": "Explicar por qué eliminar un botón de la interfaz no protege necesariamente el endpoint del servidor."
+    },
+    {
+      "title": "Fallos de autenticación",
+      "summary": "Explicar qué puede fallar en sistemas de login:\n- Contraseñas débiles.\n- Enumeración de usuarios.\n- Recuperación de contraseña.\n- MFA.\n- Sesiones.\n- Rate limiting."
+    },
+    {
+      "title": "Enumeración de usuarios",
+      "summary": "Explicar cómo diferencias en mensajes, tiempos o respuestas pueden revelar si una cuenta existe."
+    },
+    {
+      "title": "Ataques a contraseñas en laboratorio",
+      "summary": "Repasar conceptualmente:\n- Diccionario.\n- Fuerza bruta.\n- Credential stuffing.\n- Password spraying.\nSiempre dentro de entornos de laboratorio."
+    },
+    {
+      "title": "Rate limiting en la autenticación",
+      "summary": "Explicar cómo una aplicación intenta limitar intentos automatizados y por qué estas defensas deben estar correctamente diseñadas."
+    },
+    {
+      "title": "Recuperación de contraseñas",
+      "summary": "Analizar cómo funcionan los flujos de \"He olvidado mi contraseña\" y qué errores de diseño pueden hacerlos inseguros."
+    },
+    {
+      "title": "Errores de implementación de MFA",
+      "summary": "Explicar que tener MFA no garantiza automáticamente un flujo seguro si existen fallos en su implementación."
+    },
+    {
+      "title": "Gestión insegura de sesiones",
+      "summary": "Explicar qué ocurre si una aplicación gestiona incorrectamente identificadores de sesión."
+    },
+    {
+      "title": "Session fixation",
+      "summary": "Explicar conceptualmente qué significa que un atacante consiga fijar previamente un identificador de sesión."
+    },
+    {
+      "title": "Secuestro de sesión",
+      "summary": "Explicar conceptualmente qué significa obtener una sesión válida perteneciente a otro usuario."
+    },
+    {
+      "title": "Configuración segura de cookies",
+      "summary": "Repasar atributos como:\n- Secure.\n- HttpOnly.\n- SameSite.\n- Domain.\n- Path.\nExplicar por qué una mala configuración puede aumentar el riesgo."
+    },
+    {
+      "title": "SQL Injection: cómo se produce",
+      "summary": "Explicar primero el problema:\nentrada del usuario → consulta SQL construida incorrectamente.\nEl alumno debe entender por qué se produce, no memorizar cadenas."
+    },
+    {
+      "title": "Modificar la lógica de una consulta SQL",
+      "summary": "Mostrar conceptualmente cómo una entrada controlada por el usuario puede modificar la lógica de una consulta."
+    },
+    {
+      "title": "SQL Injection en un inicio de sesión",
+      "summary": "Explicar por qué un login mal construido puede verse afectado por una inyección SQL."
+    },
+    {
+      "title": "SQL Injection basada en UNION",
+      "summary": "Explicar qué significa combinar resultados de varias consultas y por qué puede permitir acceder a información adicional."
+    },
+    {
+      "title": "Blind SQL Injection",
+      "summary": "Explicar cómo puede existir una SQLi incluso cuando la base de datos no muestra directamente los resultados."
+    },
+    {
+      "title": "SQL Injection: errores y tiempos",
+      "summary": "Introducir las distintas formas de inferir información a través de errores o diferencias temporales."
+    },
+    {
+      "title": "Prevenir SQL Injection",
+      "summary": "Explicar:\n- Consultas parametrizadas.\n- Prepared Statements.\n- Validación.\n- Mínimo privilegio.\nDejar claro que escapar manualmente cadenas no debería ser la principal defensa."
+    },
+    {
+      "title": "XSS: datos que se interpretan como código",
+      "summary": "Explicar cómo datos controlados por el usuario pueden terminar siendo interpretados como código JavaScript por el navegador."
+    },
+    {
+      "title": "XSS reflejado",
+      "summary": "Explicar cuándo el payload viaja en una petición y aparece inmediatamente en la respuesta."
+    },
+    {
+      "title": "XSS almacenado",
+      "summary": "Explicar cuándo la entrada se guarda en el servidor y afecta posteriormente a otros usuarios."
+    },
+    {
+      "title": "DOM-based XSS",
+      "summary": "Explicar cuándo el problema aparece dentro del propio JavaScript del navegador."
+    },
+    {
+      "title": "Impacto de XSS",
+      "summary": "Explicar posibles consecuencias:\n- Modificar la página.\n- Actuar en nombre del usuario.\n- Acceder a información accesible desde JavaScript.\n- Phishing dentro de la propia aplicación."
+    },
+    {
+      "title": "Prevenir XSS",
+      "summary": "Explicar:\n- Output encoding.\n- Sanitización.\n- Evitar sinks inseguros.\n- Content Security Policy como capa adicional."
+    },
+    {
+      "title": "CSRF: peticiones no deseadas",
+      "summary": "Explicar cómo un atacante puede intentar aprovechar una sesión ya autenticada para provocar una petición no deseada."
+    },
+    {
+      "title": "Tokens anti-CSRF",
+      "summary": "Explicar qué son, por qué funcionan y qué características debería tener un token correctamente implementado."
+    },
+    {
+      "title": "SameSite frente a CSRF",
+      "summary": "Relacionar las cookies SameSite con lo aprendido anteriormente."
+    },
+    {
+      "title": "Defensas contra CSRF",
+      "summary": "Combinar:\n- Tokens.\n- SameSite.\n- Comprobaciones adicionales.\n- Buen diseño de endpoints."
+    },
+    {
+      "title": "Política del mismo origen",
+      "summary": "Repasar qué recursos puede leer una página desde otro origen y por qué el navegador impone restricciones."
+    },
+    {
+      "title": "Configuraciones inseguras de CORS",
+      "summary": "Explicar cómo una configuración demasiado permisiva puede permitir que otros orígenes accedan a información que no deberían."
+    },
+    {
+      "title": "CORS y credenciales",
+      "summary": "Explicar por qué permitir credenciales junto con orígenes mal controlados puede aumentar el impacto."
+    },
+    {
+      "title": "Path Traversal",
+      "summary": "Explicar qué ocurre cuando una aplicación permite controlar incorrectamente rutas del sistema de archivos.\nRelacionarlo con Linux:\n../\ny con la estructura de directorios aprendida anteriormente."
+    },
+    {
+      "title": "LFI y RFI: inclusión de archivos",
+      "summary": "Explicar los conceptos Local File Inclusion y Remote File Inclusion y por qué ciertas aplicaciones pueden intentar cargar archivos controlados por el usuario."
+    },
+    {
+      "title": "Subida insegura de archivos",
+      "summary": "Explicar cómo una función aparentemente sencilla como \"subir una foto\" puede generar riesgos si no se valida correctamente."
+    },
+    {
+      "title": "Validar y almacenar archivos de forma segura",
+      "summary": "Explicar:\n- Tipo real del archivo.\n- Extensión.\n- Tamaño.\n- Nombre.\n- Ubicación.\n- Permisos.\n- Procesamiento."
+    },
+    {
+      "title": "Command Injection",
+      "summary": "Explicar qué ocurre cuando una aplicación utiliza datos del usuario para construir comandos del sistema operativo.\nRelacionarlo con Bash y Linux."
+    },
+    {
+      "title": "Blind Command Injection",
+      "summary": "Explicar que una aplicación puede ejecutar comandos aunque su salida no aparezca directamente en la respuesta."
+    },
+    {
+      "title": "Prevenir Command Injection",
+      "summary": "Explicar que debe evitarse ejecutar comandos del sistema con entradas controlables siempre que sea posible y utilizar APIs seguras y validación estricta."
+    },
+    {
+      "title": "SSRF: peticiones desde el servidor",
+      "summary": "Explicar Server-Side Request Forgery con un esquema:\nusuario → aplicación → otro recurso.\nMostrar por qué puede permitir acceder a servicios que el usuario no podría alcanzar directamente."
+    },
+    {
+      "title": "SSRF y recursos internos",
+      "summary": "Explicar conceptualmente cómo el servidor puede tener acceso a sistemas internos que no son accesibles directamente desde Internet."
+    },
+    {
+      "title": "Blind SSRF",
+      "summary": "Explicar que puede existir SSRF aunque la aplicación no muestre directamente la respuesta del recurso solicitado."
+    },
+    {
+      "title": "Prevenir SSRF",
+      "summary": "Hablar de allowlists, validación de destinos, segmentación y restricciones de red."
+    },
+    {
+      "title": "XXE: entidades externas de XML",
+      "summary": "Partiendo de XML, explicar qué son las entidades externas y cómo un parser inseguro puede provocar comportamientos no deseados."
+    },
+    {
+      "title": "Impacto de XXE",
+      "summary": "Explicar conceptualmente posibles impactos:\n- Lectura de archivos.\n- Peticiones internas.\n- Denegación de servicio en determinadas circunstancias."
+    },
+    {
+      "title": "Prevenir XXE",
+      "summary": "Explicar configuraciones seguras de parsers y deshabilitación de funcionalidades innecesarias."
+    },
+    {
+      "title": "Motores de plantillas",
+      "summary": "Antes de enseñar SSTI, explicar qué hacen tecnologías como Jinja, Twig u otros sistemas similares."
+    },
+    {
+      "title": "SSTI: inyección en plantillas",
+      "summary": "Explicar qué ocurre cuando datos del usuario terminan siendo interpretados como una expresión de plantilla."
+    },
+    {
+      "title": "Impacto y prevención de SSTI",
+      "summary": "Explicar por qué dependiendo del motor puede llegar a tener consecuencias graves y cómo evitar evaluar entradas controladas."
+    },
+    {
+      "title": "Serialización y deserialización",
+      "summary": "Explicar cómo un programa convierte objetos en datos almacenables o transmisibles y posteriormente los reconstruye."
+    },
+    {
+      "title": "Deserialización insegura",
+      "summary": "Explicar por qué confiar en objetos manipulables por un usuario puede provocar comportamientos inesperados o peligrosos."
+    },
+    {
+      "title": "JWT: repaso de su estructura",
+      "summary": "Repasar:\nheader.payload.signature\ny aclarar nuevamente que el contenido normalmente está codificado, no cifrado."
+    },
+    {
+      "title": "Errores de seguridad en JWT",
+      "summary": "Explicar conceptualmente problemas como:\n- Verificación incorrecta de firmas.\n- Algoritmos mal configurados.\n- Secretos débiles.\n- Claims mal validados."
+    },
+    {
+      "title": "Validar JWT correctamente",
+      "summary": "Explicar validación de firma, expiración, issuer, audience, gestión de claves y diseño correcto."
+    },
+    {
+      "title": "OAuth: flujo y actores",
+      "summary": "Repasar el flujo conceptual de autorización y los actores implicados."
+    },
+    {
+      "title": "Riesgos de implementación de OAuth",
+      "summary": "Explicar riesgos alrededor de:\n- Redirect URIs.\n- State.\n- Tokens.\n- Vinculación de cuentas.\nSin entrar en técnicas contra proveedores reales."
+    },
+    {
+      "title": "OAuth y OpenID Connect",
+      "summary": "Explicar la diferencia conceptual entre OAuth y OpenID Connect para evitar una confusión muy habitual."
+    },
+    {
+      "title": "Pentesting de APIs",
+      "summary": "Explicar qué cambia cuando no estamos probando una interfaz web tradicional sino endpoints que devuelven JSON."
+    },
+    {
+      "title": "Enumerar endpoints de una API",
+      "summary": "Aprender a identificar:\n- Rutas.\n- Métodos.\n- Parámetros.\n- Versiones.\n- Documentación."
+    },
+    {
+      "title": "Autorización e IDOR en APIs",
+      "summary": "Aplicar Broken Access Control e IDOR a endpoints de APIs."
+    },
+    {
+      "title": "Mass Assignment",
+      "summary": "Explicar qué ocurre cuando una API permite modificar propiedades que el usuario no debería poder controlar."
+    },
+    {
+      "title": "Límites de uso en APIs",
+      "summary": "Analizar por qué determinados endpoints necesitan límites de uso."
+    },
+    {
+      "title": "API keys y sus permisos",
+      "summary": "Explicar qué es una API key y por qué no debería tratarse como información pública cuando concede privilegios."
+    },
+    {
+      "title": "GraphQL: queries, mutations y schema",
+      "summary": "Explicar queries, mutations y schema."
+    },
+    {
+      "title": "Seguridad en GraphQL",
+      "summary": "Introducir problemas relacionados con:\n- Autorización.\n- Introspection.\n- Consultas complejas.\n- Exposición excesiva de datos."
+    },
+    {
+      "title": "Seguridad en WebSockets",
+      "summary": "Explicar que una conexión WebSocket sigue necesitando autenticación, autorización y validación de los mensajes."
+    },
+    {
+      "title": "Autenticación y origen en WebSockets",
+      "summary": "Introducir conceptualmente cómo una mala gestión de autenticación y origen puede afectar conexiones WebSocket."
+    },
+    {
+      "title": "Vulnerabilidades de lógica de negocio",
+      "summary": "Explicar que no todas las vulnerabilidades son errores técnicos.\nEjemplos:\n- Comprar algo por un precio incorrecto.\n- Saltarse un paso obligatorio.\n- Utilizar una función en un orden inesperado."
+    },
+    {
+      "title": "Analizar flujos y pasos de una aplicación",
+      "summary": "Enseñar a analizar:\n\"¿Qué espera la aplicación que haga el usuario?\"\nfrente a:\n\"¿Qué pasa si hago las cosas en otro orden?\""
+    },
+    {
+      "title": "Race conditions",
+      "summary": "Explicar qué ocurre cuando varias peticiones realizadas prácticamente al mismo tiempo producen un estado inesperado.\nUtilizar ejemplos conceptuales como cupones o balances ficticios."
+    },
+    {
+      "title": "Exposición de información",
+      "summary": "Explicar cómo una aplicación puede revelar accidentalmente:\n- Versiones.\n- Rutas.\n- Errores.\n- Código.\n- Credenciales.\n- Datos internos.\n- Comentarios."
+    },
+    {
+      "title": "Errores que revelan detalles internos",
+      "summary": "Explicar por qué stack traces, SQL errors o rutas internas pueden facilitar el análisis de una aplicación."
+    },
+    {
+      "title": "Clickjacking y sus defensas",
+      "summary": "Explicar cómo una página puede intentar engañar visualmente al usuario para que haga clic sobre otra interfaz.\nIntroducir X-Frame-Options y frame-ancestors de CSP."
+    },
+    {
+      "title": "Ataques a la cabecera Host",
+      "summary": "Explicar por qué algunas aplicaciones confían incorrectamente en la cabecera Host para generar URLs o tomar decisiones."
+    },
+    {
+      "title": "Límites de peticiones entre servidores",
+      "summary": "Antes de Request Smuggling, explicar que en arquitecturas con frontend y backend ambos deben estar de acuerdo sobre dónde termina una petición."
+    },
+    {
+      "title": "HTTP Request Smuggling",
+      "summary": "Explicar conceptualmente cómo discrepancias entre servidores pueden provocar que interpreten límites de peticiones de forma diferente.\nEste debe ser un tema avanzado."
+    },
+    {
+      "title": "Web Cache Poisoning",
+      "summary": "Explicar qué ocurre cuando un atacante consigue que una caché almacene una respuesta manipulada que posteriormente reciben otros usuarios."
+    },
+    {
+      "title": "Web Cache Deception",
+      "summary": "Explicar cómo determinadas diferencias en la interpretación de rutas pueden hacer que una caché almacene información que debería ser privada."
+    },
+    {
+      "title": "Prototype Pollution",
+      "summary": "Introducir primero cómo funciona la herencia mediante prototipos en JavaScript y explicar conceptualmente qué ocurre cuando propiedades controladas contaminan objetos globales.\nTema avanzado."
+    },
+    {
+      "title": "NoSQL Injection",
+      "summary": "Partiendo de lo aprendido sobre MongoDB y bases NoSQL, explicar que también pueden sufrir inyecciones si la aplicación construye consultas de forma insegura."
+    },
+    {
+      "title": "Mapa de vulnerabilidades web",
+      "summary": "Crear un mapa general de todas las vulnerabilidades vistas y clasificarlas según dónde aparece principalmente el problema.\nEl objetivo es ordenar mentalmente toda la ruta."
+    },
+    {
+      "title": "Escáneres web y sus limitaciones",
+      "summary": "Introducir herramientas automáticas de análisis web y explicar sus limitaciones.\nUn escáner puede encontrar pistas, pero no sustituye el razonamiento humano."
+    },
+    {
+      "title": "Escaneo automatizado con Burp Suite",
+      "summary": "Si se dispone de una edición que lo permita, explicar conceptualmente cómo funciona el escaneo automatizado y cómo validar manualmente sus resultados."
+    },
+    {
+      "title": "Herramientas complementarias",
+      "summary": "Introducir el ecosistema de herramientas adicionales sin convertir la metodología en una colección de programas."
+    },
+    {
+      "title": "Cómo razonar al analizar una aplicación",
+      "summary": "Enseñar una metodología mental:\n- ¿Qué controla el usuario?\n- ¿Dónde acaba ese dato?\n- ¿Quién confía en él?\n- ¿Qué ocurre si lo modifico?\n- ¿Qué debería comprobar el servidor?\n- ¿Qué pasa si elimino o repito pasos?\nEste debería ser uno de los vídeos más importantes de toda la ruta."
+    },
+    {
+      "title": "Seguir el flujo de datos del usuario",
+      "summary": "Explicar que un parámetro puede terminar en:\n- Una consulta SQL.\n- HTML.\n- JavaScript.\n- Un comando.\n- Una ruta.\n- Una API.\n- Una plantilla.\n- Una petición interna.\nEnseñar a pensar en flujo de datos."
+    },
+    {
+      "title": "Validar con la mínima prueba necesaria",
+      "summary": "Explicar cómo validar una vulnerabilidad utilizando la prueba mínima necesaria.\nNo borrar, modificar o exfiltrar información real innecesariamente."
+    },
+    {
+      "title": "Documentar un hallazgo web",
+      "summary": "Estructura recomendada:\n- Título.\n- Endpoint.\n- Descripción.\n- Pasos reproducibles.\n- Evidencia.\n- Impacto.\n- Severidad.\n- Recomendación."
+    },
+    {
+      "title": "Recomendar una solución técnica",
+      "summary": "No limitarse a:\n\"Arreglar el XSS.\"\nExplicar por qué ocurre y qué cambio técnico debería realizarse."
+    },
+    {
+      "title": "Laboratorio guiado de seguridad web",
+      "summary": "Dar una aplicación deliberadamente vulnerable y pedir:\n1. Mapear la aplicación.\n2. Identificar funcionalidades.\n3. Interceptar tráfico.\n4. Analizar autenticación.\n5. Analizar autorización.\n6. Probar entradas.\n7. Identificar varias vulnerabilidades.\n8. Documentarlas."
+    },
+    {
+      "title": "Proyecto final: auditoría web completa",
+      "summary": "Realizar un pentest completo contra una aplicación de laboratorio.\nEl alumno deberá entregar:\n- Mapa de la aplicación.\n- Metodología.\n- Vulnerabilidades encontradas.\n- Evidencias.\n- Severidad.\n- Impacto.\n- Recomendaciones.\n- Informe final.\nEl objetivo ya no debe ser simplemente conseguir flags, sino realizar una auditoría web estructurada."
+    },
+    {
+      "title": "Cierre de ruta: metodología y competencias",
+      "summary": "Al completar la Ruta 07, el alumno debería ser capaz de abrir una aplicación web desconocida de laboratorio y seguir un proceso como:\nMapeo\n↓\nInterceptar tráfico\n↓\nEntender parámetros y funcionalidades\n↓\nAnalizar autenticación\n↓\nAnalizar autorización\n↓\nSeguir entradas controladas por el usuario\n↓\nIdentificar posibles vulnerabilidades\n↓\nValidarlas de forma controlada\n↓\nDeterminar impacto\n↓\nProponer una solución\n↓\nDocumentar el hallazgo\nDebería comprender vulnerabilidades como:\n- Broken Access Control.\n- IDOR.\n- Authentication vulnerabilities.\n- Session vulnerabilities.\n- SQL Injection.\n- XSS.\n- CSRF.\n- CORS.\n- Path Traversal.\n- File Inclusion.\n- File Upload vulnerabilities.\n- Command Injection.\n- SSRF.\n- XXE.\n- SSTI.\n- Insecure Deserialization.\n- JWT vulnerabilities.\n- OAuth vulnerabilities.\n- API vulnerabilities.\n- GraphQL vulnerabilities.\n- WebSocket vulnerabilities.\n- Business Logic vulnerabilities.\n- Race Conditions.\n- Information Disclosure.\n- Clickjacking.\n- Host Header attacks.\n- Request Smuggling.\n- Cache Poisoning.\n- Prototype Pollution.\n- NoSQL Injection."
+    }
+  ];
+
   const routeTopicBlueprints = {
     "linux-sistemas": ["Qué es Linux y por qué se usa tanto en ciberseguridad", "Distribuciones Linux: Ubuntu, Debian, Kali y Parrot", "Terminal de Linux: moverte sin perderte", "Archivos, permisos y propietarios en Linux", "Usuarios, grupos y privilegios", "Procesos, servicios y demonios", "Gestores de paquetes y repositorios", "Variables de entorno y PATH", "Redirecciones, pipes y filtros", "Scripts básicos con Bash", "SSH explicado desde cero", "Máquinas virtuales y entornos seguros", "Instalar Kali Linux sin romper nada", "Primer laboratorio Linux controlado"],
     "redes-desde-cero": ["Qué es una IP y para qué sirve", "Direcciones MAC: el DNI invisible de tus dispositivos", "IP pública vs IP privada", "Router, switch, módem y punto de acceso", "Puertos: qué son y para qué sirven", "TCP y UDP explicados juntos", "DNS: cómo se traducen dominios a IP", "DHCP: cómo tu equipo recibe configuración", "NAT: por qué muchos equipos salen con una IP", "Subredes explicadas sin dolor", "Ping, traceroute y conectividad básica", "Wireshark: leer paquetes por primera vez", "Qué pasa cuando te conectas a una red Wi-Fi", "VPN: cuándo sirve y cuándo no"],
@@ -4892,6 +5315,19 @@ function normalizeRoadmapLearningStructure() {
         url: "",
         thumbnail: "",
         relatedVideos: index === 8 && osintVideo?.url ? [osintVideo] : []
+      }));
+    } else if (route.id === "hacking-web") {
+      route.topics = webSecurityTopicPlan.map(({ title, summary }, index) => ({
+        id: `topic-web-security-plan-${index + 1}`,
+        title,
+        summary,
+        tags: ["Seguridad web"],
+        level: route.level,
+        route: route.title,
+        status: "pending",
+        statusLabel: "Pendiente",
+        url: "",
+        thumbnail: ""
       }));
     } else if (blueprint) {
       route.topics = blueprint.map((title, index) => {
