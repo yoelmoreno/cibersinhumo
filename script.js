@@ -3439,11 +3439,11 @@ const roadmapRoutes = [
   }
 ,
   {
-    "id": "programacion-hacking",
+    "id": "active-directory",
     "level": "Nivel 10",
-    "title": "Programacion orientada al hacking",
-    "description": "Scripting, automatizacion y lenguajes utiles para entender herramientas, crear pruebas y leer codigo.",
-    "icon": "code",
+    "title": "Active Directory y entornos Windows",
+    "description": "Arquitectura de AD, Kerberos, autenticación, GPO, BloodHound, ataques, movimiento lateral y auditoría.",
+    "icon": "network",
     "topics": []
   },
   {
@@ -3637,6 +3637,7 @@ function normalizeRoadmapLearningStructure() {
     "hacking-web": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Seguridad web", title: "Seguridad web y hacking web", description: "Burp Suite, peticiones HTTP, SQL Injection, XSS, sesiones y vulnerabilidades web." },
     "casos-reales": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Investigación digital", title: "OSINT e investigación digital", description: "Búsqueda de información pública, metadatos, huella digital, verificación y casos reales." },
     "defensa-siguiente-paso": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Blue Team", title: "Introducción al Blue Team", description: "Defensa, SOC, SIEM, EDR, telemetría, logs, detección, respuesta a incidentes y laboratorios defensivos." },
+    "active-directory": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Active Directory", title: "Active Directory y entornos Windows", description: "Arquitectura de AD, Kerberos, autenticación, GPO, BloodHound, ataques, movimiento lateral y auditoría." },
     "programacion-hacking": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Programar para ciber", title: "Programación para ciberseguridad", description: "Python, Bash, C, JavaScript, APIs, sockets, automatización y lectura de exploits." },
     "criptografia": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Cripto aplicada", title: "Criptografía aplicada", description: "Cifrado, hashing, claves, certificados, TLS, firmas digitales y seguridad real." }
   };
@@ -5944,6 +5945,393 @@ function normalizeRoadmapLearningStructure() {
     }
 ];
 
+  const adTopicPlan = [
+    {
+        "title": "¿Qué es Active Directory?",
+        "summary": "Explicar qué problema resuelve Active Directory y por qué una empresa puede utilizar un sistema centralizado para gestionar:\n\nUsuarios.\nEquipos.\nGrupos.\nPermisos.\nPolíticas.\nRecursos."
+    },
+    {
+        "title": "¿Qué es un dominio?",
+        "summary": "Explicar conceptos como:\n\nDominio.\nControlador de dominio.\nCliente.\nServidor.\nCuenta de usuario.\n\nConstruir un ejemplo sencillo de una empresa ficticia."
+    },
+    {
+        "title": "Active Directory vs Azure/Entra ID",
+        "summary": "Diferenciar:\n\nActive Directory Domain Services.\nMicrosoft Entra ID.\n\nExplicar que no son simplemente \"el mismo Active Directory en Internet\" y cuándo se utilizan."
+    },
+    {
+        "title": "Montar un laboratorio de Active Directory",
+        "summary": "Crear un pequeño laboratorio:\n\nWindows Server.\nDomain Controller.\nWindows cliente.\nUsuarios.\nGrupos.\nDNS.\n\nEste laboratorio será la base práctica de toda la ruta."
+    },
+    {
+        "title": "¿Qué es un Domain Controller?",
+        "summary": "Explicar qué funciones desempeña un DC y por qué es una pieza crítica de la infraestructura."
+    },
+    {
+        "title": "AD DS",
+        "summary": "Explicar Active Directory Domain Services y cómo almacena información sobre objetos del dominio."
+    },
+    {
+        "title": "Usuarios, grupos y equipos",
+        "summary": "Introducir los principales objetos de Active Directory."
+    },
+    {
+        "title": "Organizational Units",
+        "summary": "Explicar qué son las OU y para qué sirven."
+    },
+    {
+        "title": "Forests, Trees y Domains",
+        "summary": "Explicar la jerarquía:\n\nForest → Tree → Domain → OU\n\nUtilizar diagramas para hacerlo visual."
+    },
+    {
+        "title": "Global Catalog",
+        "summary": "Explicar qué es y para qué sirve."
+    },
+    {
+        "title": "DNS en Active Directory",
+        "summary": "Explicar por qué DNS es fundamental para que Active Directory funcione correctamente.\n\nRelacionarlo con la Ruta 02 de Redes."
+    },
+    {
+        "title": "¿Cómo inicia sesión un usuario en un dominio?",
+        "summary": "Explicar el proceso de autenticación desde que el usuario introduce: usuario + contraseña, hasta obtener acceso a recursos."
+    },
+    {
+        "title": "Kerberos desde cero",
+        "summary": "Explicar:\n\nCliente.\nKDC.\nAuthentication Server.\nTicket Granting Ticket.\nTicket Granting Service.\n\nNo empezar todavía con ataques."
+    },
+    {
+        "title": "Tickets de Kerberos",
+        "summary": "Explicar qué representa un ticket y por qué permite autenticarse frente a determinados servicios sin enviar continuamente la contraseña."
+    },
+    {
+        "title": "NTLM",
+        "summary": "Explicar qué es NTLM y por qué todavía aparece en determinados entornos."
+    },
+    {
+        "title": "Kerberos vs NTLM",
+        "summary": "Comparar:\n\nFuncionamiento.\nSeguridad.\nDependencias.\nCasos de uso."
+    },
+    {
+        "title": "LDAP",
+        "summary": "Explicar qué es LDAP y cómo se utiliza para consultar información del directorio."
+    },
+    {
+        "title": "SMB",
+        "summary": "Repasar SMB ahora desde la perspectiva empresarial:\n\nShares.\nAutenticación.\nPermisos.\nRecursos compartidos."
+    },
+    {
+        "title": "Grupos de seguridad",
+        "summary": "Explicar cómo permiten asignar permisos a conjuntos de usuarios."
+    },
+    {
+        "title": "Grupos privilegiados",
+        "summary": "Analizar grupos como:\n\nDomain Admins.\nEnterprise Admins.\nAdministrators.\n\nExplicar por qué deben protegerse especialmente."
+    },
+    {
+        "title": "Service Accounts",
+        "summary": "Explicar qué son las cuentas utilizadas por servicios y por qué pueden convertirse en un riesgo si tienen demasiados privilegios."
+    },
+    {
+        "title": "Managed Service Accounts",
+        "summary": "Introducir MSA/gMSA y explicar cómo ayudan a gestionar credenciales de servicios."
+    },
+    {
+        "title": "Delegación de privilegios",
+        "summary": "Explicar el principio: un usuario debería tener únicamente los permisos que necesita.\n\nRelacionarlo con Least Privilege."
+    },
+    {
+        "title": "¿Qué es Group Policy?",
+        "summary": "Explicar cómo una organización puede aplicar configuraciones a muchos equipos simultáneamente."
+    },
+    {
+        "title": "GPOs",
+        "summary": "Introducir:\n\nComputer Configuration.\nUser Configuration.\nPolíticas.\nHerencia."
+    },
+    {
+        "title": "Seguridad mediante Group Policy",
+        "summary": "Aplicar GPOs a:\n\nContraseñas.\nFirewall.\nAuditoría.\nRestricciones.\nPowerShell.\nServicios."
+    },
+    {
+        "title": "Errores de configuración en GPO",
+        "summary": "Explicar cómo una política mal configurada puede afectar a toda una organización."
+    },
+    {
+        "title": "SYSVOL y políticas del dominio",
+        "summary": "Explicar qué es SYSVOL y por qué es importante para el funcionamiento del dominio."
+    },
+    {
+        "title": "¿Qué significa enumerar un dominio?",
+        "summary": "Explicar qué información puede intentar obtener un usuario autorizado:\n\nUsuarios.\nGrupos.\nEquipos.\nServicios.\nRelaciones.\nPermisos."
+    },
+    {
+        "title": "PowerView",
+        "summary": "Introducirlo como herramienta de enumeración dentro de un laboratorio."
+    },
+    {
+        "title": "BloodHound",
+        "summary": "Explicar qué problema resuelve: \"Tengo cientos de usuarios, grupos y equipos. ¿Cómo descubro las relaciones importantes?\""
+    },
+    {
+        "title": "SharpHound",
+        "summary": "Explicar cómo recopila información para construir las relaciones que posteriormente analiza BloodHound."
+    },
+    {
+        "title": "Leer un grafo de BloodHound",
+        "summary": "Aprender conceptos como:\n\nusuario → grupo → equipo → privilegio → objetivo\n\nSin memorizar todas las queries."
+    },
+    {
+        "title": "¿Qué es una ACL?",
+        "summary": "Explicar Access Control Lists y cómo determinan quién puede realizar determinadas acciones."
+    },
+    {
+        "title": "DACL y ACE",
+        "summary": "Introducir:\n\nDACL.\nACE.\nPermisos."
+    },
+    {
+        "title": "Permisos efectivos",
+        "summary": "Explicar por qué pertenecer a varios grupos puede hacer que los permisos finales sean diferentes de los que parece tener el usuario directamente."
+    },
+    {
+        "title": "ACLs peligrosas en Active Directory",
+        "summary": "Explicar conceptualmente cómo determinados permisos sobre objetos de AD pueden permitir obtener privilegios adicionales."
+    },
+    {
+        "title": "Delegación incorrecta",
+        "summary": "Analizar ejemplos de: \"Un usuario normal tiene capacidad para modificar algo que no debería.\""
+    },
+    {
+        "title": "Password Policy",
+        "summary": "Explicar:\n\nLongitud.\nComplejidad.\nHistorial.\nExpiración.\nBloqueo.\n\nY analizar sus ventajas y limitaciones."
+    },
+    {
+        "title": "Password Spraying",
+        "summary": "Explicar la diferencia entre: muchas contraseñas para un usuario vs una contraseña contra muchos usuarios."
+    },
+    {
+        "title": "Credential Stuffing",
+        "summary": "Relacionarlo con credenciales reutilizadas procedentes de otras filtraciones."
+    },
+    {
+        "title": "NTLM Hashes",
+        "summary": "Explicar qué es un hash NTLM y por qué proteger las credenciales almacenadas es fundamental."
+    },
+    {
+        "title": "Pass-the-Hash",
+        "summary": "Explicar conceptualmente cómo determinadas autenticaciones pueden realizarse utilizando material de autenticación obtenido sin conocer la contraseña original."
+    },
+    {
+        "title": "Credential Dumping",
+        "summary": "Explicar de forma defensiva dónde pueden aparecer credenciales o material de autenticación y por qué esto es importante."
+    },
+    {
+        "title": "Kerberoasting",
+        "summary": "Explicar:\n\nService Principal Name.\nCuentas de servicio.\nTickets.\nOffline cracking.\n\nRealizarlo exclusivamente en laboratorio."
+    },
+    {
+        "title": "AS-REP Roasting",
+        "summary": "Explicar qué ocurre cuando determinadas cuentas no requieren preautenticación Kerberos."
+    },
+    {
+        "title": "Golden Ticket",
+        "summary": "Explicar conceptualmente por qué comprometer determinadas claves de Kerberos puede tener consecuencias extremadamente graves para un dominio."
+    },
+    {
+        "title": "Silver Ticket",
+        "summary": "Diferenciarlo del Golden Ticket y explicar su alcance."
+    },
+    {
+        "title": "Pass-the-Ticket",
+        "summary": "Explicar conceptualmente el uso indebido de tickets Kerberos obtenidos durante un compromiso."
+    },
+    {
+        "title": "¿Qué es el movimiento lateral?",
+        "summary": "Explicar: equipo A → equipo B → equipo C, y por qué es uno de los grandes problemas de una red empresarial plana."
+    },
+    {
+        "title": "SMB y movimiento lateral",
+        "summary": "Explicar cómo SMB puede formar parte de determinados movimientos dentro de un entorno Windows."
+    },
+    {
+        "title": "Remote Desktop Protocol",
+        "summary": "Explicar RDP:\n\nQué es.\nCómo se utiliza.\nRiesgos.\nHardening."
+    },
+    {
+        "title": "WinRM",
+        "summary": "Introducir Windows Remote Management y su importancia en administración remota."
+    },
+    {
+        "title": "PsExec y ejecución remota",
+        "summary": "Explicar conceptualmente cómo determinadas herramientas pueden ejecutar procesos remotamente."
+    },
+    {
+        "title": "Escalada de privilegios en Windows",
+        "summary": "Repasar:\n\nServicios.\nPermisos.\nTareas.\nCredenciales.\nConfiguraciones."
+    },
+    {
+        "title": "Unquoted Service Paths",
+        "summary": "Explicar el problema y por qué una configuración incorrecta puede generar un vector de escalada."
+    },
+    {
+        "title": "Servicios con permisos incorrectos",
+        "summary": "Analizar cómo una cuenta con permisos excesivos sobre un servicio puede generar riesgo."
+    },
+    {
+        "title": "Scheduled Tasks",
+        "summary": "Repasar tareas programadas desde la perspectiva ofensiva y defensiva."
+    },
+    {
+        "title": "DLL Search Order Hijacking",
+        "summary": "Introducir conceptualmente cómo Windows busca determinadas DLL y cómo una mala configuración puede generar problemas."
+    },
+    {
+        "title": "¿Qué es persistencia?",
+        "summary": "Explicar cómo un atacante intenta mantener acceso después de reiniciar el equipo o cambiar determinadas credenciales."
+    },
+    {
+        "title": "Persistencia en Windows",
+        "summary": "Introducir categorías como:\n\nServicios.\nScheduled Tasks.\nRegistry.\nStartup.\nCuentas."
+    },
+    {
+        "title": "Persistencia en Active Directory",
+        "summary": "Explicar por qué determinados cambios en objetos privilegiados pueden permitir mantener acceso al dominio."
+    },
+    {
+        "title": "Cómo detectar persistencia",
+        "summary": "Relacionarlo directamente con la Ruta 09:\n\ncambio → log → alerta → investigación."
+    },
+    {
+        "title": "De un equipo comprometido al dominio",
+        "summary": "Explicar un escenario: máquina comprometida → credenciales → enumeración → relaciones → privilegios, sin asumir que todos los entornos siguen el mismo camino."
+    },
+    {
+        "title": "Attack Paths",
+        "summary": "Introducir el concepto de rutas de ataque:\n\nUsuario → Grupo → Equipo → Permiso → Administrador."
+    },
+    {
+        "title": "BloodHound para identificar Attack Paths",
+        "summary": "Utilizar el laboratorio para encontrar rutas de privilegios."
+    },
+    {
+        "title": "Domain Admin no debería ser el objetivo automático",
+        "summary": "Explicar que una auditoría profesional debe demostrar impacto de forma proporcional y controlada."
+    },
+    {
+        "title": "Hardening de Active Directory",
+        "summary": "Aplicar:\n\nLeast Privilege.\nMFA donde sea viable.\nTiering.\nSegmentación.\nGestión de cuentas privilegiadas.\nReducción de protocolos heredados."
+    },
+    {
+        "title": "Proteger cuentas privilegiadas",
+        "summary": "Explicar:\n\nSeparación de cuentas.\nAdministración controlada.\nMonitorización.\nRestricción de logins."
+    },
+    {
+        "title": "Proteger Kerberos",
+        "summary": "Explicar buenas prácticas relacionadas con:\n\nCuentas de servicio.\nContraseñas robustas.\nAES.\nReducción de configuraciones inseguras."
+    },
+    {
+        "title": "Reducir NTLM",
+        "summary": "Explicar por qué una organización puede intentar reducir la dependencia de NTLM y qué problemas de compatibilidad deben considerarse."
+    },
+    {
+        "title": "LAPS",
+        "summary": "Explicar cómo Microsoft LAPS ayuda a gestionar contraseñas de administradores locales de forma más segura."
+    },
+    {
+        "title": "Windows Defender y seguridad del endpoint",
+        "summary": "Relacionar AD con las defensas del endpoint vistas en la Ruta 09."
+    },
+    {
+        "title": "Tiering administrativo",
+        "summary": "Explicar por qué las cuentas administrativas no deberían utilizarse indistintamente en cualquier equipo."
+    },
+    {
+        "title": "Detectar Password Spraying",
+        "summary": "Utilizar logs de autenticación y correlación."
+    },
+    {
+        "title": "Detectar Kerberoasting",
+        "summary": "Explicar qué eventos y patrones pueden resultar relevantes para identificar actividad sospechosa."
+    },
+    {
+        "title": "Detectar movimiento lateral",
+        "summary": "Correlacionar:\n\nUsuario.\nHost origen.\nHost destino.\nServicio.\nHora."
+    },
+    {
+        "title": "Detectar cambios privilegiados",
+        "summary": "Monitorizar cambios en:\n\nGrupos.\nUsuarios.\nGPO.\nPermisos."
+    },
+    {
+        "title": "Detectar persistencia",
+        "summary": "Relacionar modificaciones del sistema con actividad de usuarios y procesos."
+    },
+    {
+        "title": "Mapear ataques AD a MITRE ATT&CK",
+        "summary": "Tomar diferentes técnicas y mostrar cómo pueden clasificarse dentro de ATT&CK."
+    },
+    {
+        "title": "¿Qué es Microsoft Entra ID?",
+        "summary": "Explicar:\n\nIdentidades cloud.\nUsuarios.\nGrupos.\nAplicaciones.\nConditional Access."
+    },
+    {
+        "title": "Active Directory híbrido",
+        "summary": "Explicar qué ocurre cuando una organización mantiene: AD local + Entra ID."
+    },
+    {
+        "title": "Sincronización de identidades",
+        "summary": "Explicar conceptualmente cómo pueden sincronizarse identidades entre entornos."
+    },
+    {
+        "title": "Conditional Access",
+        "summary": "Explicar cómo pueden aplicarse políticas basadas en:\n\nUsuario.\nDispositivo.\nUbicación.\nAplicación.\nRiesgo."
+    },
+    {
+        "title": "MFA y ataques contra identidad cloud",
+        "summary": "Explicar por qué MFA es importante y que una implementación incorrecta puede seguir dejando vectores de ataque."
+    },
+    {
+        "title": "Laboratorio: crea un dominio",
+        "summary": "Construir desde cero:\n\nDomain Controller.\nDNS.\nUsuarios.\nGrupos.\nCliente Windows.\nGPO."
+    },
+    {
+        "title": "Laboratorio: administra usuarios y permisos",
+        "summary": "Crear distintos roles:\n\nUsuario.\nHelpdesk.\nAdministrador.\nServicio.\n\nY aplicar permisos diferentes."
+    },
+    {
+        "title": "Laboratorio: enumera el dominio",
+        "summary": "Utilizar herramientas de Windows y herramientas de laboratorio para descubrir:\n\nUsuarios.\nGrupos.\nEquipos.\nRelaciones."
+    },
+    {
+        "title": "Laboratorio: BloodHound",
+        "summary": "Crear un escenario con una ruta de privilegios intencionadamente insegura y encontrarla mediante BloodHound."
+    },
+    {
+        "title": "Laboratorio: Kerberoasting",
+        "summary": "Utilizar cuentas de servicio deliberadamente vulnerables para comprender el ataque y posteriormente corregir la configuración."
+    },
+    {
+        "title": "Laboratorio: Password Spraying",
+        "summary": "Realizarlo exclusivamente contra el dominio de laboratorio y analizar después qué rastros deja en los logs."
+    },
+    {
+        "title": "Laboratorio: movimiento lateral",
+        "summary": "Partir de una máquina comprometida ficticia y analizar qué caminos permitirían alcanzar otro sistema."
+    },
+    {
+        "title": "Laboratorio: detectar el ataque",
+        "summary": "Ejecutar determinadas técnicas en el laboratorio y cambiar de perspectiva:\n\nRed Team → logs → SIEM → detección."
+    },
+    {
+        "title": "Laboratorio: hardening",
+        "summary": "Aplicar medidas de seguridad y comprobar cómo cambian:\n\nPermisos.\nAutenticación.\nVisibilidad.\nSuperficie de ataque."
+    },
+    {
+        "title": "Proyecto: auditoría completa de Active Directory",
+        "summary": "Crear un pequeño dominio empresarial ficticio con usuarios, grupos, GPO, servidores, clientes y cuentas de servicio. El alumno deberá recorrer las 8 fases: Reconocimiento, Enumeración, Identificación de riesgos, Validación, Detección, Hardening, Retesting e Informe final con hallazgos, evidencias y remediaciones."
+    },
+    {
+        "title": "Cierre de ruta: metodología y competencias en Active Directory",
+        "summary": "Al completar la Ruta 10, el alumno comprenderá la arquitectura completa de un dominio Active Directory, el ciclo de vida de la autenticación con Kerberos y NTLM, las rutas de ataque con BloodHound, las técnicas de escalada y movimiento lateral, y cómo auditar y proteger una infraestructura corporativa con criterios profesionales."
+    }
+];
+
   const osintIntroVideo = roadmapRoutes.flatMap((route) => route.topics).find((topic) => topic.id === "topic-152");
 
   const routeTopicBlueprints = {
@@ -6101,6 +6489,19 @@ function normalizeRoadmapLearningStructure() {
         title,
         summary,
         tags: ["Blue Team", "Defensa"],
+        level: route.level,
+        route: route.title,
+        status: "pending",
+        statusLabel: "Pendiente",
+        url: "",
+        thumbnail: ""
+      }));
+    } else if (route.id === "active-directory") {
+      route.topics = adTopicPlan.map(({ title, summary }, index) => ({
+        id: `topic-ad-plan-${index + 1}`,
+        title,
+        summary,
+        tags: ["Active Directory", "Windows"],
         level: route.level,
         route: route.title,
         status: "pending",
