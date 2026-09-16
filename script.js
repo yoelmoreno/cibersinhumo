@@ -3431,223 +3431,11 @@ const roadmapRoutes = [
   },
   {
     "id": "defensa-siguiente-paso",
-    "level": "Nivel 8",
-    "title": "Defensa y siguiente paso",
-    "description": "Blue Team, SOC, SIEM, EDR, hardening, respuesta a incidentes y siguientes pasos profesionales.",
+    "level": "Nivel 9",
+    "title": "Introducción al Blue Team",
+    "description": "Defensa, SOC, SIEM, EDR, telemetría, logs, detección, respuesta a incidentes y laboratorios defensivos.",
     "icon": "defense",
-    "topics": [
-      {
-        "id": "topic-211",
-        "number": 211,
-        "title": "Blue Team vs Red Team vs Purple Team",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Blue Team vs Red Team vs Purple Team",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-212",
-        "number": 212,
-        "title": "Qu\u00e9 es un SOC?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es un SOC?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-213",
-        "number": 213,
-        "title": "Qu\u00e9 hace un analista SOC?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 hace un analista SOC?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-214",
-        "number": 214,
-        "title": "Qu\u00e9 es un SIEM?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es un SIEM?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-215",
-        "number": 215,
-        "title": "Qu\u00e9 es un EDR?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es un EDR?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-216",
-        "number": 216,
-        "title": "Antivirus vs EDR",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Antivirus vs EDR",
-        "tags": [
-          "Malware",
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-217",
-        "number": 217,
-        "title": "Qu\u00e9 es hardening?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es hardening?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-218",
-        "number": 218,
-        "title": "Por qu\u00e9 las copias de seguridad son una medida de ciberseguridad?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Por qu\u00e9 las copias de seguridad son una medida de ciberseguridad?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-219",
-        "number": 219,
-        "title": "Qu\u00e9 es la segmentaci\u00f3n de red?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es la segmentaci\u00f3n de red?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-220",
-        "number": 220,
-        "title": "Qu\u00e9 es detecci\u00f3n y respuesta a incidentes?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es detecci\u00f3n y respuesta a incidentes?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-221",
-        "number": 221,
-        "title": "Qu\u00e9 es forense digital?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es forense digital?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-222",
-        "number": 222,
-        "title": "Qu\u00e9 es threat intelligence?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es threat intelligence?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-223",
-        "number": 223,
-        "title": "Qu\u00e9 es un honeypot?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es un honeypot?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      },
-      {
-        "id": "topic-224",
-        "number": 224,
-        "title": "Qu\u00e9 es Zero Trust?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
-        "summary": "Tema del roadmap para aprender: Qu\u00e9 es Zero Trust?",
-        "tags": [
-          "Defensa"
-        ],
-        "level": "Nivel 8",
-        "route": "Defensa y siguiente paso"
-      }
-    ]
+    "topics": []
   }
 ,
   {
@@ -3848,7 +3636,7 @@ function normalizeRoadmapLearningStructure() {
     "hacking-pentesting": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Elige tu camino", title: "Pentesting y hacking ético", description: "Reconocimiento, laboratorios, metodología, explotación controlada y reporte ético." },
     "hacking-web": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Seguridad web", title: "Seguridad web y hacking web", description: "Burp Suite, peticiones HTTP, SQL Injection, XSS, sesiones y vulnerabilidades web." },
     "casos-reales": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Investigación digital", title: "OSINT e investigación digital", description: "Búsqueda de información pública, metadatos, huella digital, verificación y casos reales." },
-    "defensa-siguiente-paso": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Blue Team", title: "Blue Team y defensa", description: "Monitorización, hardening, logs, respuesta a incidentes y protección de sistemas." },
+    "defensa-siguiente-paso": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Blue Team", title: "Introducción al Blue Team", description: "Defensa, SOC, SIEM, EDR, telemetría, logs, detección, respuesta a incidentes y laboratorios defensivos." },
     "programacion-hacking": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Programar para ciber", title: "Programación para ciberseguridad", description: "Python, Bash, C, JavaScript, APIs, sockets, automatización y lectura de exploits." },
     "criptografia": { stage: "speciality", stageLabel: "Especialidad", pathHint: "Cripto aplicada", title: "Criptografía aplicada", description: "Cifrado, hashing, claves, certificados, TLS, firmas digitales y seguridad real." }
   };
@@ -5573,6 +5361,589 @@ function normalizeRoadmapLearningStructure() {
       "summary": "Entregar un caso ficticio que combine:\n\nEmpresa.\nInfraestructura.\nDominios.\nDocumentos.\nCódigo público.\nImágenes.\nRedes sociales.\nCronología."
     }
   ];
+  const blueTeamTopicPlan = [
+    {
+        "title": "¿Qué es Blue Team?",
+        "summary": "Explicar qué significa defender sistemas y redes frente a amenazas y qué funciones puede incluir:\n\nMonitorización.\nDetección.\nInvestigación.\nRespuesta.\nHardening.\nThreat Hunting.\nGestión de vulnerabilidades."
+    },
+    {
+        "title": "Red Team vs Blue Team vs Purple Team",
+        "summary": "Repasar las diferencias y explicar cómo ofensiva y defensa pueden ayudarse mutuamente."
+    },
+    {
+        "title": "¿Qué es un SOC?",
+        "summary": "Explicar qué es un Security Operations Center y por qué centraliza gran parte de la monitorización de seguridad de una organización."
+    },
+    {
+        "title": "¿Qué hace realmente un analista SOC?",
+        "summary": "Seguir un ejemplo:\n\nalerta → comprobar datos → investigar → decidir si es real → determinar impacto → escalar o cerrar\n\nDesmontar la idea de que un analista SOC simplemente mira gráficos."
+    },
+    {
+        "title": "SOC L1, L2 y L3",
+        "summary": "Explicar de forma orientativa:\n\nL1: triage inicial.\nL2: investigación más profunda.\nL3: casos complejos, hunting y conocimiento avanzado.\n\nAclarar que la estructura cambia entre organizaciones."
+    },
+    {
+        "title": "Cómo funciona un turno dentro de un SOC",
+        "summary": "Explicar conceptos como:\n\nCola de alertas.\nPrioridades.\nTickets.\nEscalado.\nTurnos.\nHandover.\nDocumentación."
+    },
+    {
+        "title": "Verdadero positivo y falso positivo",
+        "summary": "Diferenciar:\n\nTrue Positive.\nFalse Positive.\nTrue Negative.\nFalse Negative.\n\nExplicar por qué una herramienta de seguridad nunca es perfecta."
+    },
+    {
+        "title": "Severidad, prioridad y riesgo",
+        "summary": "Explicar que una alerta técnicamente grave puede tener distinta prioridad dependiendo del activo, usuario y contexto."
+    },
+    {
+        "title": "¿Qué es un log?",
+        "summary": "Explicar qué información registra un sistema y por qué los logs son una de las principales fuentes de evidencia para un defensor."
+    },
+    {
+        "title": "Evento, log y alerta: no son lo mismo",
+        "summary": "Diferenciar:\n\nEvento: algo ha ocurrido.\nLog: registro de lo ocurrido.\nAlerta: una regla o sistema considera que algo merece atención."
+    },
+    {
+        "title": "¿Qué es telemetría?",
+        "summary": "Explicar que un entorno defensivo recopila mucho más que archivos de log:\n\nProcesos.\nConexiones.\nDNS.\nAutenticaciones.\nArchivos.\nCambios de configuración.\nActividad cloud."
+    },
+    {
+        "title": "Timestamp: saber cuándo ocurrió algo",
+        "summary": "Explicar:\n\nFecha y hora.\nZona horaria.\nUTC.\nSincronización.\n\nMostrar por qué una investigación puede romperse si distintos sistemas tienen horas incorrectas."
+    },
+    {
+        "title": "Cómo leer un log",
+        "summary": "Enseñar a identificar:\n\nTimestamp.\nHost.\nUsuario.\nIP.\nProceso.\nAcción.\nResultado.\nID del evento."
+    },
+    {
+        "title": "Normalización de logs",
+        "summary": "Explicar que distintas herramientas registran la misma información de maneras diferentes y que un SIEM intenta convertirla en campos manejables."
+    },
+    {
+        "title": "Correlación de eventos",
+        "summary": "Explicar cómo varios eventos aparentemente normales pueden convertirse en sospechosos cuando se observan juntos.\n\nEjemplo:\n\nmuchos fallos de login → login correcto → proceso extraño → conexión externa."
+    },
+    {
+        "title": "Windows Event Logs",
+        "summary": "Introducir:\n\nApplication.\nSecurity.\nSystem.\n\nY explicar cómo utilizar Event Viewer."
+    },
+    {
+        "title": "Eventos de inicio de sesión en Windows",
+        "summary": "Explicar cómo Windows registra autenticaciones correctas y fallidas.\n\nIntroducir ejemplos conocidos como 4624 (inicio de sesión exitoso) y 4625 (inicio de sesión fallido), sin pretender memorizar todos los Event IDs."
+    },
+    {
+        "title": "Creación de procesos en Windows",
+        "summary": "Explicar por qué saber qué programas se han ejecutado es fundamental.\n\nIntroducir eventos relacionados con creación de procesos, como 4688 cuando la auditoría correspondiente está habilitada."
+    },
+    {
+        "title": "Servicios de Windows",
+        "summary": "Explicar cómo la creación o modificación de servicios puede resultar relevante durante una investigación."
+    },
+    {
+        "title": "PowerShell desde el punto de vista defensivo",
+        "summary": "Explicar por qué PowerShell es totalmente legítimo pero también aparece con frecuencia en incidentes.\n\nMostrar qué tipo de actividad puede monitorizarse."
+    },
+    {
+        "title": "PowerShell Logging",
+        "summary": "Introducir conceptualmente:\n\nScript Block Logging.\nModule Logging.\nPowerShell Operational Logs."
+    },
+    {
+        "title": "Sysmon",
+        "summary": "Explicar qué es System Monitor y cómo amplía enormemente la visibilidad de Windows.\n\nIntroducir eventos sobre:\n\nProcesos.\nRedes.\nArchivos.\nRegistro."
+    },
+    {
+        "title": "Registro de Windows para defensores",
+        "summary": "Explicar qué es el Registry y por qué determinados cambios pueden ser relevantes para persistencia o configuración."
+    },
+    {
+        "title": "Scheduled Tasks",
+        "summary": "Explicar cómo las tareas programadas son utilizadas legítimamente por Windows pero también pueden resultar importantes durante investigaciones."
+    },
+    {
+        "title": "Logs de Linux",
+        "summary": "Retomar:\n\n/var/log\njournalctl\nsyslog.\n\nAplicarlos ahora desde la perspectiva defensiva."
+    },
+    {
+        "title": "Logs de autenticación en Linux",
+        "summary": "Analizar eventos relacionados con:\n\nSSH.\nsudo.\nInicios de sesión.\nFallos de autenticación."
+    },
+    {
+        "title": "Procesos sospechosos en Linux",
+        "summary": "Aplicar ps, top, systemctl, procesos padre/hijo y usuarios al análisis defensivo."
+    },
+    {
+        "title": "Servicios y persistencia en Linux",
+        "summary": "Analizar conceptualmente:\n\nServicios.\ncron.\nConfiguraciones de inicio."
+    },
+    {
+        "title": "Conexiones de red en Linux",
+        "summary": "Utilizar herramientas como ss para identificar procesos que escuchan o mantienen conexiones."
+    },
+    {
+        "title": "¿Qué es un SIEM?",
+        "summary": "Explicar:\n\nSecurity Information and Event Management\n\ny por qué centraliza datos procedentes de muchos sistemas."
+    },
+    {
+        "title": "¿Cómo llegan los logs al SIEM?",
+        "summary": "Explicar:\n\nservidor/endpoints/firewall → agente o collector → SIEM.\n\nIntroducir ingestión de datos sin entrar demasiado en arquitectura empresarial."
+    },
+    {
+        "title": "Buscar información en un SIEM",
+        "summary": "Enseñar el concepto de consultar eventos utilizando campos como:\n\nIP.\nUsuario.\nHost.\nProceso.\nFecha."
+    },
+    {
+        "title": "Splunk desde cero",
+        "summary": "Introducción a la interfaz y a cómo buscar eventos."
+    },
+    {
+        "title": "SPL básico",
+        "summary": "Aprender búsquedas sencillas y filtrado de datos en Splunk.\n\nNo convertir la ruta en un curso completo de SPL."
+    },
+    {
+        "title": "Elastic Stack desde cero",
+        "summary": "Explicar conceptualmente:\n\nElasticsearch.\nLogstash/ingesta.\nKibana.\n\nY cómo se utiliza para analizar eventos."
+    },
+    {
+        "title": "Microsoft Sentinel y KQL",
+        "summary": "Introducir qué es un SIEM cloud y enseñar conceptualmente cómo KQL permite consultar telemetría."
+    },
+    {
+        "title": "Dashboards",
+        "summary": "Explicar para qué sirven y por qué un dashboard bonito no sustituye una investigación."
+    },
+    {
+        "title": "Reglas de detección",
+        "summary": "Explicar cómo una consulta o lógica puede transformarse en una alerta.\n\nEjemplo:\n\ndemasiados fallos de autenticación desde una misma IP."
+    },
+    {
+        "title": "Correlation Rules",
+        "summary": "Mostrar que las detecciones más interesantes suelen combinar varios comportamientos o fuentes."
+    },
+    {
+        "title": "El problema de demasiadas alertas",
+        "summary": "Explicar:\n\nAlert fatigue.\nRuido.\nTuning.\nPriorización."
+    },
+    {
+        "title": "Cómo mejorar una regla de detección",
+        "summary": "Analizar una detección demasiado genérica y reducir falsos positivos mediante contexto."
+    },
+    {
+        "title": "¿Qué es un EDR?",
+        "summary": "Explicar qué monitoriza un Endpoint Detection and Response y cómo se diferencia de un antivirus tradicional."
+    },
+    {
+        "title": "Qué puede ver un EDR",
+        "summary": "Mostrar telemetría como:\n\nProcesos.\nÁrboles de procesos.\nConexiones.\nArchivos.\nUsuarios.\nComandos."
+    },
+    {
+        "title": "Árboles de procesos",
+        "summary": "Explicar relaciones padre-hijo.\n\nEjemplo:\n\noutlook.exe → powershell.exe\n\npuede ser mucho más interesante que observar powershell.exe de forma aislada."
+    },
+    {
+        "title": "Línea de comandos como evidencia",
+        "summary": "Explicar por qué los argumentos utilizados al ejecutar un proceso pueden ser muy relevantes durante una investigación."
+    },
+    {
+        "title": "Hashes de archivos",
+        "summary": "Explicar MD5/SHA en el contexto de identificación de archivos y por qué un hash puede utilizarse como IOC."
+    },
+    {
+        "title": "Contención mediante EDR",
+        "summary": "Explicar conceptualmente acciones defensivas como:\n\nAislar un endpoint.\nTerminar un proceso.\nCuarentenar un archivo."
+    },
+    {
+        "title": "IDS e IPS en profundidad",
+        "summary": "Retomar la diferencia y aplicarla ahora a monitorización defensiva real."
+    },
+    {
+        "title": "Firmas de red",
+        "summary": "Explicar cómo determinadas características del tráfico pueden utilizarse para detectar comportamientos conocidos."
+    },
+    {
+        "title": "Snort",
+        "summary": "Introducción a Snort como IDS/IPS y cómo funcionan las reglas a nivel conceptual."
+    },
+    {
+        "title": "Suricata",
+        "summary": "Introducir Suricata y explicar su función en Network Security Monitoring."
+    },
+    {
+        "title": "Zeek",
+        "summary": "Explicar que Zeek transforma tráfico de red en registros estructurados extremadamente útiles para investigaciones."
+    },
+    {
+        "title": "PCAP: una grabación del tráfico",
+        "summary": "Explicar qué es un archivo .pcap y por qué puede ser una fuente fundamental durante una investigación."
+    },
+    {
+        "title": "Wireshark para Blue Team",
+        "summary": "Dejar de utilizarlo únicamente para aprender redes y empezar a buscar comportamientos sospechosos."
+    },
+    {
+        "title": "Filtrar tráfico en Wireshark",
+        "summary": "Trabajar con filtros para localizar:\n\nIPs.\nDNS.\nHTTP.\nTCP.\nProtocolos concretos."
+    },
+    {
+        "title": "Analizar DNS desde el lado defensivo",
+        "summary": "Buscar:\n\nDominios extraños.\nMuchas consultas.\nNombres sospechosos.\nResoluciones inesperadas."
+    },
+    {
+        "title": "Analizar HTTP/HTTPS desde el lado defensivo",
+        "summary": "Examinar metadatos disponibles:\n\nHosts.\nURLs cuando sean visibles.\nMétodos.\nUser-Agent.\nPatrones de conexión."
+    },
+    {
+        "title": "Detectar escaneos de red",
+        "summary": "Relacionar lo aprendido en Pentesting con Blue Team.\n\nAhora el alumno se pone en el otro lado: ¿qué aspecto tiene un escaneo para el defensor?"
+    },
+    {
+        "title": "Detectar movimiento lateral",
+        "summary": "Analizar patrones de conexiones internas, autenticaciones y acceso entre máquinas."
+    },
+    {
+        "title": "Detectar exfiltración de datos",
+        "summary": "Explicar qué señales podrían indicar transferencias de información anormalmente grandes o inesperadas."
+    },
+    {
+        "title": "Logs de un servidor web",
+        "summary": "Analizar logs típicos de Apache/Nginx:\n\nIP.\nMétodo.\nRuta.\nStatus.\nUser-Agent."
+    },
+    {
+        "title": "Detectar reconocimiento web",
+        "summary": "Mostrar qué aspecto pueden tener:\n\nEnumeración.\nContent discovery.\nEscaneos automatizados."
+    },
+    {
+        "title": "Detectar intentos de explotación web",
+        "summary": "Relacionar con Ruta 07:\n\nSQLi.\nXSS.\nPath Traversal.\nCommand Injection.\n\nAhora vistos desde los logs."
+    },
+    {
+        "title": "WAF: Web Application Firewall",
+        "summary": "Explicar qué hace un WAF y por qué no debe considerarse una solución mágica para vulnerabilidades web."
+    },
+    {
+        "title": "Detectar una Web Shell",
+        "summary": "Explicar qué es una web shell a nivel defensivo y qué señales podrían indicar que un servidor web está ejecutando archivos inesperados."
+    },
+    {
+        "title": "Cómo analizar un correo de phishing",
+        "summary": "Crear una metodología:\n\nRemitente.\nDominio.\nCabeceras.\nURLs.\nAdjuntos.\nContexto.\nIOC."
+    },
+    {
+        "title": "From no siempre demuestra quién envió un correo",
+        "summary": "Explicar spoofing y por qué es necesario analizar más información que el nombre visible del remitente."
+    },
+    {
+        "title": "SPF, DKIM y DMARC",
+        "summary": "Explicar qué intenta comprobar cada mecanismo y cómo pueden ayudar durante el análisis."
+    },
+    {
+        "title": "Analizar URLs sospechosas",
+        "summary": "Investigar de forma defensiva:\n\nDominio.\nSubdominio.\nRuta.\nRedirecciones.\nAntigüedad y contexto.\nReputación."
+    },
+    {
+        "title": "Adjuntos sospechosos",
+        "summary": "Explicar cómo tratar archivos potencialmente maliciosos con seguridad y por qué no deben abrirse directamente en el equipo habitual."
+    },
+    {
+        "title": "Sandboxing",
+        "summary": "Explicar qué es ejecutar un archivo en un entorno controlado para observar su comportamiento."
+    },
+    {
+        "title": "Laboratorio de phishing",
+        "summary": "Entregar varios correos ficticios y pedir al alumno determinar cuáles son legítimos y cuáles requieren investigación."
+    },
+    {
+        "title": "Malware desde la perspectiva de un SOC",
+        "summary": "Repasar familias de malware, pero ahora preguntando: ¿Qué señales deja en el sistema?"
+    },
+    {
+        "title": "Análisis estático vs dinámico",
+        "summary": "Explicar:\n\nEstático: estudiar el archivo sin ejecutarlo.\nDinámico: observar qué hace al ejecutarse en un entorno controlado."
+    },
+    {
+        "title": "Strings, hashes y metadatos",
+        "summary": "Introducción básica al triage de un archivo sospechoso."
+    },
+    {
+        "title": "VirusTotal y servicios de reputación",
+        "summary": "Explicar cómo interpretar resultados sin asumir \"0 detecciones = seguro\" o \"1 detección = malware confirmado\"."
+    },
+    {
+        "title": "Comportamiento de malware",
+        "summary": "Observar conceptualmente:\n\nProcesos creados.\nArchivos.\nRegistro.\nConexiones.\nPersistencia."
+    },
+    {
+        "title": "Living off the Land",
+        "summary": "Explicar cómo un atacante puede abusar de herramientas legítimas ya presentes en el sistema, como PowerShell u otras utilidades."
+    },
+    {
+        "title": "¿Qué es Cyber Threat Intelligence?",
+        "summary": "Explicar cómo se transforma información sobre amenazas en conocimiento útil para defender una organización."
+    },
+    {
+        "title": "IOC: indicadores de compromiso",
+        "summary": "Repasar:\n\nIP.\nDominio.\nURL.\nHash.\nEmail.\nArchivo."
+    },
+    {
+        "title": "IOC no significa culpable",
+        "summary": "Explicar que una IP, dominio o hash debe analizarse con contexto y que los indicadores pueden quedar obsoletos o producir falsos positivos."
+    },
+    {
+        "title": "IOA: indicadores de ataque",
+        "summary": "Introducir la diferencia entre buscar un artefacto concreto y buscar un comportamiento."
+    },
+    {
+        "title": "Pyramid of Pain",
+        "summary": "Explicar por qué algunos indicadores son mucho más fáciles de cambiar para un atacante que otros."
+    },
+    {
+        "title": "TTP: tácticas, técnicas y procedimientos",
+        "summary": "Explicar por qué detectar cómo se comporta un adversario puede ser más robusto que bloquear únicamente una IP."
+    },
+    {
+        "title": "MITRE ATT&CK en profundidad",
+        "summary": "Explicar:\n\nTáctica.\nTécnica.\nSubtécnica.\nProcedimiento."
+    },
+    {
+        "title": "Cómo leer la matriz ATT&CK",
+        "summary": "No intentar memorizar cientos de técnicas.\n\nEnseñar a navegar la matriz y encontrar información útil."
+    },
+    {
+        "title": "Las fases del comportamiento adversario",
+        "summary": "Recorrer conceptos como:\n\nInitial Access.\nExecution.\nPersistence.\nPrivilege Escalation.\nCredential Access.\nDiscovery.\nLateral Movement.\nCollection.\nCommand and Control.\nExfiltration.\nImpact.\n\nIncluir también la estructura actual de ATT&CK para evasión defensiva."
+    },
+    {
+        "title": "Mapear una alerta a MITRE ATT&CK",
+        "summary": "Tomar una actividad ficticia y relacionarla con una técnica."
+    },
+    {
+        "title": "MITRE ATT&CK no es una checklist de seguridad",
+        "summary": "Explicar qué puede y qué no puede decirnos ATT&CK."
+    },
+    {
+        "title": "¿Qué es Detection Engineering?",
+        "summary": "Explicar que detectar amenazas también implica diseñar, probar y mejorar detecciones."
+    },
+    {
+        "title": "De comportamiento sospechoso a regla",
+        "summary": "Ejemplo conceptual:\n\n\"PowerShell ejecutándose\" es demasiado genérico.\n\nPero: Word → PowerShell + parámetros extraños + conexión externa puede resultar mucho más interesante."
+    },
+    {
+        "title": "Sigma Rules",
+        "summary": "Explicar qué es Sigma y cómo permite describir detecciones basadas en logs de forma relativamente independiente del SIEM."
+    },
+    {
+        "title": "YARA Rules",
+        "summary": "Explicar qué es YARA y cómo permite identificar archivos o contenido mediante características concretas.\n\nDiferenciarlo de Sigma."
+    },
+    {
+        "title": "Calidad de una detección",
+        "summary": "Explicar:\n\nCobertura.\nPrecisión.\nFalsos positivos.\nContexto.\nMantenimiento."
+    },
+    {
+        "title": "Detection Gap",
+        "summary": "Explicar que una organización no puede detectar aquello para lo que no tiene telemetría suficiente."
+    },
+    {
+        "title": "Purple Team y validación de detecciones",
+        "summary": "Mostrar cómo una técnica ofensiva realizada de forma controlada puede utilizarse para comprobar si las defensas la detectan."
+    },
+    {
+        "title": "¿Qué es SOAR?",
+        "summary": "Explicar:\n\nSecurity Orchestration, Automation and Response."
+    },
+    {
+        "title": "Playbooks",
+        "summary": "Explicar cómo una organización puede definir un procedimiento repetible:\n\nalerta de phishing → consultar dominio → analizar hash → buscar otros correos → generar ticket."
+    },
+    {
+        "title": "Qué automatizar y qué no",
+        "summary": "Dejar claro que automatización no significa delegar decisiones críticas sin control."
+    },
+    {
+        "title": "Cómo hacer triage de una alerta",
+        "summary": "Metodología:\n\n¿Qué detectó la alerta?\n¿Qué activo afecta?\n¿Qué usuario?\n¿Cuándo?\n¿Qué ocurrió antes?\n¿Qué ocurrió después?\n¿Es comportamiento esperado?\n¿Qué impacto podría tener?"
+    },
+    {
+        "title": "Construir una timeline",
+        "summary": "Ordenar todos los eventos cronológicamente para reconstruir un incidente."
+    },
+    {
+        "title": "Enriquecimiento de alertas",
+        "summary": "Añadir contexto:\n\nUsuario.\nHost.\nIP.\nThreat Intelligence.\nProcesos.\nHistorial.\nCriticidad del activo."
+    },
+    {
+        "title": "Formular hipótesis",
+        "summary": "Enseñar a decir \"Mi hipótesis es que...\" y buscar evidencias que puedan tanto confirmarla como refutarla."
+    },
+    {
+        "title": "Pivotar durante una investigación",
+        "summary": "Explicar el concepto defensivo de pivotar:\n\nhash → hosts → usuarios → IP → dominio → otros eventos."
+    },
+    {
+        "title": "Scope del incidente",
+        "summary": "Determinar si afecta:\n\nA un usuario.\nA un equipo.\nA varios endpoints.\nA toda una red."
+    },
+    {
+        "title": "Documentar una investigación",
+        "summary": "Registrar:\n\nEvidencias.\nConsultas.\nTimeline.\nDecisiones.\nConclusiones.\nAcciones realizadas."
+    },
+    {
+        "title": "¿Qué es un incidente de seguridad?",
+        "summary": "Diferenciar una alerta, un evento y un incidente confirmado."
+    },
+    {
+        "title": "Cómo funciona Incident Response",
+        "summary": "Explicar el flujo moderno:\n\nprepararse → detectar → responder → recuperar → mejorar\n\ny relacionarlo con la gestión continua del riesgo."
+    },
+    {
+        "title": "Preparación",
+        "summary": "Explicar por qué la respuesta a incidentes comienza antes de que ocurra el ataque:\n\nLogs.\nBackups.\nResponsables.\nContactos.\nHerramientas.\nPlaybooks."
+    },
+    {
+        "title": "Contención",
+        "summary": "Explicar medidas como:\n\nAislar un dispositivo.\nBloquear una cuenta.\nBloquear infraestructura maliciosa.\nSegmentar sistemas."
+    },
+    {
+        "title": "Erradicación",
+        "summary": "Explicar que hay que eliminar la causa y no simplemente apagar la alerta.\n\nEjemplos:\n\nMalware.\nPersistencia.\nCredenciales comprometidas.\nVulnerabilidad."
+    },
+    {
+        "title": "Recuperación",
+        "summary": "Restaurar sistemas, servicios y operaciones de manera segura."
+    },
+    {
+        "title": "Lecciones aprendidas",
+        "summary": "Preguntar:\n\n¿Cómo entró?\n¿Por qué no lo impedimos?\n¿Cómo lo detectamos?\n¿Qué podríamos haber detectado antes?\n¿Qué debemos cambiar?"
+    },
+    {
+        "title": "Root Cause Analysis",
+        "summary": "Diferenciar entre solucionar el síntoma y encontrar la causa raíz del incidente."
+    },
+    {
+        "title": "Investigar múltiples fallos de login",
+        "summary": "Determinar si se trata de:\n\nUsuario equivocado.\nAplicación mal configurada.\nBrute force.\nPassword spraying."
+    },
+    {
+        "title": "Investigar un login extraño",
+        "summary": "Analizar:\n\nUsuario.\nIP.\nHora.\nUbicación aproximada.\nDispositivo.\nActividad posterior."
+    },
+    {
+        "title": "Investigar un proceso sospechoso",
+        "summary": "Seguir:\n\nproceso → padre → command line → usuario → conexiones → archivos."
+    },
+    {
+        "title": "Investigar una conexión sospechosa",
+        "summary": "Seguir:\n\nIP → proceso → host → usuario → reputación → otros equipos."
+    },
+    {
+        "title": "Investigar un archivo sospechoso",
+        "summary": "Seguir:\n\narchivo → hash → origen → procesos → comportamiento → otros hosts."
+    },
+    {
+        "title": "Investigar posible ransomware",
+        "summary": "Buscar señales relacionadas con:\n\nEjecuciones sospechosas.\nModificación masiva de archivos.\nPersistencia.\nConexiones.\nCambios defensivos."
+    },
+    {
+        "title": "Investigar posible movimiento lateral",
+        "summary": "Relacionar autenticaciones, conexiones internas, usuarios y hosts."
+    },
+    {
+        "title": "Investigar posible exfiltración",
+        "summary": "Buscar transferencias anómalas y contextualizarlas con usuario, proceso y destino."
+    },
+    {
+        "title": "¿Qué es Threat Hunting?",
+        "summary": "Explicar la diferencia entre esperar una alerta y buscar activamente señales que todavía no han generado una alerta."
+    },
+    {
+        "title": "Hunting basado en hipótesis",
+        "summary": "Ejemplo:\n\n\"¿Existe algún equipo ejecutando PowerShell de forma anormal?\"\n\nA partir de ahí construir una investigación."
+    },
+    {
+        "title": "Baselines: saber qué es normal",
+        "summary": "Explicar que para detectar anomalías debemos conocer primero el comportamiento habitual."
+    },
+    {
+        "title": "Anomalía no significa ataque",
+        "summary": "Dejar claro que algo raro únicamente merece investigación; no demuestra actividad maliciosa."
+    },
+    {
+        "title": "Gestión de vulnerabilidades desde Blue Team",
+        "summary": "Repasar:\n\ndescubrir → priorizar → corregir → verificar."
+    },
+    {
+        "title": "Priorizar vulnerabilidades",
+        "summary": "Combinar:\n\nCVSS.\nExposición.\nExplotabilidad.\nActivo.\nImpacto empresarial.\nEvidencia de explotación."
+    },
+    {
+        "title": "Patching vs Mitigation",
+        "summary": "Explicar que cuando un parche no puede aplicarse inmediatamente pueden existir medidas compensatorias."
+    },
+    {
+        "title": "Hardening de endpoints",
+        "summary": "Aplicar:\n\nMínimo privilegio.\nActualizaciones.\nServicios innecesarios.\nConfiguraciones.\nControles de ejecución."
+    },
+    {
+        "title": "Hardening de redes",
+        "summary": "Aplicar:\n\nSegmentación.\nFirewall.\nServicios.\nAcceso remoto.\nMonitorización."
+    },
+    {
+        "title": "Hardening de servidores",
+        "summary": "Relacionar Linux, Windows y servicios expuestos con reducción de superficie de ataque."
+    },
+    {
+        "title": "MTTD y MTTR",
+        "summary": "Introducir métricas como Mean Time to Detect y Mean Time to Respond/Recover, y explicar por qué reducir tiempos puede limitar el impacto."
+    },
+    {
+        "title": "Medir un SOC correctamente",
+        "summary": "Explicar por qué \"cerramos 10.000 alertas\" no significa necesariamente que el SOC sea bueno."
+    },
+    {
+        "title": "Cobertura de detección",
+        "summary": "Relacionar telemetría, reglas y ATT&CK para comprender qué comportamientos podemos detectar y cuáles no."
+    },
+    {
+        "title": "Laboratorio: analiza logs de Windows",
+        "summary": "Investigar un conjunto de eventos ficticios y reconstruir qué ocurrió."
+    },
+    {
+        "title": "Laboratorio: analiza logs de Linux",
+        "summary": "Detectar autenticaciones o actividad sospechosa dentro de un entorno preparado."
+    },
+    {
+        "title": "Laboratorio: investiga tráfico con Wireshark",
+        "summary": "Analizar un PCAP y localizar comunicaciones relevantes."
+    },
+    {
+        "title": "Laboratorio: investiga un phishing",
+        "summary": "Combinar correo, URL, dominio, headers, archivos e IOC."
+    },
+    {
+        "title": "Laboratorio: triage en un SIEM",
+        "summary": "Recibir varias alertas y decidir cerrar, investigar o escalar, justificando cada decisión."
+    },
+    {
+        "title": "Laboratorio: detecta el ataque que aprendiste en Red Team",
+        "summary": "Ejecutar una técnica segura en laboratorio y observar qué rastros deja:\n\nataque → logs → detección → investigación\n\nEste laboratorio sirve como conexión perfecta con la Ruta 06."
+    },
+    {
+        "title": "Laboratorio: crea tu primera detección",
+        "summary": "Dar un comportamiento malicioso simulado y pedir al alumno diseñar una regla que lo detecte minimizando falsos positivos."
+    },
+    {
+        "title": "Laboratorio: investiga un incidente completo",
+        "summary": "Proporcionar telemetría de SIEM, Endpoint, DNS, Firewall y Windows/Linux para que el alumno reconstruya el ataque."
+    },
+    {
+        "title": "Proyecto final: trabaja como analista SOC",
+        "summary": "Simular un incidente completo donde el alumno deberá recibir la alerta, realizar triage, buscar evidencias, construir timeline, determinar alcance, mapear actividad a MITRE ATT&CK, identificar IOC, proponer contención, determinar causa raíz, crear o mejorar una detección, documentar el incidente y elaborar un informe final."
+    },
+    {
+        "title": "Cierre de ruta: mentalidad y competencias defensivas",
+        "summary": "Al terminar la Ruta 09, el alumno debería poder enfrentarse a una alerta y pensar con criterio defensivo: entender la telemetría, investigar hipótesis, correlacionar eventos en SIEM/EDR, contener amenazas y documentar lecciones aprendidas."
+    }
+];
+
   const osintIntroVideo = roadmapRoutes.flatMap((route) => route.topics).find((topic) => topic.id === "topic-152");
 
   const routeTopicBlueprints = {
@@ -5724,6 +6095,19 @@ function normalizeRoadmapLearningStructure() {
           relatedVideos: (relatedVideoIds[index] || []).map((id) => existingTopics.find((topic) => topic.id === id)).filter((topic) => topic?.url)
         };
       });
+    } else if (route.id === "defensa-siguiente-paso") {
+      route.topics = blueTeamTopicPlan.map(({ title, summary }, index) => ({
+        id: `topic-blue-team-plan-${index + 1}`,
+        title,
+        summary,
+        tags: ["Blue Team", "Defensa"],
+        level: route.level,
+        route: route.title,
+        status: "pending",
+        statusLabel: "Pendiente",
+        url: "",
+        thumbnail: ""
+      }));
     } else if (blueprint) {
       route.topics = blueprint.map((title, index) => {
         const existing = route.topics[index] || {};
