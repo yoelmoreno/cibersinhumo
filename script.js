@@ -7062,8 +7062,8 @@ function updateRoadmapSolarSystem(timestamp = 0) {
 
   cards.forEach((card, index) => {
     const order = Number(card.dataset.orbitIndex || index);
-    const baseAngle = Math.PI / 2 + (order / total) * Math.PI * 2;
-    const angle = baseAngle + elapsed * angularSpeed;
+    const baseAngle = (order / total) * Math.PI * 2;
+    const angle = baseAngle - elapsed * angularSpeed;
     const x = Math.cos(angle) * radiusX;
     const y = Math.sin(angle) * radiusY;
     const depth = (Math.sin(angle) + 1) / 2;

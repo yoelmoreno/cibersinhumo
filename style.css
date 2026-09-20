@@ -8337,7 +8337,7 @@ select {
   border-radius: 50%;
   transform: none;
   filter: drop-shadow(0 0 24px rgba(0,255,136,.28));
-  animation: planetSpin 12s linear infinite reverse;
+  animation: planetSpin 12s linear infinite;
 }
 
 .video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-planet i {
@@ -8543,7 +8543,7 @@ body.roadmap-fullscreen-mode { overflow: hidden; }
 .video-roadmap-section.is-roadmap-open .roadmap-route-card.roadmap-planet-card::after,
 .video-roadmap-section.is-roadmap-open .roadmap-planet-card .route-meter { display: none !important; }
 .video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-route-num { display: grid !important; place-items: center; position: absolute; top: -10px; left: 50%; right: auto; width: 34px; height: 34px; transform: translateX(-50%); border: 1px solid rgba(0,255,136,.55); border-radius: 50%; background: rgba(0, 8, 5, .86); color: #eafff1; font: 800 .92rem/1 'Share Tech Mono', monospace; box-shadow: 0 0 18px rgba(0,255,136,.32); z-index: 4; }
-.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-planet { position: relative; left: auto; top: auto; display: block; width: clamp(82px, 7.5vw, 128px); height: clamp(82px, 7.5vw, 128px); margin: 0 auto 12px; border-radius: 50%; transform: none; filter: drop-shadow(0 0 24px rgba(0,255,136,.24)); animation: planetSpin 11s linear infinite reverse; }
+.video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-planet { position: relative; left: auto; top: auto; display: block; width: clamp(82px, 7.5vw, 128px); height: clamp(82px, 7.5vw, 128px); margin: 0 auto 12px; border-radius: 50%; transform: none; filter: drop-shadow(0 0 24px rgba(0,255,136,.24)); animation: planetSpin 11s linear infinite; }
 .video-roadmap-section.is-roadmap-open .roadmap-planet-card .roadmap-planet i { position: absolute; inset: 0; border-radius: 50%; background-size: 220% 100%, 100% 100%, 100% 100%; box-shadow: inset -24px -26px 34px rgba(0,0,0,.62), inset 10px 8px 20px rgba(255,255,255,.2), 0 0 34px rgba(0,255,136,.2); }
 .video-roadmap-section.is-roadmap-open .roadmap-planet-card strong { display: block; width: max-content; max-width: 230px; margin: 0 auto 6px; color: var(--text-main); font-size: clamp(1rem, 1.3vw, 1.3rem); line-height: 1.04; text-shadow: 0 2px 18px rgba(0,0,0,.95); }
 .video-roadmap-section.is-roadmap-open .roadmap-planet-card > span:not(.roadmap-planet):not(.roadmap-route-num) { display: none !important; }
