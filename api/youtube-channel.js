@@ -1,5 +1,5 @@
 const YOUTUBE_API = "https://www.googleapis.com/youtube/v3";
-const MIN_VISIBLE_SUBSCRIBERS = 113;
+const MIN_VISIBLE_SUBSCRIBERS = 110;
 
 module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store, max-age=0");
