@@ -3668,10 +3668,6 @@ function normalizeRoadmapLearningStructure() {
       "title": "Tus primeros comandos de Linux"
     },
     {
-      "summary": "Aprender a navegar por el sistema de archivos utilizando pwd, ls y cd. Explicar rutas absolutas, rutas relativas, . , .. y el directorio personal ~.",
-      "title": "Moverte por Linux: pwd, ls y cd"
-    },
-    {
       "summary": "Explicar touch, mkdir, cp, mv, rm y rmdir. Mostrar cómo realizar desde la terminal las operaciones básicas que normalmente haríamos con el explorador de archivos.",
       "title": "Crear, copiar, mover y borrar archivos y carpetas"
     },
@@ -6357,8 +6353,24 @@ function normalizeRoadmapLearningStructure() {
       });
     } else if (route.id === "linux-sistemas") {
       const basicCommandsVideo = route.topics.find((topic) => topic.id === "topic-26");
+      const routeVideos = {
+        0: {
+          id: "topic-linux-plan-1",
+          status: "published",
+          statusLabel: "Publicado",
+          url: "https://www.youtube.com/watch?v=dp8vyvcoSMs&t=8s",
+          thumbnail: "https://i.ytimg.com/vi/dp8vyvcoSMs/hqdefault.jpg"
+        },
+        1: {
+          id: "topic-linux-plan-2",
+          status: "published",
+          statusLabel: "Publicado",
+          url: "https://www.youtube.com/watch?v=a8zRRt7Yvvs",
+          thumbnail: "https://i.ytimg.com/vi/a8zRRt7Yvvs/hqdefault.jpg"
+        }
+      };
       route.topics = linuxTopicPlan.map(({ title, summary }, index) => {
-        const existing = index === 2 ? basicCommandsVideo : null;
+        const existing = routeVideos[index] || (index === 2 ? basicCommandsVideo : null);
         return {
           ...(existing || {}),
           id: existing?.id || `topic-linux-plan-${index + 1}`,
