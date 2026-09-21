@@ -1,5 +1,5 @@
 const YOUTUBE_API = "https://www.googleapis.com/youtube/v3";
-const MIN_VISIBLE_SUBSCRIBERS = 110;
+const MIN_VISIBLE_SUBSCRIBERS = 112;
 
 module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store, max-age=0");
@@ -104,7 +104,7 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({
       configured: true,
       title: channelData.snippet?.title || "Ciber Sin Humo",
-      subscribers: Math.max(subscriberCount, MIN_VISIBLE_SUBSCRIBERS),
+      subscribers: subscriberCount > 0 ? subscriberCount : MIN_VISIBLE_SUBSCRIBERS,
       videos: channelData.statistics?.videoCount || null,
       views: channelData.statistics?.viewCount || null,
       latestVideos,
