@@ -3668,10 +3668,6 @@ function normalizeRoadmapLearningStructure() {
       "title": "Tus primeros comandos de Linux"
     },
     {
-      "summary": "Explicar touch, mkdir, cp, mv, rm y rmdir. Mostrar cómo realizar desde la terminal las operaciones básicas que normalmente haríamos con el explorador de archivos.",
-      "title": "Crear, copiar, mover y borrar archivos y carpetas"
-    },
-    {
       "summary": "Utilizar cat, less, head, tail y un editor sencillo como nano. Enseñar cómo consultar y modificar archivos sin depender de una interfaz gráfica.",
       "title": "Leer y editar archivos desde la terminal"
     },
@@ -10024,9 +10020,63 @@ async function loadSubscriberHistory(liveSubscribers) {
 
 const MIN_VISIBLE_SUBSCRIBERS = 112;
 
+const roadmapTitleStopWords = new Set(["como", "que", "es", "son", "para", "por", "desde", "con", "sin", "las", "los", "una", "uno", "del", "dentro", "sobre", "video", "videos"]);
+
+function normalizeYoutubeRoadmapTitle(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function youtubeTitleMatchesRoadmapTopic(videoTitle, topicTitle) {
+  const video = normalizeYoutubeRoadmapTitle(videoTitle);
+  const topic = normalizeYoutubeRoadmapTitle(topicTitle);
+  if (!video || !topic) return false;
+  if (video.includes(topic) || topic.includes(video)) return true;
+
+  const videoWords = new Set(video.split(" ").filter((word) => word.length > 2 && !roadmapTitleStopWords.has(word)));
+  const topicWords = new Set(topic.split(" ").filter((word) => word.length > 2 && !roadmapTitleStopWords.has(word)));
+  const matches = [...videoWords].filter((word) => topicWords.has(word)).length;
+  return matches >= 3 && matches / Math.min(videoWords.size, topicWords.size) >= 0.8;
+}
+
+function syncRoadmapWithYoutube(videos) {
+  if (!Array.isArray(videos)) return;
+
+  let changed = false;
+  [...videos]
+    .filter((video) => video?.id && video?.title && video?.url)
+    .sort((a, b) => new Date(a.publishedAt || 0) - new Date(b.publishedAt || 0))
+    .forEach((video) => {
+      const match = roadmapRoutes
+        .map((route) => ({ route, topic: route.topics.find((topic) => !topic.url) }))
+        .find(({ topic }) => topic && youtubeTitleMatchesRoadmapTopic(video.title, topic.title));
+
+      if (!match) return;
+      Object.assign(match.topic, {
+        status: "published",
+        statusLabel: "Publicado",
+        url: video.url,
+        thumbnail: video.thumbnail || "",
+        publishedAt: video.publishedAt || "",
+        duration: video.duration || ""
+      });
+      changed = true;
+    });
+
+  if (changed) {
+    renderRoadmapRoutes();
+    renderExploreVideos();
+  }
+}
+
 async function initYoutubeChannelPanel() {
   const subsEl = document.getElementById("youtube-subs-count");
   const spotlightSubsEl = document.getElementById("youtube-subs-spotlight");
+  const videosCountEl = document.getElementById("youtube-videos-count");
   const statusEl = document.getElementById("youtube-subs-status");
   const latestEl = document.getElementById("youtube-latest-videos");
   const latestStatus = document.getElementById("youtube-latest-status");
@@ -10071,11 +10121,17 @@ async function initYoutubeChannelPanel() {
     const data = await response.json();
     if (!data.configured) throw new Error("api sin configurar");
 
+    syncRoadmapWithYoutube(Array.isArray(data.allVideos) ? data.allVideos : data.latestVideos);
+
     if (data.subscribers) {
       liveSubscribers = Number(data.subscribers);
       if (subsEl) subsEl.textContent = formatCompactNumber(liveSubscribers);
       if (spotlightSubsEl) spotlightSubsEl.textContent = formatCompactNumber(liveSubscribers);
       statusEl.textContent = "Comunidad de Ciber Sin Humo.";
+    }
+
+    if (data.videos !== null && data.videos !== undefined) {
+      videosCountEl.textContent = formatCompactNumber(Number(data.videos));
     }
 
     if (Array.isArray(data.latestVideos) && data.latestVideos.length) {
