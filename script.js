@@ -6363,6 +6363,20 @@ function normalizeRoadmapLearningStructure() {
           statusLabel: "Publicado",
           url: "https://www.youtube.com/watch?v=a8zRRt7Yvvs",
           thumbnail: "https://i.ytimg.com/vi/a8zRRt7Yvvs/hqdefault.jpg"
+        },
+        3: {
+          id: "topic-linux-plan-4",
+          status: "published",
+          statusLabel: "Publicado",
+          url: "https://youtu.be/HaJgRV1deBE",
+          thumbnail: "https://i.ytimg.com/vi/HaJgRV1deBE/hqdefault.jpg"
+        },
+        12: {
+          id: "topic-linux-plan-13",
+          status: "published",
+          statusLabel: "Publicado",
+          url: "https://youtu.be/HaJgRV1deBE",
+          thumbnail: "https://i.ytimg.com/vi/HaJgRV1deBE/hqdefault.jpg"
         }
       };
       route.topics = linuxTopicPlan.map(({ title, summary }, index) => {
@@ -10018,7 +10032,7 @@ async function loadSubscriberHistory(liveSubscribers) {
   }
 }
 
-const MIN_VISIBLE_SUBSCRIBERS = 112;
+const MIN_VISIBLE_SUBSCRIBERS = 114;
 
 const roadmapTitleStopWords = new Set(["como", "que", "es", "son", "para", "por", "desde", "con", "sin", "las", "los", "una", "uno", "del", "dentro", "sobre", "video", "videos"]);
 
