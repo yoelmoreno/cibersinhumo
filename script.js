@@ -629,10 +629,10 @@ const roadmapRoutes = [
         "id": "topic-29",
         "number": 29,
         "title": "Qu\u00e9 es el sistema de archivos de Linux?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
+        "status": "published",
+        "statusLabel": "Publicado",
+        "url": "https://youtu.be/e6jmYHLrcc8",
+        "thumbnail": "https://i.ytimg.com/vi/e6jmYHLrcc8/hqdefault.jpg",
         "summary": "Tema del roadmap para aprender: Qu\u00e9 es el sistema de archivos de Linux?",
         "tags": [
           "Linux"
@@ -6377,6 +6377,13 @@ function normalizeRoadmapLearningStructure() {
           statusLabel: "Publicado",
           url: "https://youtu.be/HaJgRV1deBE",
           thumbnail: "https://i.ytimg.com/vi/HaJgRV1deBE/hqdefault.jpg"
+        },
+        13: {
+          id: "topic-linux-plan-14",
+          status: "published",
+          statusLabel: "Publicado",
+          url: "https://youtu.be/e6jmYHLrcc8",
+          thumbnail: "https://i.ytimg.com/vi/e6jmYHLrcc8/hqdefault.jpg"
         }
       };
       route.topics = linuxTopicPlan.map(({ title, summary }, index) => {
