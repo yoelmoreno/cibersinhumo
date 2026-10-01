@@ -6382,7 +6382,7 @@ function normalizeRoadmapLearningStructure() {
           id: "topic-linux-plan-14",
           status: "published",
           statusLabel: "Publicado",
-          url: "https://youtu.be/e6jmYHLrcc8",
+          url: "https://www.youtube.com/watch?v=e6jmYHLrcc8&t=211s",
           thumbnail: "https://i.ytimg.com/vi/e6jmYHLrcc8/hqdefault.jpg"
         }
       };
