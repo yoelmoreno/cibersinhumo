@@ -6382,7 +6382,7 @@ function normalizeRoadmapLearningStructure() {
           id: "topic-linux-plan-14",
           status: "published",
           statusLabel: "Publicado",
-          url: "https://www.youtube.com/watch?v=e6jmYHLrcc8&t=211s",
+          url: "https://www.youtube.com/watch?v=e6jmYHLrcc8&t=134s",
           thumbnail: "https://i.ytimg.com/vi/e6jmYHLrcc8/hqdefault.jpg"
         }
       };
@@ -10039,7 +10039,7 @@ async function loadSubscriberHistory(liveSubscribers) {
   }
 }
 
-const MIN_VISIBLE_SUBSCRIBERS = 116;
+const MIN_VISIBLE_SUBSCRIBERS = 120;
 
 const roadmapTitleStopWords = new Set(["como", "que", "es", "son", "para", "por", "desde", "con", "sin", "las", "los", "una", "uno", "del", "dentro", "sobre", "video", "videos"]);
 
@@ -10105,22 +10105,22 @@ async function initYoutubeChannelPanel() {
 
   const localLatestVideos = [
     {
-      url: "https://www.youtube.com/watch?v=dp8vyvcoSMs",
+      url: "https://www.youtube.com/watch?v=dp8vyvcoSMs&t=8s",
       thumbnail: "https://i.ytimg.com/vi/dp8vyvcoSMs/hqdefault.jpg",
-      category: "Informática base",
-      title: "Todo lo que un principiante debería saber de Linux"
+      category: "Ruta 2 · Linux y terminal",
+      title: "Linux: qué es, sus distribuciones y por qué se usa tanto en ciberseguridad"
     },
     {
-      url: "https://www.youtube.com/watch?v=plaRNTudKPA",
-      thumbnail: "https://i.ytimg.com/vi/plaRNTudKPA/hqdefault.jpg",
-      category: "Informática base",
-      title: "Qué es un sistema operativo?"
+      url: "https://www.youtube.com/watch?v=a8zRRt7Yvvs",
+      thumbnail: "https://i.ytimg.com/vi/a8zRRt7Yvvs/hqdefault.jpg",
+      category: "Ruta 2 · Linux y terminal",
+      title: "Terminal, consola, shell y Bash: ¿son lo mismo?"
     },
     {
-      url: "https://www.youtube.com/watch?v=YfnVA5sx3pQ",
-      thumbnail: "https://i.ytimg.com/vi/YfnVA5sx3pQ/hqdefault.jpg",
-      category: "Informática base",
-      title: "Hardware y software: la base para empezar"
+      url: "https://youtu.be/HaJgRV1deBE",
+      thumbnail: "https://i.ytimg.com/vi/HaJgRV1deBE/hqdefault.jpg",
+      category: "Ruta 2 · Linux y terminal",
+      title: "Leer y editar archivos desde la terminal"
     }
   ];
 
@@ -10145,7 +10145,7 @@ async function initYoutubeChannelPanel() {
     syncRoadmapWithYoutube(Array.isArray(data.allVideos) ? data.allVideos : data.latestVideos);
 
     if (data.subscribers) {
-      liveSubscribers = Number(data.subscribers);
+      liveSubscribers = Math.max(Number(data.subscribers), MIN_VISIBLE_SUBSCRIBERS);
       if (subsEl) subsEl.textContent = formatCompactNumber(liveSubscribers);
       if (spotlightSubsEl) spotlightSubsEl.textContent = formatCompactNumber(liveSubscribers);
       statusEl.textContent = "Comunidad de Ciber Sin Humo.";
@@ -10156,7 +10156,22 @@ async function initYoutubeChannelPanel() {
     }
 
     if (Array.isArray(data.latestVideos) && data.latestVideos.length) {
-      renderLatestVideos(data.latestVideos);
+      const roadmapVideoIds = new Set(
+        roadmapRoutes
+          .find((route) => route.id === "linux-sistemas")
+          ?.topics.map((topic) => getYoutubeVideoId(topic.url))
+          .filter(Boolean) || []
+      );
+      const routeLatestVideos = (Array.isArray(data.allVideos) ? data.allVideos : data.latestVideos)
+        .filter((video) => roadmapVideoIds.has(video.id))
+        .slice(0, 3)
+        .map((video) => {
+          const topic = roadmapRoutes
+            .find((route) => route.id === "linux-sistemas")
+            ?.topics.find((item) => getYoutubeVideoId(item.url) === video.id);
+          return topic ? { ...video, title: topic.title, category: "Ruta 2 · Linux y terminal" } : video;
+        });
+      renderLatestVideos(routeLatestVideos.length ? routeLatestVideos : localLatestVideos);
       if (latestStatus) latestStatus.textContent = "YouTube sync";
     }
   } catch (error) {
