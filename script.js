@@ -6398,6 +6398,7 @@ function normalizeRoadmapLearningStructure() {
         return {
           ...(existing || {}),
           id: existing?.id || `topic-linux-plan-${index + 1}`,
+          number: index + 1,
           title,
           summary,
           tags: ["Linux"],
