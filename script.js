@@ -6378,22 +6378,22 @@ function normalizeRoadmapLearningStructure() {
           url: "https://youtu.be/HaJgRV1deBE",
           thumbnail: "https://i.ytimg.com/vi/HaJgRV1deBE/hqdefault.jpg"
         },
-        13: {
-          id: "topic-linux-plan-14",
+        4: {
+          id: "topic-linux-plan-5",
           status: "published",
           statusLabel: "Publicado",
           url: "https://www.youtube.com/watch?v=e6jmYHLrcc8&t=134s",
           thumbnail: "https://i.ytimg.com/vi/e6jmYHLrcc8/hqdefault.jpg"
         },
-        14: {
-          id: "topic-linux-plan-15",
+        5: {
+          id: "topic-linux-plan-6",
           status: "published",
           statusLabel: "Publicado",
           url: "https://www.youtube.com/watch?v=ZWBUrOvFLl4&t=1s",
           thumbnail: "https://i.ytimg.com/vi/ZWBUrOvFLl4/hqdefault.jpg"
         },
-        15: {
-          id: "topic-linux-plan-16",
+        6: {
+          id: "topic-linux-plan-7",
           status: "published",
           statusLabel: "Publicado",
           url: "https://youtu.be/CNkTBIf0_I0",
