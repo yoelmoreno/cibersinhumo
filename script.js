@@ -631,7 +631,7 @@ const roadmapRoutes = [
         "title": "Qu\u00e9 es el sistema de archivos de Linux?",
         "status": "published",
         "statusLabel": "Publicado",
-        "url": "https://www.youtube.com/watch?v=e6jmYHLrcc8",
+        "url": "https://www.youtube.com/watch?v=e6jmYHLrcc8&t=134s",
         "thumbnail": "https://i.ytimg.com/vi/e6jmYHLrcc8/hqdefault.jpg",
         "summary": "Tema del roadmap para aprender: Qu\u00e9 es el sistema de archivos de Linux?",
         "tags": [
@@ -6382,7 +6382,7 @@ function normalizeRoadmapLearningStructure() {
           id: "topic-linux-plan-14",
           status: "published",
           statusLabel: "Publicado",
-          url: "https://www.youtube.com/watch?v=e6jmYHLrcc8",
+          url: "https://www.youtube.com/watch?v=e6jmYHLrcc8&t=134s",
           thumbnail: "https://i.ytimg.com/vi/e6jmYHLrcc8/hqdefault.jpg"
         },
         14: {
