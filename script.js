@@ -6398,6 +6398,13 @@ function normalizeRoadmapLearningStructure() {
           statusLabel: "Publicado",
           url: "https://youtu.be/CNkTBIf0_I0",
           thumbnail: "https://i.ytimg.com/vi/CNkTBIf0_I0/hqdefault.jpg"
+        },
+        7: {
+          id: "topic-linux-plan-8",
+          status: "published",
+          statusLabel: "Publicado",
+          url: "https://youtu.be/oCPLFqPrHPo",
+          thumbnail: "https://i.ytimg.com/vi/oCPLFqPrHPo/hqdefault.jpg"
         }
       };
       route.topics = linuxTopicPlan.map(({ title, summary }, index) => {
