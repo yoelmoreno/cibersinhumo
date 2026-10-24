@@ -10061,7 +10061,7 @@ async function loadSubscriberHistory(liveSubscribers) {
   }
 }
 
-const MIN_VISIBLE_SUBSCRIBERS = 135;
+const MIN_VISIBLE_SUBSCRIBERS = 144;
 
 const roadmapTitleStopWords = new Set(["como", "que", "es", "son", "para", "por", "desde", "con", "sin", "las", "los", "una", "uno", "del", "dentro", "sobre", "video", "videos"]);
 
