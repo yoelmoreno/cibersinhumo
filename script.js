@@ -704,10 +704,10 @@ const roadmapRoutes = [
         "id": "topic-34",
         "number": 34,
         "title": "Qu\u00e9 es el usuario root?",
-        "status": "pending",
-        "statusLabel": "Pendiente",
-        "url": "",
-        "thumbnail": "",
+        "status": "published",
+        "statusLabel": "Publicado",
+        "url": "https://youtu.be/jUuJyXRsHLk",
+        "thumbnail": "https://i.ytimg.com/vi/jUuJyXRsHLk/hqdefault.jpg",
         "summary": "Tema del roadmap para aprender: Qu\u00e9 es el usuario root?",
         "tags": [
           "Linux"
