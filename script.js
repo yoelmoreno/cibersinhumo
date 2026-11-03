@@ -704,10 +704,10 @@ const roadmapRoutes = [
         "id": "topic-34",
         "number": 34,
         "title": "Qu\u00e9 es el usuario root?",
-        "status": "published",
-        "statusLabel": "Publicado",
-        "url": "https://youtu.be/jUuJyXRsHLk",
-        "thumbnail": "https://i.ytimg.com/vi/jUuJyXRsHLk/hqdefault.jpg",
+        "status": "pending",
+        "statusLabel": "Pendiente",
+        "url": "",
+        "thumbnail": "",
         "summary": "Tema del roadmap para aprender: Qu\u00e9 es el usuario root?",
         "tags": [
           "Linux"
@@ -6412,6 +6412,13 @@ function normalizeRoadmapLearningStructure() {
           statusLabel: "Publicado",
           url: "https://youtu.be/u3M68reHpC4",
           thumbnail: "https://i.ytimg.com/vi/u3M68reHpC4/hqdefault.jpg"
+        },
+        18: {
+          id: "topic-linux-plan-19",
+          status: "published",
+          statusLabel: "Publicado",
+          url: "https://youtu.be/jUuJyXRsHLk",
+          thumbnail: "https://i.ytimg.com/vi/jUuJyXRsHLk/hqdefault.jpg"
         }
       };
       route.topics = linuxTopicPlan.map(({ title, summary }, index) => {
