@@ -6417,7 +6417,7 @@ function normalizeRoadmapLearningStructure() {
           id: "topic-linux-plan-19",
           status: "published",
           statusLabel: "Publicado",
-          url: "https://youtu.be/jUuJyXRsHLk",
+          url: "https://www.youtube.com/watch?v=jUuJyXRsHLk&t=10s",
           thumbnail: "https://i.ytimg.com/vi/jUuJyXRsHLk/hqdefault.jpg"
         }
       };
