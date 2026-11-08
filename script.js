@@ -6413,7 +6413,7 @@ function normalizeRoadmapLearningStructure() {
           url: "https://youtu.be/u3M68reHpC4",
           thumbnail: "https://i.ytimg.com/vi/u3M68reHpC4/hqdefault.jpg"
         },
-        18: {
+        9: {
           id: "topic-linux-plan-19",
           status: "published",
           statusLabel: "Publicado",
