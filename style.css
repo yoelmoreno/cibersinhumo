@@ -7864,6 +7864,24 @@ select {
   letter-spacing: .04em;
 }
 
+.topic-video-preview[data-video-id="CNkTBIf0_I0"] .topic-video-duration,
+.topic-video-preview[data-video-id="oCPLFqPrHPo"] .topic-video-duration,
+.topic-video-preview[data-video-id="u3M68reHpC4"] .topic-video-duration,
+.topic-video-preview[data-video-id="jUuJyXRsHLk"] .topic-video-duration {
+  right: 12px;
+  bottom: 12px;
+  padding: 0;
+  background: transparent;
+  text-shadow: 0 1px 4px #000, 0 0 8px #000;
+}
+
+.topic-video-preview[data-video-id="CNkTBIf0_I0"] .topic-video-frame img,
+.topic-video-preview[data-video-id="oCPLFqPrHPo"] .topic-video-frame img,
+.topic-video-preview[data-video-id="u3M68reHpC4"] .topic-video-frame img,
+.topic-video-preview[data-video-id="jUuJyXRsHLk"] .topic-video-frame img {
+  object-position: center bottom;
+}
+
 .topic-video-placeholder {
   color: var(--accent);
   font-size: 2rem;
