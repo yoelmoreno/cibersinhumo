@@ -6419,6 +6419,13 @@ function normalizeRoadmapLearningStructure() {
           statusLabel: "Publicado",
           url: "https://www.youtube.com/watch?v=jUuJyXRsHLk&t=10s",
           thumbnail: "https://i.ytimg.com/vi/jUuJyXRsHLk/hqdefault.jpg"
+        },
+        10: {
+          id: "topic-linux-plan-20",
+          status: "published",
+          statusLabel: "Publicado",
+          url: "https://youtu.be/Cpkkur5KhaY",
+          thumbnail: "https://i.ytimg.com/vi/Cpkkur5KhaY/hqdefault.jpg"
         }
       };
       route.topics = linuxTopicPlan.map(({ title, summary }, index) => {
